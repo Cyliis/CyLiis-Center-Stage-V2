@@ -80,15 +80,7 @@ public class CoolServo {
     }
 
     public void forceUpdate(){
-        if(isProfiled) profile.update();
-        if(isProfiled) {
-            cachedPosition = profile.getPosition();
-            servo.setPositionAsync(cachedPosition);
-        }
-        if(!isProfiled) {
-            cachedPosition = targetPosition;
-            servo.setPositionAsync(targetPosition);
-        }
+        servo.setPositionAsync(targetPosition);
         if(!async) servo.updatePositionAsync();
     }
 
