@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Math.Angles;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
@@ -112,10 +113,7 @@ public class MecanumDrive implements IRobotModule {
 
     public boolean reachedHeading(double tolerance){
         if(runMode == RunMode.Vector) return false;
-        diff = targetPose.getHeading() - localizer.getHeading();
-        while(diff>Math.PI) diff -= Math.PI * 2.0;
-        while(diff<-Math.PI) diff += Math.PI * 2.0;
-        return Math.abs(diff) <= tolerance;
+        return Math.abs(Angles.normalize(targetPose.getHeading() - localizer.getHeading())) <= tolerance;
     }
 
     public boolean stopped(){
@@ -144,10 +142,7 @@ public class MecanumDrive implements IRobotModule {
                 powerVector = new Vector(translationalPower * Math.cos(Math.atan2(yDiff, xDiff)), translationalPower * Math.sin(Math.atan2(yDiff, xDiff)));
                 powerVector = Vector.rotateBy(powerVector, currentPose.getHeading());
 
-                double headingDiff = (targetPose.getHeading() - currentPose.getHeading()) % (2*PI);
-
-                if(headingDiff > PI) headingDiff -= 2.0*PI;
-                if(headingDiff < -PI) headingDiff += 2.0*PI;
+                double headingDiff = Angles.normalize(targetPose.getHeading() - currentPose.getHeading());
 
                 hpid.setPID(headingPID.p, headingPID.i, headingPID.d);
 

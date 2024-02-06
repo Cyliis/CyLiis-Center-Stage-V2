@@ -61,7 +61,7 @@ public class Localizer implements IRobotModule {
     private final LowPassFilter xVelocityFilter = new LowPassFilter(filterParameter, 0),
             yVelocityFilter = new LowPassFilter(filterParameter, 0);
 
-    public static double xDeceleration = 45, yDeceleration = 120;
+    public static double xDeceleration = 0, yDeceleration = 0;
 
     public Vector getVelocity(){
         return velocity;

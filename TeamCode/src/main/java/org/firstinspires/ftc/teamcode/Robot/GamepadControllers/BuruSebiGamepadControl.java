@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot.GamepadControllers;
 
+import com.fasterxml.jackson.core.io.DataOutputAsStream;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -7,6 +8,9 @@ import org.firstinspires.ftc.teamcode.Modules.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
 import org.firstinspires.ftc.teamcode.Modules.TopGripper;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
@@ -36,6 +40,12 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public static double triggerThreshold = 0.1;
 
     public void updateIntake(){
+        if(!Intake.ENABLED) return;
+        if(robotModules.outtake.getState() != Outtake.State.DOWN) {
+            if(gamepad2.left_trigger >= triggerThreshold || gamepad1.left_bumper) robotModules.activeIntake.setState(ActiveIntake.State.REVERSE);
+            else robotModules.activeIntake.setState(ActiveIntake.State.IDLE);
+            return;
+        }
         if(gamepad1.right_bumper){ // extendo out
             if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN &&
             robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
@@ -75,6 +85,33 @@ public class BuruSebiGamepadControl implements IRobotModule {
                     robotModules.intake.setState(Intake.State.CLOSING_GRIPPERS);
         }
 
+    }
+
+    public void updateOuttake(){
+        if(!Outtake.ENABLED) return;
+        if(stickyGamepad2.dpad_up){
+            Lift.level = Math.min(8, Lift.level + 1);
+            if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
+        }
+        if(stickyGamepad2.dpad_down){
+            Lift.level = Math.max(0, Lift.level - 1);
+            if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
+        }
+//        if(robotModules.intake.getState() != Intake.State.IDLE) return;
+        if(stickyGamepad2.x){
+            if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GO_CLOSE || robotModules.extension.getState() == Extension.State.CLOSE)) robotModules.extension.setState(Extension.State.GO_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE) robotModules.outtake.setState(Outtake.State.EXTEND_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_CLOSE) robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+        }
+        if(stickyGamepad2.a){
+            if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GO_FAR || robotModules.extension.getState() == Extension.State.FAR)) robotModules.extension.setState(Extension.State.GO_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_FAR) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+        }
     }
 
     @Override

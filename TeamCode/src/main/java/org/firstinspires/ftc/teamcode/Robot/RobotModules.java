@@ -7,6 +7,10 @@ import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Modules.TopGripper;
 
 public class RobotModules implements IRobotModule {
@@ -20,6 +24,12 @@ public class RobotModules implements IRobotModule {
 
     public final Intake intake;
 
+    public final Extension extension;
+    public final Lift lift;
+    public final Turret turret;
+
+    public final Outtake outtake;
+
     public RobotModules(Hardware hardware){
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
         dropDown = new DropDown(hardware, DropDown.State.UP);
@@ -29,6 +39,12 @@ public class RobotModules implements IRobotModule {
         topGripper = new TopGripper(hardware, TopGripper.State.OPENING);
 
         intake = new Intake(activeIntake, dropDown, ramp, extendo, bottomGripper, topGripper);
+
+        extension = new Extension(hardware, Extension.State.IN);
+        lift = new Lift(hardware, Lift.State.GOING_DOWN);
+        turret = new Turret(hardware, Turret.State.MIDDLE);
+
+        outtake = new Outtake(lift, extension, turret, Outtake.State.DOWN);
     }
 
     public void telemetry(Telemetry telemetry){

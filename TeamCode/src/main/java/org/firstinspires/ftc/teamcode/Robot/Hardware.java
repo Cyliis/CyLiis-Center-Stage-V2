@@ -31,8 +31,15 @@ public class Hardware {
 
     public VoltageSensor voltageSensor;
 
-    public Hardware(HardwareMap hm){
+    public enum Color{
+        Red, Blue
+    }
+
+    public final Color color;
+
+    public Hardware(HardwareMap hm, Color color){
         this.hardwareMap = hm;
+        this.color = color;
 
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
