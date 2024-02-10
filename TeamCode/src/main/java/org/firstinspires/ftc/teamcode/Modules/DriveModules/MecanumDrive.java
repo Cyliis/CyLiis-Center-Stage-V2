@@ -43,7 +43,7 @@ public class MecanumDrive implements IRobotModule {
     public static double voltage = 0;
 
     public enum RunMode{
-        PID, Vector
+        PID, Vector, Climb
     }
 
     private RunMode runMode;
@@ -150,6 +150,9 @@ public class MecanumDrive implements IRobotModule {
 
                 powerVector= new Vector(powerVector.getX(),powerVector.getY() * lateralMultiplier, headingPower);
                 break;
+            case Climb:
+                powerVector = new Vector(targetVector.getX(), 0);
+                break;
         }
         if(Math.abs(powerVector.getX()) + Math.abs(powerVector.getY()) + Math.abs(powerVector.getZ()) > 1)
             powerVector.scaleToMagnitude(1);
@@ -157,14 +160,20 @@ public class MecanumDrive implements IRobotModule {
     }
 
     private void updateMotors(){
-        voltage = voltageSensor.getVoltage();
-        double actualKs = ks * 12.0/voltage;
+        if(runMode != RunMode.Climb) {
+            voltage = voltageSensor.getVoltage();
+            double actualKs = ks * 12.0 / voltage;
 
-        frontLeft.setPower((powerVector.getX() - powerVector.getY() - powerVector.getZ()) * (1-actualKs) + actualKs * Math.signum(powerVector.getX() - powerVector.getY() - powerVector.getZ()));
-        frontRight.setPower((powerVector.getX() + powerVector.getY() + powerVector.getZ()) * (1-actualKs) + actualKs * Math.signum(powerVector.getX() + powerVector.getY() + powerVector.getZ()));
-        backLeft.setPower((powerVector.getX() + powerVector.getY() - powerVector.getZ()) * (1-actualKs) + actualKs * Math.signum(powerVector.getX() + powerVector.getY() - powerVector.getZ()));
-        backRight.setPower((powerVector.getX() - powerVector.getY() + powerVector.getZ()) * (1-actualKs) + actualKs * Math.signum(powerVector.getX() - powerVector.getY() + powerVector.getZ()));
-
+            frontLeft.setPower((powerVector.getX() - powerVector.getY() - powerVector.getZ()) * (1 - actualKs) + actualKs * Math.signum(powerVector.getX() - powerVector.getY() - powerVector.getZ()));
+            frontRight.setPower((powerVector.getX() + powerVector.getY() + powerVector.getZ()) * (1 - actualKs) + actualKs * Math.signum(powerVector.getX() + powerVector.getY() + powerVector.getZ()));
+            backLeft.setPower((powerVector.getX() + powerVector.getY() - powerVector.getZ()) * (1 - actualKs) + actualKs * Math.signum(powerVector.getX() + powerVector.getY() - powerVector.getZ()));
+            backRight.setPower((powerVector.getX() - powerVector.getY() + powerVector.getZ()) * (1 - actualKs) + actualKs * Math.signum(powerVector.getX() - powerVector.getY() + powerVector.getZ()));
+        } else {
+            frontLeft.setPower(powerVector.getX());
+            frontRight.setPower(powerVector.getX());
+            backLeft.setPower(-powerVector.getX());
+            backRight.setPower(-powerVector.getX());
+        }
         frontLeft.update();
         frontRight.update();
         backLeft.update();

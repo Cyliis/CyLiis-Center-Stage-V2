@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.Modules.Intake;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Modules.BottomGripper;
-import org.firstinspires.ftc.teamcode.Modules.TopGripper;
+import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
+import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
 

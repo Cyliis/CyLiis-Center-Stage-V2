@@ -21,7 +21,7 @@ public class BuruDriveTrainControl implements IRobotModule {
 
     @Override
     public void update() {
-        if(gamepad.left_bumper && gamepad.right_bumper) {
+        if(gamepad.back) {
             drive.getLocalizer().imu.resetImu();
         }
 

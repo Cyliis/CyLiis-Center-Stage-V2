@@ -1,19 +1,22 @@
 package org.firstinspires.ftc.teamcode.Robot.GamepadControllers;
 
-import com.fasterxml.jackson.core.io.DataOutputAsStream;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Modules.BottomGripper;
+import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Modules.Other.Climb;
+import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
-import org.firstinspires.ftc.teamcode.Modules.TopGripper;
+import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
+import org.firstinspires.ftc.teamcode.Utils.DoubleStickyGamepad;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 import org.firstinspires.ftc.teamcode.Utils.UnStickyGamepad;
 
@@ -22,6 +25,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
     private final RobotModules robotModules;
     private final StickyGamepad stickyGamepad1, stickyGamepad2;
     private final UnStickyGamepad unStickyGamepad1, unStickyGamepad2;
+    private final DoubleStickyGamepad doubleStickyGamepad;
     private final Gamepad gamepad1, gamepad2;
 
     public BuruSebiGamepadControl(RobotModules robotModules, Gamepad gamepad1, Gamepad gamepad2){
@@ -32,6 +36,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
         this.stickyGamepad2 = new StickyGamepad(gamepad2);
         this.unStickyGamepad1 = new UnStickyGamepad(gamepad1);
         this.unStickyGamepad2 = new UnStickyGamepad(gamepad2);
+        this.doubleStickyGamepad = new DoubleStickyGamepad(gamepad1, gamepad2);
         timer.startTime();
     }
 
@@ -114,9 +119,33 @@ public class BuruSebiGamepadControl implements IRobotModule {
         }
     }
 
+    public void updatePlane(){
+        if(!Plane.ENABLED) return;
+        if(doubleStickyGamepad.y && robotModules.plane.getState() == Plane.State.CLOSED)
+            robotModules.plane.setState(Plane.State.OPEN);
+    }
+
+    public void updateClimb(){
+        if(!Climb.ENABLED) return;
+        if(doubleStickyGamepad.y && robotModules.plane.getState() == Plane.State.OPEN){
+            if(robotModules.climb.getState() == Climb.State.DISENGAGED) robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
+            else if(robotModules.climb.getState() == Climb.State.HOOKS_DEPLOYED) {
+                robotModules.climb.setState(Climb.State.ENGAGED);
+                robotModules.drive.setRunMode(MecanumDrive.RunMode.Climb);
+            }
+            else if(robotModules.climb.getState() == Climb.State.ENGAGED) {
+                robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
+                robotModules.drive.setRunMode(MecanumDrive.RunMode.Vector);
+            }
+        }
+    }
+
     @Override
     public void update() {
         updateIntake();
+        updateOuttake();
+        updatePlane();
+        updateClimb();
         stickyGamepad1.update();
         stickyGamepad2.update();
         timer.reset();

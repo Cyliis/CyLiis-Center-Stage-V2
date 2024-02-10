@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Modules;
+package org.firstinspires.ftc.teamcode.Modules.Other;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 
 @Config
-public class TopGripper implements IStateBasedModule, IRobotModule {
+public class BottomGripper implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
@@ -57,7 +57,7 @@ public class TopGripper implements IStateBasedModule, IRobotModule {
         timer.reset();
     }
 
-    public TopGripper(Hardware hardware, State initialState){
+    public BottomGripper(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
         else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
         timer.startTime();

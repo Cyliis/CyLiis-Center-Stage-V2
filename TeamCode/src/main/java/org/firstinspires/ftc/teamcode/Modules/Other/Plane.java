@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Modules;
+package org.firstinspires.ftc.teamcode.Modules.Other;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,18 +9,17 @@ import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 
 @Config
-public class BottomGripper implements IStateBasedModule, IRobotModule {
+public class Plane implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double openPosition = 0.5, closedPosition = 0.5;
-    public static double motionTime = 0.2;
+    public static double openPosition = 0.7, closedPosition = 0.93;
 
     public enum State{
-        OPEN(openPosition), OPENING(openPosition, OPEN), CLOSED(openPosition), CLOSING(openPosition, CLOSED);
+        OPEN(openPosition), CLOSED(closedPosition);
 
         public double position;
         public final State nextState;
@@ -38,9 +37,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
 
     private void updateStateValues(){
         State.OPEN.position = openPosition;
-        State.OPENING.position = openPosition;
         State.CLOSED.position = closedPosition;
-        State.CLOSING.position = closedPosition;
     }
 
     private State state;
@@ -57,9 +54,9 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
         timer.reset();
     }
 
-    public BottomGripper(Hardware hardware, State initialState){
+    public Plane(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position-0.01);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();
@@ -81,7 +78,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateState() {
-        if(timer.seconds() >= motionTime) setState(state.nextState);
+        if(servo.getTimeToMotionEnd() == 0) state = state.nextState;
     }
 
     @Override
