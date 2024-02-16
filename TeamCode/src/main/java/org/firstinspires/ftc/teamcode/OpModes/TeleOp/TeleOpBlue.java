@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadCo
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Red 🐟")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Blue 🐟")
 public class TeleOpBlue extends LinearOpMode {
 
     FtcDashboard dash;
@@ -64,6 +64,8 @@ public class TeleOpBlue extends LinearOpMode {
             robotModules.update();
 
 //            robotModules.telemetry(telemetry);
+
+            hardware.update();
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             loopTimer.reset();

@@ -69,11 +69,11 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public Extendo(Hardware hardware, State initialState){
         if(!ENABLED) motor = null;
-        else motor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.PID, motorReversed);
+        else motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.PID, motorReversed);
 
         if(!ENABLED) encoder = null;
         else {
-            encoder = hardware.ech0;
+            encoder = hardware.ech2;
             if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
         }
 

@@ -69,12 +69,12 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public Lift(Hardware hardware, State initialState){
         if(!ENABLED) leftMotor = null;
-        else leftMotor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.PID, leftMotorReversed);
+        else leftMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, leftMotorReversed);
         if(!ENABLED) rightMotor = null;
-        else rightMotor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.PID, rightMotorReversed);
+        else rightMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, rightMotorReversed);
 
         if(!ENABLED) encoder = null;
-        else encoder = hardware.ech0;
+        else encoder = hardware.ech1;
         if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
 
         this.state = initialState;

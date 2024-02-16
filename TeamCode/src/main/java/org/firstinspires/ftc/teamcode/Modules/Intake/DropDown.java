@@ -18,30 +18,33 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     public static double intakePosition = 0.5, upPosition = 0.5;
     public static int index = 0;
-    public static double pos0 = 0.5, pos1 = 0.5, pos2 = 0.5, pos3 = 0.5, pos4 = 0.5;
+    public static double pos0 = 0.62, pos1 = 0.54, pos2 = 0.48, pos3 = 0.36, pos4 = 0.26;
+    public static double upPos0 = 0.27, upPos1 = 0.27, upPos2 = 0.27, upPos3 = 0.17, upPos4 = 0.08;
 
-    public enum State{
+
+    public enum State {
         UP(upPosition), INTAKE(intakePosition);
 
         public double position;
         public final State nextState;
 
-        State(double position){
+        State(double position) {
             this.position = position;
             this.nextState = this;
         }
 
-        State(double position, State nextState){
+        State(double position, State nextState) {
             this.position = position;
             this.nextState = nextState;
         }
     }
 
-    private void updateStateValues(){
+    private void updateStateValues() {
 
         double[] poses = new double[]{pos0, pos1, pos2, pos3, pos4};
         intakePosition = poses[index];
-
+        double[] upPoses = new double[]{upPos0, upPos1, upPos2, upPos3, upPos4};
+        upPosition = upPoses[index];
         State.UP.position = upPosition;
         State.INTAKE.position = intakePosition;
     }
@@ -50,22 +53,23 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public State getState(){
+    public State getState() {
         return state;
     }
 
-    public void setState(State newState){
-        if(newState == state) return;
+    public void setState(State newState) {
+        if (newState == state) return;
         this.state = newState;
         timer.reset();
     }
 
-    public DropDown(Hardware hardware, State initialState){
-        if(!ENABLED) servo = null;
+    public DropDown(Hardware hardware, State initialState) {
+        if (!ENABLED) servo = null;
+            // maybe sch1
         else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
-        if(ENABLED) servo.forceUpdate();
+        if (ENABLED) servo.forceUpdate();
     }
 
     @Override
@@ -75,7 +79,7 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     @Override
     public void update() {
-        if(!ENABLED) return;
+        if (!ENABLED) return;
 
         updateStateValues();
         updateHardware();

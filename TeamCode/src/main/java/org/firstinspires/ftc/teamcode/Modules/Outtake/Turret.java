@@ -68,7 +68,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     public Turret(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch0, reversedServo, profileMaxVelocity, profileAcceleration, initialState.position);
+        else servo = new CoolServo(hardware.seh2, reversedServo, profileMaxVelocity, profileAcceleration, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

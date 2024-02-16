@@ -59,7 +59,7 @@ public class TopGripper implements IStateBasedModule, IRobotModule {
 
     public TopGripper(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.seh3, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();
