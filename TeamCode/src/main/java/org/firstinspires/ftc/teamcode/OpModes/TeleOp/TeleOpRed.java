@@ -65,8 +65,6 @@ public class TeleOpRed extends LinearOpMode {
 
 //            robotModules.telemetry(telemetry);
 
-            hardware.update();
-
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             loopTimer.reset();
 

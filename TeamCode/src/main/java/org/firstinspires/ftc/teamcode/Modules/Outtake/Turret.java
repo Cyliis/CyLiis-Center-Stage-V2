@@ -19,10 +19,10 @@ public class Turret implements IStateBasedModule, IRobotModule {
     public static boolean reversedServo = true;
 
     public static double middle = 0.5;
-    public static double range = Math.toRadians(180);
+    public static double range = Math.toRadians(270);
     public static double limit = Math.toRadians(45);
 
-    public static double profileMaxVelocity = 26, profileAcceleration = 32;
+    public static double profileMaxVelocity = 20, profileAcceleration = 20;
     private final Localizer localizer;
     private final Hardware.Color color;
 

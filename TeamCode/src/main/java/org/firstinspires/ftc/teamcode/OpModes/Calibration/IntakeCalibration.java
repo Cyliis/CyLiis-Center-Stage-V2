@@ -78,8 +78,6 @@ public class IntakeCalibration extends LinearOpMode {
 
 //            robotModules.telemetry(telemetry);
 
-            hardware.update();
-
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             telemetry.addData("Ramp level", Ramp.index);
             telemetry.addData("Dropdown level", DropDown.index);

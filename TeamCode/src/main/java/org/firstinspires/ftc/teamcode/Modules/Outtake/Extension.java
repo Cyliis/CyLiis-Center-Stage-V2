@@ -22,8 +22,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public enum State{
         IN(inPosition1, inPosition2), GOING_IN(inPosition1, inPosition2, IN),
-        CLOSE(outPosition1, inPosition2), GO_CLOSE(outPosition1, inPosition2, CLOSE),
-        FAR(outPosition1, outPosition2), GO_FAR(outPosition1, outPosition2, FAR);
+        CLOSE(outPosition1, inPosition2), GOING_CLOSE(outPosition1, inPosition2, CLOSE),
+        FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR);
 
         public double position1, position2;
         public final State nextState;
@@ -44,12 +44,12 @@ public class Extension implements IStateBasedModule, IRobotModule {
         State.IN.position2 = inPosition2;
         State.CLOSE.position1 = outPosition1;
         State.CLOSE.position2 = inPosition2;
-        State.GO_CLOSE.position1 = outPosition1;
-        State.GO_CLOSE.position2 = inPosition2;
+        State.GOING_CLOSE.position1 = outPosition1;
+        State.GOING_CLOSE.position2 = inPosition2;
         State.FAR.position1 = outPosition1;
         State.FAR.position2 = outPosition2;
-        State.GO_FAR.position1 = outPosition1;
-        State.GO_FAR.position2 = outPosition2;
+        State.GOING_FAR.position1 = outPosition1;
+        State.GOING_FAR.position2 = outPosition2;
     }
 
     private State state;

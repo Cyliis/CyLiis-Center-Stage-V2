@@ -29,10 +29,10 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 lift.setState(Lift.State.GOING_UP);
                 break;
             case EXTEND_CLOSE:
-                extension.setState(Extension.State.GO_CLOSE);
+                extension.setState(Extension.State.GOING_CLOSE);
                 break;
             case EXTEND_FAR:
-                extension.setState(Extension.State.GO_FAR);
+                extension.setState(Extension.State.GOING_FAR);
                 break;
             case UP:
                 turret.setState(Turret.State.BACKDROP);
