@@ -21,7 +21,7 @@ public class Ramp implements IStateBasedModule, IRobotModule {
     public static double pos0 = 0.37, pos1 =0.37, pos2 = 0.4, pos3 = 0.5, pos4 = 0.58;
 
     public enum State{
-        UP(upPosition), INTAKE(rampPosition);
+        UP(upPosition), DOWN(rampPosition);
 
         public double position;
         public final State nextState;
@@ -43,7 +43,7 @@ public class Ramp implements IStateBasedModule, IRobotModule {
         rampPosition = poses[index];
 
         State.UP.position = upPosition;
-        State.INTAKE.position = rampPosition;
+        State.DOWN.position = rampPosition;
     }
 
     private State state;
