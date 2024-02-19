@@ -1,32 +1,32 @@
 package org.firstinspires.ftc.teamcode.OpModes.Calibration;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
+import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
-import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
-import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
-@Config
 @TeleOp
-public class LiftCalibration extends LinearOpMode {
+public class OuttakeTest extends LinearOpMode {
     FtcDashboard dash;
 
     Hardware hardware;
 
-    CoolMotor leftMotor, rightMotor;
-    Encoder encoder;
+    Lift lift;
+    Extension extension;
+    Turret turret;
+    Outtake outtake;
 
     StickyGamepad gamepad;
-
-    public static double target = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,11 +41,10 @@ public class LiftCalibration extends LinearOpMode {
 
         hardware.startThreads(this);
 
-        leftMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, Lift.leftMotorReversed);
-        rightMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, Lift.rightMotorReversed);
-
-        encoder = hardware.ech1;
-        if(Lift.encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
+        lift = new Lift(hardware, Lift.State.GOING_DOWN);
+        extension = new Extension(hardware, Extension.State.IN);
+        turret = new Turret(hardware, Turret.State.GOING_MIDDLE);
+        outtake = new Outtake(lift, extension, turret, Outtake.State.DOWN);
 
         while(opModeInInit() && !isStopRequested()){
 
@@ -60,18 +59,24 @@ public class LiftCalibration extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             hardware.update();
 
-            leftMotor.setMode(CoolMotor.RunMode.PID);
-            rightMotor.setMode(CoolMotor.RunMode.PID);
-            leftMotor.setPIDF(Lift.pid, Lift.ff1 + Lift.ff2 * target);
-            rightMotor.setPIDF(Lift.pid, Lift.ff1 + Lift.ff2 * target);
-            leftMotor.calculatePower(encoder.getCurrentPosition(), target);
-            rightMotor.calculatePower(encoder.getCurrentPosition(), target);
+            if(gamepad.x){
+                if(outtake.getState() == Outtake.State.UP) outtake.setState(Outtake.State.GOING_DOWN);
+                else if(outtake.getState() == Outtake.State.DOWN) outtake.setState(Outtake.State.GOING_UP_FAR);
+            }
 
-            leftMotor.update();
-            rightMotor.update();
+            outtake.update();
+            gamepad.update();
 
-            telemetry.addData("Target", target);
-            telemetry.addData("Current", encoder.getCurrentPosition());
+//            robotModules.telemetry(telemetry);
+
+            hardware.update();
+            telemetry.addData("Outtake state", outtake.getState());
+            telemetry.addData("Lift state", lift.getState());
+            telemetry.addData("Extension state", extension.getState());
+            telemetry.addData("Turret state", turret.getState());
+
+//            while (loopTimer.seconds() <= 0.025){}
+
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
 
             loopTimer.reset();

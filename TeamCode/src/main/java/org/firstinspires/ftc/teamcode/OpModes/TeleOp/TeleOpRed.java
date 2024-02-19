@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruDriveTrainControl;
 import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadControl;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
@@ -63,7 +64,7 @@ public class TeleOpRed extends LinearOpMode {
 
             robotModules.update();
 
-//            robotModules.telemetry(telemetry);
+            robotModules.telemetry(telemetry);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             loopTimer.reset();

@@ -13,22 +13,19 @@ import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 @Config
 public class Lift implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final CoolMotor leftMotor, rightMotor;
     public static boolean leftMotorReversed = true, rightMotorReversed = false;
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 0, increment = 0, level = 0, positionThresh = 16, passthroughPosition = 100;
+    public static int groundPos = 0, firstLevel = 250, increment = 70, level = 0, positionThresh = 10, passthroughPosition = 150;
 
     public static double resetPower = -0.5, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0.06,0,0.0007 );
-    public static double ff1 = 0.00003, ff2 = 0.00052;
-
-    public static double maxVelocity = 0, acceleration = 0, deceleration = 0;
-    public AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
+    public static PIDCoefficients pid = new PIDCoefficients(0.015,0.15,0.0007);
+    public static double ff1 = 0.00007, ff2 = 0.0002;
 
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
@@ -57,7 +54,6 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         updateStateValues();
-        profile.setMotion(newState == State.DOWN?State.DOWN.position:encoder.getCurrentPosition(), newState.position, newState == State.DOWN?0:profile.getSignedVelocity());
         if(state == newState) return;
         this.state = newState;
     }
@@ -106,7 +102,6 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateHardware() {
-        profile.update();
 
         if(state == State.RESETTING){
             leftMotor.setMode(CoolMotor.RunMode.RUN);
@@ -114,7 +109,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
             leftMotor.setPower(resetPower);
             rightMotor.setPower(resetPower);
         }else{
-            target = (int)profile.getPosition() + groundPos;
+            target = state.position + groundPos;
 
             leftMotor.setMode(CoolMotor.RunMode.PID);
             rightMotor.setMode(CoolMotor.RunMode.PID);
@@ -126,6 +121,5 @@ public class Lift implements IStateBasedModule, IRobotModule {
         leftMotor.update();
         rightMotor.update();
 
-        if(profile.finalPosition != state.position) profile.setMotion(profile.getPosition(), state.position, profile.getSignedVelocity());
     }
 }

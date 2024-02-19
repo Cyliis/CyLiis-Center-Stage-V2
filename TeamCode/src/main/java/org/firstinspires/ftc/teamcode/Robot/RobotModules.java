@@ -75,7 +75,12 @@ public class RobotModules implements IRobotModule {
     }
 
     public void telemetry(Telemetry telemetry){
-
+        telemetry.addData("Lift level", Lift.level);
+        telemetry.addData("Current position lift", lift.encoder.getCurrentPosition());
+        telemetry.addData("Target position lift", lift.target);
+        telemetry.addData("Outtake state", outtake.getState());
+        telemetry.addData("Intake state", intake.getState());
+        telemetry.addData("Lift state", lift.getState());
     }
 
     @Override

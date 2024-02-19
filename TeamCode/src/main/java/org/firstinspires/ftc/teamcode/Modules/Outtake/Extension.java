@@ -11,14 +11,14 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Extension implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
     public static double inPosition1 = 0.72, outPosition1 = 0.2, inPosition2 = 0.3, outPosition2 = 0.85;
 
-    public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 10;
+    public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
     public enum State{
         IN(inPosition1, inPosition2), GOING_IN(inPosition1, inPosition2, IN),
@@ -68,10 +68,13 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public Extension(Hardware hardware, State initialState){
         if(!ENABLED) servo1 = null;
-
         else servo1 = new CoolServo(hardware.seh0, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
         if(!ENABLED) servo2 = null;
         else servo2 = new CoolServo(hardware.seh1, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
+        if(ENABLED){
+            servo1.cachedPosition = initialState.position1;
+            servo2.cachedPosition = initialState.position2;
+        }
         timer.startTime();
         setState(initialState);
     }

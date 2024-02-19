@@ -64,6 +64,7 @@ public class Plane implements IStateBasedModule, IRobotModule {
 
     @Override
     public void initUpdate() {
+        if(!ENABLED) return;
         update();
     }
 

@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.Angles;
+import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.Localizer;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
@@ -13,16 +14,17 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Turret implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
     public static double middle = 0.495;
-    public static double range = Math.toRadians(255);
-    public static double limit = Math.toRadians(45);
+    public static double range = Math.toRadians(355);
+    public static double limit = Math.toRadians(90);
 
-    public static double profileMaxVelocity = 20, profileAcceleration = 20;
+    public static double profileMaxVelocity = 20, profileAcceleration = 32;
+    private final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(profileMaxVelocity, profileAcceleration, profileAcceleration);
     private final Localizer localizer;
     private final Hardware.Color color;
 
@@ -62,13 +64,14 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         if(newState == state) return;
+        if(newState == State.GOING_MIDDLE) profile.setMotion(state.position, middle, 0);
         this.state = newState;
         timer.reset();
     }
 
     public Turret(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.seh2, reversedServo, profileMaxVelocity, profileAcceleration, initialState.position);
+        else servo = new CoolServo(hardware.seh2, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();
@@ -93,12 +96,14 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateState() {
-        if(servo.getTimeToMotionEnd() == 0) state = state.nextState;
+        if(profile.getTimeToMotionEnd() == 0 && state == State.GOING_MIDDLE) state = state.nextState;
     }
 
     @Override
     public void updateHardware() {
-        servo.setPosition(state.position);
+        profile.update();
+        if(state != State.GOING_MIDDLE)servo.setPosition(state.position);
+        else servo.setPosition(profile.getPosition());
 
         servo.update();
     }

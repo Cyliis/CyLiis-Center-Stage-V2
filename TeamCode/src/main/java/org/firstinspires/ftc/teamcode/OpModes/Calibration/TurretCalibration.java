@@ -51,6 +51,8 @@ public class TurretCalibration extends LinearOpMode {
 //            robotModules.telemetry(telemetry);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
+            telemetry.addData("Imu angle", hardware.localizer.getHeading());
+            telemetry.addData("Turret position", Turret.State.BACKDROP.position);
             loopTimer.reset();
 
             telemetry.update();

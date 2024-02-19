@@ -70,6 +70,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void atStart(){
+        if(!ENABLED) return;
+
         lift.atStart();
         extension.atStart();
         turret.atStart();
@@ -78,6 +80,9 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void initUpdate(){
+        if(!ENABLED) return;
+
+        updateState();
         lift.initUpdate();
         extension.initUpdate();
         turret.initUpdate();
@@ -111,7 +116,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 if(extension.getState() == extension.getState().nextState)
                     setState(State.UP);
                 break;
-            case GOING_DOWN:
+            case HOME_TURRET:
                 if(turret.getState() == Turret.State.MIDDLE)
                     setState(State.RETRACT_GO_PASSTHROUGH);
                 break;

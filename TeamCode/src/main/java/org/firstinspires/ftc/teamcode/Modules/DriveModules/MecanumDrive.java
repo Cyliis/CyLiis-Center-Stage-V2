@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
 @Config
 public class MecanumDrive implements IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final Localizer localizer;
 
@@ -57,10 +57,10 @@ public class MecanumDrive implements IRobotModule {
         }
 
         this.localizer = localizer;
-        frontLeft = new CoolMotor(hardware.mch1, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
-        frontRight = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
-        backLeft = new CoolMotor(hardware.mch2, CoolMotor.RunMode.RUN, backLeftMotorReversed);
-        backRight = new CoolMotor(hardware.mch3, CoolMotor.RunMode.RUN, backRightMotorReversed);
+        frontLeft = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        backRight = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RUN, backRightMotorReversed);
 
         if(brake){
             frontLeft.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);

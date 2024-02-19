@@ -18,7 +18,7 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     public static double intakePosition = 0.5, upPosition = 0.5;
     public static int index = 0;
-    public static double pos0 = 0.62, pos1 = 0.54, pos2 = 0.48, pos3 = 0.36, pos4 = 0.26;
+    public static double pos0 = 0.62, pos1 = 0.54, pos2 = 0.48, pos3 = 0.43, pos4 = 0.26;
     public static double upPos0 = 0.27, upPos1 = 0.27, upPos2 = 0.27, upPos3 = 0.17, upPos4 = 0.08;
 
 

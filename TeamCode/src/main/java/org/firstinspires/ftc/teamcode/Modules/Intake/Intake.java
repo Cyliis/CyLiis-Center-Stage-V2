@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
 
 public class Intake implements IStateBasedModule, IRobotModule {
 
+    public static boolean ENABLED = false;
+
     private final ActiveIntake activeIntake;
     private final DropDown dropDown;
     private final Ramp ramp;
@@ -28,6 +30,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void initUpdate() {
+        if(!ENABLED) return;
+
          activeIntake.initUpdate();
          dropDown.initUpdate();
          ramp.initUpdate();
@@ -36,6 +40,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void atStart() {
+        if(!ENABLED) return;
+
         activeIntake.atStart();
         dropDown.atStart();
         ramp.atStart();
@@ -102,6 +108,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void update() {
+        if(!ENABLED) return;
+
         updateState();
         updateHardware();
     }
@@ -137,6 +145,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     @Override
     public void emergencyStop() {
+        if(!ENABLED) return;
+
         activeIntake.emergencyStop();
         dropDown.emergencyStop();
         ramp.emergencyStop();
