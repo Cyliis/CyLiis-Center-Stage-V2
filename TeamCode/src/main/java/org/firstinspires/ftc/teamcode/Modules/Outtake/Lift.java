@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 @Config
 public class Lift implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final CoolMotor leftMotor, rightMotor;
-    public static boolean leftMotorReversed = false, rightMotorReversed = true;
+    public static boolean leftMotorReversed = true, rightMotorReversed = false;
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
@@ -24,8 +24,8 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public static double resetPower = -0.5, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0,0,0);
-    public static double ff1 = 0, ff2 = 0;
+    public static PIDCoefficients pid = new PIDCoefficients(0.06,0,0.0007 );
+    public static double ff1 = 0.00003, ff2 = 0.00052;
 
     public static double maxVelocity = 0, acceleration = 0, deceleration = 0;
     public AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);

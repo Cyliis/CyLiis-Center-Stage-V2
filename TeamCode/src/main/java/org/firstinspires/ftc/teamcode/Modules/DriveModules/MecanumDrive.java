@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
 @Config
 public class MecanumDrive implements IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final Localizer localizer;
 

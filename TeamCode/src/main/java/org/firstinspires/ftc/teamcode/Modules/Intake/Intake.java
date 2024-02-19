@@ -23,6 +23,7 @@ public class Intake implements IStateBasedModule, IRobotModule {
         this.extendo = extendo;
         this.bottomGripper = bottomGripper;
         this.topGripper = topGripper;
+        state=State.IDLE;
     }
 
     @Override

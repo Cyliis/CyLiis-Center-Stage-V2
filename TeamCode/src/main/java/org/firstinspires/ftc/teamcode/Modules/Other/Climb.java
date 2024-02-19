@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 
 @Config
 public class Climb implements IRobotModule, IStateBasedModule {
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final CoolServo leftServo, rightServo, latchServo;
     public static boolean leftReversed = false, rightReversed = true, latchReversed = false;

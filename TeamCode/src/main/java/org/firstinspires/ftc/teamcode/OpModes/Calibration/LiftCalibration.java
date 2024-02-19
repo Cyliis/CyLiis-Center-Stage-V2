@@ -68,7 +68,7 @@ public class LiftCalibration extends LinearOpMode {
             rightMotor.calculatePower(encoder.getCurrentPosition(), target);
 
             leftMotor.update();
-            rightMotor.update();
+            //rightMotor.update();
 
             telemetry.addData("Target", target);
             telemetry.addData("Current", encoder.getCurrentPosition());

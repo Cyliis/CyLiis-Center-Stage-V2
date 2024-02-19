@@ -45,7 +45,7 @@ public class RobotModules implements IRobotModule {
     public RobotModules(Hardware hardware, MecanumDrive drive){
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
         dropDown = new DropDown(hardware, DropDown.State.UP);
-        ramp = new Ramp(hardware, Ramp.State.INTAKE);
+        ramp = new Ramp(hardware, Ramp.State.UP);
         extendo = new Extendo(hardware, Extendo.State.GOING_IN);
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPENING);
         topGripper = new TopGripper(hardware, TopGripper.State.OPENING);

@@ -13,13 +13,13 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Turret implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final CoolServo servo;
-    public static boolean reversedServo = true;
+    public static boolean reversedServo = false;
 
-    public static double middle = 0.5;
-    public static double range = Math.toRadians(270);
+    public static double middle = 0.495;
+    public static double range = Math.toRadians(255);
     public static double limit = Math.toRadians(45);
 
     public static double profileMaxVelocity = 20, profileAcceleration = 20;

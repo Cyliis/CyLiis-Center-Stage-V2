@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Extension implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.5, outPosition1 = 0.5, inPosition2 = 0.5, outPosition2 = 0.5;
+    public static double inPosition1 = 0.72, outPosition1 = 0.2, inPosition2 = 0.3, outPosition2 = 0.85;
 
     public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 10;
 

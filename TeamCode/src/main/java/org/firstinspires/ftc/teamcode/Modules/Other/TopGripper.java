@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class TopGripper implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final CoolServo servo;
     public static boolean reversedServo = false;
