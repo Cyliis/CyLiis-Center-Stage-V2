@@ -45,7 +45,7 @@ public class RobotModules implements IRobotModule {
     public RobotModules(Hardware hardware, MecanumDrive drive){
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
         dropDown = new DropDown(hardware, DropDown.State.UP);
-        ramp = new Ramp(hardware, Ramp.State.UP);
+        ramp = new Ramp(hardware, Ramp.State.DOWN);
         extendo = new Extendo(hardware, Extendo.State.GOING_IN);
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPENING);
         topGripper = new TopGripper(hardware, TopGripper.State.OPENING);
@@ -81,6 +81,7 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Outtake state", outtake.getState());
         telemetry.addData("Intake state", intake.getState());
         telemetry.addData("Lift state", lift.getState());
+        telemetry.addData("Extendo state", extendo.getState());
     }
 
     @Override

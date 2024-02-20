@@ -55,11 +55,9 @@ public class IntakeCalibration extends LinearOpMode {
                 else if(dropDown.getState() == DropDown.State.INTAKE)dropDown.setState(DropDown.State.UP);
             }
             if(gamepad.left_bumper){
-                Ramp.index = Math.max(0, Ramp.index - 1);
                 DropDown.index = Math.max(0, DropDown.index - 1);
             }
             if(gamepad.right_bumper){
-                Ramp.index = Math.min(4, Ramp.index + 1);
                 DropDown.index = Math.min(4, DropDown.index + 1);
             }
 
@@ -67,10 +65,11 @@ public class IntakeCalibration extends LinearOpMode {
             dropDown.update();
             gamepad.update();
 
+            hardware.mch0.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+
 //            robotModules.telemetry(telemetry);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
-            telemetry.addData("Ramp level", Ramp.index);
             telemetry.addData("Dropdown level", DropDown.index);
             telemetry.addData("Ramp state", ramp.getState());
             telemetry.addData("Dropdown state", dropDown.getState());

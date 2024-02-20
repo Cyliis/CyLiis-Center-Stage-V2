@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
@@ -46,6 +47,12 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
     public void updateIntake(){
         if(!Intake.ENABLED) return;
+        if(stickyGamepad2.right_bumper){
+            DropDown.index = Math.min(4, DropDown.index + 1);
+        }
+        if(stickyGamepad2.left_bumper){
+            DropDown.index = Math.max(0, DropDown.index - 1);
+        }
         if(robotModules.outtake.getState() != Outtake.State.DOWN) {
             if(gamepad2.left_trigger >= triggerThreshold || gamepad1.left_bumper) robotModules.activeIntake.setState(ActiveIntake.State.REVERSE);
             else robotModules.activeIntake.setState(ActiveIntake.State.IDLE);
@@ -54,14 +61,24 @@ public class BuruSebiGamepadControl implements IRobotModule {
         if(gamepad1.right_bumper){ // extendo out
             if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN &&
             robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
+                if(robotModules.extendo.getState() == Extendo.State.IN || robotModules.extendo.getState() == Extendo.State.GOING_IN)
+                    robotModules.extendo.setState(Extendo.State.OUT);
                 Extendo.extendedPos = (int)Math.min(Extendo.extensionLimit,
                         Extendo.extendedPos + (int)(timer.seconds() * Extendo.extensionRate));
+            }
+            if(robotModules.topGripper.getState() == TopGripper.State.CLOSED || robotModules.topGripper.getState() == TopGripper.State.CLOSING){
+                robotModules.topGripper.setState(TopGripper.State.OPENING);
+            }
+            if(robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED || robotModules.bottomGripper.getState() == BottomGripper.State.CLOSING){
+                robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
             }
         }
         if(gamepad1.left_bumper){ // extendo in
             Extendo.extendedPos = (int)Math.max(0, Extendo.extendedPos - (int)(timer.seconds() * Extendo.extensionRate));
             if(Extendo.extendedPos == 0) robotModules.extendo.setState(Extendo.State.GOING_IN);
         }
+        if(!gamepad1.left_bumper && !gamepad1.right_bumper)
+            Extendo.extendedPos = robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos;
         if(stickyGamepad1.b && // extendo completly in
                 (robotModules.extendo.getState() == Extendo.State.OUT || robotModules.extendo.getState() == Extendo.State.GOING_OUT)){
             robotModules.intake.setState(Intake.State.GOING_IN);
@@ -108,14 +125,22 @@ public class BuruSebiGamepadControl implements IRobotModule {
             else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
             else if(robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE) robotModules.outtake.setState(Outtake.State.EXTEND_FAR);
             else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_CLOSE) robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
-            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) {
+                if((robotModules.topGripper.getState() == TopGripper.State.OPEN || robotModules.topGripper.getState() == TopGripper.State.OPENING)
+                    && (robotModules.bottomGripper.getState() == BottomGripper.State.OPEN || robotModules.bottomGripper.getState() == BottomGripper.State.OPENING))
+                robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            }
         }
         if(stickyGamepad2.a){
             if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GOING_FAR || robotModules.extension.getState() == Extension.State.FAR)) robotModules.extension.setState(Extension.State.GOING_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.EXTEND_FAR) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
-            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) {
+                if((robotModules.topGripper.getState() == TopGripper.State.OPEN || robotModules.topGripper.getState() == TopGripper.State.OPENING)
+                        && (robotModules.bottomGripper.getState() == BottomGripper.State.OPEN || robotModules.bottomGripper.getState() == BottomGripper.State.OPENING))
+                    robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            }
         }
     }
 
@@ -140,12 +165,27 @@ public class BuruSebiGamepadControl implements IRobotModule {
         }
     }
 
+    void updateGrippers(){
+        if(!TopGripper.ENABLED || !BottomGripper.ENABLED) return;
+        if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION){
+            if(stickyGamepad1.x){
+                robotModules.topGripper.setState(TopGripper.State.OPENING);
+                robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
+            }
+            if(stickyGamepad1.a){
+                if(robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED) robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
+                else if(robotModules.topGripper.getState() == TopGripper.State.CLOSED) robotModules.topGripper.setState(TopGripper.State.OPENING);
+            }
+        }
+    }
+
     @Override
     public void update() {
         updateIntake();
         updateOuttake();
         updatePlane();
         updateClimb();
+        updateGrippers();
         stickyGamepad1.update();
         stickyGamepad2.update();
         timer.reset();

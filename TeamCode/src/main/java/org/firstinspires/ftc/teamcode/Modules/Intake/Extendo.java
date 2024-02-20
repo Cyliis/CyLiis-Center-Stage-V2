@@ -23,11 +23,11 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static int zeroPos;
     public static int extendedPos;
-    public static double extensionRate = 500, extensionLimit = 1320;
+    public static double extensionRate = 5000, extensionLimit = 1320;
 
     public static double resetPower = -0.5, velocityThreshold = 0, positionThreshold = 5;
 
-    public static PIDFCoefficients pidf = new PIDFCoefficients(0.05,0,0.0004,0);
+    public static PIDFCoefficients pidf = new PIDFCoefficients(0.035,0,0.0004,0);
 
     public static double maxVelocity = 0, acceleration = 0, deceleration = 0;
     public AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
@@ -98,7 +98,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
                 state = state.nextState;
             }
         }
-        else if(Math.abs(state.nextState.nextState.position - encoder.getCurrentPosition()) <= positionThreshold)
+        else if(Math.abs((state.nextState.nextState.position + zeroPos) - encoder.getCurrentPosition()) <= positionThreshold)
             state = state.nextState;
     }
 

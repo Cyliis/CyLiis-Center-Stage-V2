@@ -20,7 +20,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 250, increment = 70, level = 0, positionThresh = 10, passthroughPosition = 150;
+    public static int groundPos = 0, firstLevel = 280, increment = 80, level = 0, positionThresh = 10, passthroughPosition = 150;
 
     public static double resetPower = -0.5, velocityThreshold = 0;
 
@@ -94,7 +94,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
                 state = state.nextState;
             }
         }
-        else if(Math.abs(state.nextState.nextState.position - encoder.getCurrentPosition()) <= positionThresh)
+        else if(Math.abs((state.nextState.nextState.position + groundPos) - encoder.getCurrentPosition()) <= positionThresh)
             state = state.nextState;
     }
 

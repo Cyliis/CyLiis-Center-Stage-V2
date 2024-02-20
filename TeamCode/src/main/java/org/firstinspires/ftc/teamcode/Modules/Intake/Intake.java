@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
 
 public class Intake implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final ActiveIntake activeIntake;
     private final DropDown dropDown;
@@ -64,6 +64,9 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         if(newState == state) return;
+
+        this.state = newState;
+
         switch (state){
             case IDLE:
                 dropDown.setState(DropDown.State.UP);
@@ -101,7 +104,6 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 topGripper.setState(TopGripper.State.CLOSING);
                 break;
         }
-        this.state = newState;
         timer.reset();
     }
 

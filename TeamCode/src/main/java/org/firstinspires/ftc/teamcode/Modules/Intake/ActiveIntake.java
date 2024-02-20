@@ -16,7 +16,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     private final CoolMotor motor;
     public static boolean reversedMotor = false;
 
-    public static double runningPower = 1, reversePower = -0.7;
+    public static double runningPower = 1, reversePower = -1;
 
     public enum State{
         RUNNING(runningPower), IDLE(0), REVERSE(reversePower);
@@ -48,7 +48,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public ActiveIntake(Hardware hardware, State initialState){
         if(!ENABLED) motor = null;
-        else motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.RUN, reversedMotor);
+        else motor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, reversedMotor);
         timer.startTime();
         setState(initialState);
     }

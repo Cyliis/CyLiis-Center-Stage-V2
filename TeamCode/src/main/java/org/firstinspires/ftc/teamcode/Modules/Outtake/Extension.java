@@ -16,7 +16,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.72, outPosition1 = 0.2, inPosition2 = 0.3, outPosition2 = 0.85;
+    public static double inPosition1 = 0.72, outPosition1 = 0.2, inPosition2 = 0.27, outPosition2 = 0.85;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
