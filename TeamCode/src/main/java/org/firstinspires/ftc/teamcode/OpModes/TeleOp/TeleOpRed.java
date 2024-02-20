@@ -34,7 +34,7 @@ public class TeleOpRed extends LinearOpMode {
 
         hardware = new Hardware(hardwareMap, Hardware.Color.Red);
 
-        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, hardware.localizer, true);
+        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, true);
 
         robotModules = new RobotModules(hardware, drive);
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -34,6 +35,8 @@ public class Hardware {
     }
 
     public final Color color;
+
+    public final Rev2mDistanceSensor outtakeSensor;
 
     public Hardware(HardwareMap hm, Color color){
         this.hardwareMap = hm;
@@ -84,6 +87,8 @@ public class Hardware {
         seh5 = hm.get(Servo.class, "seh5");
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
+        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
 
         imu = new CoolIMU(hm);
 

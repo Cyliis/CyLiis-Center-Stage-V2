@@ -59,7 +59,7 @@ public class OuttakeTest extends LinearOpMode {
         topGripper = new TopGripper(hardware, TopGripper.State.OPEN);
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPEN);
 
-        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, hardware.localizer, true);
+        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, true);
         a = new BuruDriveTrainControl(gamepad1, drive);
 
         while(opModeInInit() && !isStopRequested()){

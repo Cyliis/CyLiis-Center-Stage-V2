@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.Modules.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Math.LowPassFilter;
+import org.firstinspires.ftc.teamcode.Modules.DriveModules.Localizer;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
+import org.firstinspires.ftc.teamcode.Utils.Vector;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
+import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
 @Config
 public class Extension implements IStateBasedModule, IRobotModule {
@@ -20,15 +26,57 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
+    public static double d0 = 54.6570999597, l1 = 110, l2 = 110, h1 = 0.465, h2 = 18;
+    public static double limit = 164;
+    public static double range = Math.toRadians(180);
+    public static double direction = -1;
+
+    public static double turretLength = 30;
+    public static double offset = 0;
+
+    private final Rev2mDistanceSensor sensor;
+    private final Localizer localizer;
+    private final Hardware.Color color;
+
+    public static double filterParameter = 0.5;
+    private final LowPassFilter filter = new LowPassFilter(filterParameter, 0);
+
+    public double sensorReading;
+
+    public double calculateBackdropExtension(){
+        double distance = sensorReading;
+        distance = Math.min(limit, distance);
+
+        Vector targetVector = new Vector(distance * Math.cos(localizer.getHeading()), distance * Math.sin(localizer.getHeading()));
+        Vector turretVector = new Vector(0, (color == Hardware.Color.Blue?1:-1) * turretLength);
+        Vector offsetVector = new Vector(offset * Math.cos(localizer.getHeading()), offset * Math.sin(localizer.getHeading()));
+
+        return targetVector.plus(turretVector.scaledBy(-1)).plus(offsetVector.scaledBy(-1)).getMagnitude();
+    }
+
+    public double calculateAngle(double distance){
+        double a = Math.sqrt((distance+d0) * (distance + d0) + (h2-h1) * (h2-h1));
+        return Math.acos((a * a + l1 * l1 - l2 * l2)/(2 * a * l1));
+    }
+
+    public double getBackdropPosition(){
+        double deltaFromIn = calculateAngle(calculateAngle(calculateBackdropExtension())) - calculateAngle(0);
+        double servoDelta = deltaFromIn * direction * (1.0/range);
+        return inPosition2 + servoDelta;
+    }
+
     public enum State{
         IN(inPosition1, inPosition2), GOING_IN(inPosition1, inPosition2, IN),
         CLOSE(outPosition1, inPosition2), GOING_CLOSE(outPosition1, inPosition2, CLOSE),
-        FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR);
+        FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
+        BACKDROP(outPosition1, inPosition2);
 
         public double position1, position2;
         public final State nextState;
 
         State(double position1, double position2){
+            this.position1 = position1;
+            this.position2 = position2;
             this.nextState = this;
         }
 
@@ -40,6 +88,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
+        sensorReading = filter.getValue(sensor.getDistance(DistanceUnit.MM));
+
         State.IN.position1 = inPosition1;
         State.IN.position2 = inPosition2;
         State.CLOSE.position1 = outPosition1;
@@ -50,6 +100,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
         State.FAR.position2 = outPosition2;
         State.GOING_FAR.position1 = outPosition1;
         State.GOING_FAR.position2 = outPosition2;
+        State.BACKDROP.position1 = outPosition1;
+        State.BACKDROP.position2 = getBackdropPosition();
     }
 
     private State state;
@@ -75,6 +127,12 @@ public class Extension implements IStateBasedModule, IRobotModule {
             servo1.cachedPosition = initialState.position1;
             servo2.cachedPosition = initialState.position2;
         }
+        if(ENABLED) sensor = hardware.outtakeSensor;
+        else sensor = null;
+
+        localizer = hardware.localizer;
+        color = hardware.color;
+
         timer.startTime();
         setState(initialState);
     }

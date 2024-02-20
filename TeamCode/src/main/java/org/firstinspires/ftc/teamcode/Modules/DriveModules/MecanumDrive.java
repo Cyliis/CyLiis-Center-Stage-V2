@@ -44,7 +44,7 @@ public class MecanumDrive implements IRobotModule {
 
     private RunMode runMode;
 
-    public MecanumDrive(Hardware hardware, RunMode runMode, Localizer localizer, boolean brake){
+    public MecanumDrive(Hardware hardware, RunMode runMode, boolean brake){
         this.runMode = runMode;
         this.voltageSensor = hardware.voltageSensor;
         if(!ENABLED) {
@@ -56,7 +56,7 @@ public class MecanumDrive implements IRobotModule {
             return;
         }
 
-        this.localizer = localizer;
+        this.localizer = hardware.localizer;
         frontLeft = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
         frontRight = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
         backLeft = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, backLeftMotorReversed);
