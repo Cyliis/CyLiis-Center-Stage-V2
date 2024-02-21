@@ -56,10 +56,16 @@ public class AutoExtensionCalibration extends LinearOpMode {
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             telemetry.addData("Imu angle", hardware.localizer.getHeading());
+            telemetry.addData("Zero extension angle", extension.calculateAngle(0));
             telemetry.addData("Sensor reading", extension.sensorReading);
             telemetry.addData("Calculated extension", extension.calculateBackdropExtension());
             telemetry.addData("Calculated angle", extension.calculateAngle(extension.calculateBackdropExtension()));
             telemetry.addData("Calculated servo position", extension.getBackdropPosition());
+            telemetry.addData("Angle delta", extension.calculateAngle(extension.calculateBackdropExtension()) - extension.calculateAngle(0));
+            telemetry.addData("Servo delta", extension.servoDelta);
+            telemetry.addData("Extension Vector", extension.extensionVector);
+            telemetry.addData("Final position", Extension.State.BACKDROP.position2);
+            telemetry.addData("Range", (extension.calculateAngle(Extension.limit) - extension.calculateAngle(0)/(Extension.outPosition2 - Extension.inPosition2)));
 
             loopTimer.reset();
 

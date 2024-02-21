@@ -100,11 +100,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public void updateState() {
         switch (state){
             case GOING_UP_CLOSE:
-                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition)
+                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
                     setState(State.EXTEND_CLOSE);
                 break;
             case GOING_UP_FAR:
-                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition)
+                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
                     setState(State.EXTEND_FAR);
                 break;
             case CHANGING_LIFT_POSITION:

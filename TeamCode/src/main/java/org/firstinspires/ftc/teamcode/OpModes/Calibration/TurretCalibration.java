@@ -31,7 +31,7 @@ public class TurretCalibration extends LinearOpMode {
         hardware = new Hardware(hardwareMap, Hardware.Color.Blue);
 
         hardware.startThreads(this);
-        turret = new Turret(hardware, Turret.State.BACKDROP);
+        turret = new Turret(hardware, Turret.State.MIDDLE);
 
         while(opModeInInit() && !isStopRequested()){
 

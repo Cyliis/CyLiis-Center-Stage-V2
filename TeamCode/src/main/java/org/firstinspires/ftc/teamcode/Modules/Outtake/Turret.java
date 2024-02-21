@@ -19,7 +19,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double middle = 0.495;
+    public static double middle = 0.485;
     public static double range = Math.toRadians(355);
     public static double limit = Math.toRadians(90);
 

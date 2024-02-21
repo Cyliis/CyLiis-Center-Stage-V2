@@ -58,7 +58,7 @@ public class RobotModules implements IRobotModule {
         modules.add(intake);
 
         extension = new Extension(hardware, Extension.State.IN);
-        lift = new Lift(hardware, Lift.State.GOING_DOWN);
+        lift = new Lift(hardware, Lift.State.RESETTING);
         turret = new Turret(hardware, Turret.State.MIDDLE);
 
         outtake = new Outtake(lift, extension, turret, Outtake.State.DOWN);

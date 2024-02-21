@@ -22,16 +22,18 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.72, outPosition1 = 0.2, inPosition2 = 0.27, outPosition2 = 0.85;
+    public static double inPosition1 = 0.8, outPosition1 = 0.21, inPosition2 = 0.29, outPosition2 = 0.85;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
-    public static double d0 = 54.6570999597, l1 = 110, l2 = 110, h1 = 0.465, h2 = 18;
-    public static double limit = 164;
-    public static double range = Math.toRadians(180);
+    public static double d0 = 57.811, l1 = 110.04, l2 = 110, h1 = 0.465, h2 = 18;
+    public static double limit = 161.48907;
+    public static double range = 2.288146111923855;
     public static double direction = -1;
 
-    public static double turretLength = 30;
+    public static double sensorOffset = 53;
+    public static double linearAdd = 13.0/300.0;
+    public static double turretLength = 0;
     public static double offset = 0;
 
     private final Rev2mDistanceSensor sensor;
@@ -43,25 +45,35 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public double sensorReading;
 
+    public Vector extensionVector = new Vector(0,0);
+
+    public double servoDelta = 0;
+
     public double calculateBackdropExtension(){
         double distance = sensorReading;
-        distance = Math.min(limit, distance);
 
         Vector targetVector = new Vector(distance * Math.cos(localizer.getHeading()), distance * Math.sin(localizer.getHeading()));
         Vector turretVector = new Vector(0, (color == Hardware.Color.Blue?1:-1) * turretLength);
         Vector offsetVector = new Vector(offset * Math.cos(localizer.getHeading()), offset * Math.sin(localizer.getHeading()));
 
-        return targetVector.plus(turretVector.scaledBy(-1)).plus(offsetVector.scaledBy(-1)).getMagnitude();
+        extensionVector = targetVector.plus(turretVector.scaledBy(-1)).plus(offsetVector.scaledBy(-1));
+
+        return Math.min(limit, extensionVector.getMagnitude());
     }
 
     public double calculateAngle(double distance){
-        double a = Math.sqrt((distance+d0) * (distance + d0) + (h2-h1) * (h2-h1));
+        double a = Math.sqrt((distance + d0) * (distance + d0) + (h2-h1) * (h2-h1));
         return Math.acos((a * a + l1 * l1 - l2 * l2)/(2 * a * l1));
     }
 
     public double getBackdropPosition(){
-        double deltaFromIn = calculateAngle(calculateAngle(calculateBackdropExtension())) - calculateAngle(0);
-        double servoDelta = deltaFromIn * direction * (1.0/range);
+        double deltaFromIn = calculateAngle(calculateBackdropExtension()) - calculateAngle(0);
+        servoDelta = (deltaFromIn * direction) / range;
+
+        if(servoDelta < 0) servoDelta = 0;
+        if(servoDelta > (outPosition2 - inPosition2)) servoDelta = outPosition2-inPosition2;
+        if(Double.isNaN(servoDelta)) servoDelta = 0;
+
         return inPosition2 + servoDelta;
     }
 
@@ -89,9 +101,12 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     private void updateStateValues(){
         sensorReading = filter.getValue(sensor.getDistance(DistanceUnit.MM));
+        sensorReading = (1 + linearAdd)*(sensorReading-sensorOffset);
 
         State.IN.position1 = inPosition1;
         State.IN.position2 = inPosition2;
+        State.GOING_IN.position1 = inPosition1;
+        State.GOING_IN.position2 = inPosition2;
         State.CLOSE.position1 = outPosition1;
         State.CLOSE.position2 = inPosition2;
         State.GOING_CLOSE.position1 = outPosition1;
@@ -124,8 +139,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
         if(!ENABLED) servo2 = null;
         else servo2 = new CoolServo(hardware.seh1, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
         if(ENABLED){
-            servo1.cachedPosition = initialState.position1;
-            servo2.cachedPosition = initialState.position2;
+            servo1.forceUpdate();
+            servo2.forceUpdate();
         }
         if(ENABLED) sensor = hardware.outtakeSensor;
         else sensor = null;
@@ -154,6 +169,11 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateHardware() {
+        if(state == State.BACKDROP) {
+            servo2.cachedPosition = state.position2;
+            servo2.forceUpdate();
+        }
+
         servo1.setPosition(state.position1);
         servo2.setPosition(state.position2);
 

@@ -23,14 +23,11 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static int zeroPos;
     public static int extendedPos;
-    public static double extensionRate = 5000, extensionLimit = 1320;
+    public static double extensionRate = 3000, extensionLimit = 1320;
 
     public static double resetPower = -0.5, velocityThreshold = 0, positionThreshold = 5;
 
     public static PIDFCoefficients pidf = new PIDFCoefficients(0.035,0,0.0004,0);
-
-    public static double maxVelocity = 0, acceleration = 0, deceleration = 0;
-    public AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
 
     public enum State{
         IN(0), RESETTING(0, IN), GOING_IN(0, RESETTING), OUT(extendedPos), GOING_OUT(extendedPos, OUT);
@@ -57,7 +54,6 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         updateStateValues();
-        profile.setMotion(encoder.getCurrentPosition() - zeroPos, newState.position, profile.getSignedVelocity());
         if(state == newState) return;
         this.state = newState;
     }
@@ -98,7 +94,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
                 state = state.nextState;
             }
         }
-        else if(Math.abs((state.nextState.nextState.position + zeroPos) - encoder.getCurrentPosition()) <= positionThreshold)
+        else if(Math.abs((state.position + zeroPos) - encoder.getCurrentPosition()) <= positionThreshold)
             state = state.nextState;
     }
 
@@ -106,19 +102,16 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateHardware() {
-        profile.update();
-
         if(state == State.RESETTING){
             motor.setMode(CoolMotor.RunMode.RUN);
             motor.setPower(resetPower);
         }else{
-            target = (int)profile.getPosition() + zeroPos;
+            target = state.position + zeroPos;
             motor.setMode(CoolMotor.RunMode.PID);
             motor.setPIDF(pidf, pidf.f * Math.signum(target - encoder.getCurrentPosition()));
             motor.calculatePower(encoder.getCurrentPosition(), target);
         }
         motor.update();
 
-        if(profile.finalPosition != state.position) profile.setMotion(profile.getPosition(), state.position, profile.getSignedVelocity());
     }
 }
