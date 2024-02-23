@@ -18,8 +18,10 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public static double runningPower = 1, reversePower = -1;
 
+    public static double pushTime = 0.2;
+
     public enum State{
-        RUNNING(runningPower), IDLE(0), REVERSE(reversePower);
+        RUNNING(runningPower), IDLE(0), REVERSE(reversePower), PUSH(runningPower);
 
         public double power;
 
@@ -33,6 +35,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     }
 
     private State state;
+    private State lastState;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -42,7 +45,13 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         if(newState == state) return;
-        this.state = newState;
+//        if(state!=State.PUSH) {
+            this.lastState = state;
+            this.state = newState;
+//        }
+//        else{
+//            this.lastState = newState;
+//        }
         timer.reset();
     }
 
@@ -50,6 +59,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
         if(!ENABLED) motor = null;
         else motor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, reversedMotor);
         timer.startTime();
+        state = initialState;
         setState(initialState);
     }
 
@@ -63,7 +73,9 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     }
 
     @Override
-    public void updateState() {}
+    public void updateState() {
+        if(state == State.PUSH && timer.seconds() >= pushTime) setState(lastState);
+    }
 
     @Override
     public void updateHardware() {

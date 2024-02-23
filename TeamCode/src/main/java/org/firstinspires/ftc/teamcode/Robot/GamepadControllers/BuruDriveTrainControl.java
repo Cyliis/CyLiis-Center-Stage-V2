@@ -19,13 +19,20 @@ public class BuruDriveTrainControl implements IRobotModule {
         this.drive = drive;
     }
 
+    double driveDeadZone = 0.03;
+
     @Override
     public void update() {
         if(gamepad.back) {
             drive.getLocalizer().imu.resetImu();
         }
 
-        drive.setTargetVector(new Vector(-gamepad.left_stick_y, -gamepad.left_stick_x, gamepad.left_trigger - gamepad.right_trigger));
+        double forward = -gamepad.left_stick_y;
+        if(Math.abs(forward) <= driveDeadZone) forward = 0;
+        double strafe = -gamepad.left_stick_x;
+        if(Math.abs(strafe) <= driveDeadZone) strafe = 0;
+
+        drive.setTargetVector(new Vector(forward, strafe, gamepad.left_trigger - gamepad.right_trigger));
 
         stickyGamepad.update();
     }

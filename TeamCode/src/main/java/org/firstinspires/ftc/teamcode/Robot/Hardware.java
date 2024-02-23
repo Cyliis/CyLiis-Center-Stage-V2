@@ -36,8 +36,6 @@ public class Hardware {
 
     public final Color color;
 
-    public final Rev2mDistanceSensor outtakeSensor;
-
     public Hardware(HardwareMap hm, Color color){
         this.hardwareMap = hm;
         this.color = color;
@@ -88,7 +86,7 @@ public class Hardware {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
+//        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
 
         imu = new CoolIMU(hm);
 

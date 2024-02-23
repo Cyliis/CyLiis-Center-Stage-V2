@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
@@ -46,7 +47,7 @@ public class RobotModules implements IRobotModule {
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
         dropDown = new DropDown(hardware, DropDown.State.UP);
         ramp = new Ramp(hardware, Ramp.State.DOWN);
-        extendo = new Extendo(hardware, Extendo.State.GOING_IN);
+        extendo = new Extendo(hardware, Extendo.State.RESETTING);
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPENING);
         topGripper = new TopGripper(hardware, TopGripper.State.OPENING);
 
@@ -82,6 +83,9 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Intake state", intake.getState());
         telemetry.addData("Lift state", lift.getState());
         telemetry.addData("Extendo state", extendo.getState());
+        telemetry.addData("Active intake state", activeIntake.getState());
+        telemetry.addData("Bottom gripper state", bottomGripper.getState());
+        telemetry.addData("Top gripper state", topGripper.getState());
     }
 
     @Override

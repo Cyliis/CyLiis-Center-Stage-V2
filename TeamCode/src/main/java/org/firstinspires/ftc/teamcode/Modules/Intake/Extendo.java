@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Modules.Intake;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
@@ -23,14 +25,18 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static int zeroPos;
     public static int extendedPos;
-    public static double extensionRate = 3000, extensionLimit = 1320;
+    public static double extensionLimit = 1320;
+    private double extensionPower = 0;
 
-    public static double resetPower = -0.5, velocityThreshold = 0, positionThreshold = 5;
+    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 10, inThreshold = 100;
 
-    public static PIDFCoefficients pidf = new PIDFCoefficients(0.035,0,0.0004,0);
+    public static PIDFCoefficients pidf = new PIDFCoefficients(0.035,0,0.0001,0);
+
+    public static double timeOut = 0.25;
+    private final ElapsedTime timer = new ElapsedTime();
 
     public enum State{
-        IN(0), RESETTING(0, IN), GOING_IN(0, RESETTING), OUT(extendedPos), GOING_OUT(extendedPos, OUT);
+        IN(0), RESETTING(0, IN), GOING_IN(0, RESETTING), OUT(0), GOING_OUT(0);
 
         public int position;
         public final State nextState;
@@ -55,17 +61,20 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public void setState(State newState){
         updateStateValues();
         if(state == newState) return;
+        timer.reset();
         this.state = newState;
     }
 
     private void updateStateValues(){
-        State.OUT.position = extendedPos;
-        State.GOING_OUT.position = extendedPos;
+
     }
 
     public Extendo(Hardware hardware, State initialState){
         if(!ENABLED) motor = null;
-        else motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.PID, motorReversed);
+        else {
+            motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.PID, motorReversed);
+            motor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
         if(!ENABLED) encoder = null;
         else {
@@ -73,7 +82,12 @@ public class Extendo implements IStateBasedModule, IRobotModule {
             if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
         }
 
+        timer.startTime();
         this.state = initialState;
+    }
+
+    public void setPower(double power){
+        this.extensionPower = power;
     }
 
     @Override
@@ -88,11 +102,14 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     @Override
     public void updateState() {
         if(state == State.RESETTING){
-            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold){
+            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold && timer.seconds() >= timeOut){
                 zeroPos = encoder.getCurrentPosition();
                 updateStateValues();
                 state = state.nextState;
             }
+        }
+        else if(state == State.GOING_IN && timer.seconds() >= timeOut){
+            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold) setState(State.RESETTING);
         }
         else if(Math.abs((state.position + zeroPos) - encoder.getCurrentPosition()) <= positionThreshold)
             state = state.nextState;
@@ -105,6 +122,10 @@ public class Extendo implements IStateBasedModule, IRobotModule {
         if(state == State.RESETTING){
             motor.setMode(CoolMotor.RunMode.RUN);
             motor.setPower(resetPower);
+        }
+        else if(state == State.OUT){
+            motor.setMode(CoolMotor.RunMode.RUN);
+            motor.setPower(extensionPower);
         }else{
             target = state.position + zeroPos;
             motor.setMode(CoolMotor.RunMode.PID);

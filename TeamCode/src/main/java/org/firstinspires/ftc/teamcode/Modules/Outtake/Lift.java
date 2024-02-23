@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Modules.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
@@ -15,7 +16,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
-    private final CoolMotor leftMotor, rightMotor;
+    public final CoolMotor leftMotor, rightMotor;
     public static boolean leftMotorReversed = true, rightMotorReversed = false;
     public final Encoder encoder;
     public static boolean encoderReversed = false;
@@ -26,6 +27,9 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public static PIDCoefficients pid = new PIDCoefficients(0.015,0.15,0.0007);
     public static double ff1 = 0.00007, ff2 = 0.0002;
+
+    private final ElapsedTime timer = new ElapsedTime();
+    public static double timeOut = 0.25;
 
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
@@ -55,6 +59,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public void setState(State newState){
         updateStateValues();
         if(state == newState) return;
+        timer.reset();
         this.state = newState;
     }
 
@@ -73,6 +78,8 @@ public class Lift implements IStateBasedModule, IRobotModule {
         else encoder = hardware.ech1;
         if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
 
+        timer.startTime();
+
         this.state = initialState;
     }
 
@@ -88,11 +95,14 @@ public class Lift implements IStateBasedModule, IRobotModule {
     @Override
     public void updateState() {
         if(state == State.RESETTING){
-            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold){
+            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold && timer.seconds() >= timeOut){
                 groundPos = encoder.getCurrentPosition();
                 updateStateValues();
                 state = state.nextState;
             }
+        }
+        else if(state == State.GOING_DOWN && timer.seconds() >= timeOut){
+            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold) setState(State.RESETTING);
         }
         else if(Math.abs((state.position + groundPos) - encoder.getCurrentPosition()) <= positionThresh)
             state = state.nextState;

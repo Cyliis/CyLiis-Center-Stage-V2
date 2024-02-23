@@ -22,7 +22,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.8, outPosition1 = 0.21, inPosition2 = 0.29, outPosition2 = 0.85;
+    public static double inPosition1 = 0.67, outPosition1 = 0.21, inPosition2 = 0.29, outPosition2 = 0.85;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
@@ -36,7 +36,6 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public static double turretLength = 0;
     public static double offset = 0;
 
-    private final Rev2mDistanceSensor sensor;
     private final Localizer localizer;
     private final Hardware.Color color;
 
@@ -100,8 +99,6 @@ public class Extension implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
-        sensorReading = filter.getValue(sensor.getDistance(DistanceUnit.MM));
-        sensorReading = (1 + linearAdd)*(sensorReading-sensorOffset);
 
         State.IN.position1 = inPosition1;
         State.IN.position2 = inPosition2;
@@ -142,8 +139,6 @@ public class Extension implements IStateBasedModule, IRobotModule {
             servo1.forceUpdate();
             servo2.forceUpdate();
         }
-        if(ENABLED) sensor = hardware.outtakeSensor;
-        else sensor = null;
 
         localizer = hardware.localizer;
         color = hardware.color;

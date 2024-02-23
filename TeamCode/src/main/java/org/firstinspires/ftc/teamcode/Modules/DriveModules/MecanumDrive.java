@@ -167,8 +167,8 @@ public class MecanumDrive implements IRobotModule {
         } else {
             frontLeft.setPower(powerVector.getX());
             frontRight.setPower(powerVector.getX());
-            backLeft.setPower(-powerVector.getX());
-            backRight.setPower(-powerVector.getX());
+            backLeft.setPower(powerVector.getX());
+            backRight.setPower(powerVector.getX());
         }
         frontLeft.update();
         frontRight.update();
