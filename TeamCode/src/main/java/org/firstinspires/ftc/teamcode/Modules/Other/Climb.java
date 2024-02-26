@@ -11,13 +11,13 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 
 @Config
 public class Climb implements IRobotModule, IStateBasedModule {
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final CoolServo leftServo, rightServo, latchServo;
-    public static boolean leftReversed = false, rightReversed = true, latchReversed = false;
+    public static boolean leftReversed = false, rightReversed = false, latchReversed = false;
 
-    public static double leftDisengagedPosition=0.5, leftEngagedPosition=0.5;
-    public static double rightDisengagedPosition=0.5, rightEngagedPosition=0.5;
+    public static double leftDisengagedPosition=0.07, leftEngagedPosition=0.5;
+    public static double rightDisengagedPosition=0.53, rightEngagedPosition=0.05;
     public static double latchOpenPosition = 0.5, latchClosedPosition = 0.5;
 
     public enum State{
@@ -67,9 +67,9 @@ public class Climb implements IRobotModule, IStateBasedModule {
             latchServo = null;
         }
         else {
-            leftServo = new CoolServo(hardware.sch0, leftReversed, initialState.leftPos);
-            rightServo = new CoolServo(hardware.sch0, rightReversed, initialState.rightPos);
-            latchServo = new CoolServo(hardware.sch0, latchReversed, initialState.latchPos);
+            leftServo = new CoolServo(hardware.sch2, leftReversed, initialState.leftPos);
+            rightServo = new CoolServo(hardware.sch3, rightReversed, initialState.rightPos);
+            latchServo = new CoolServo(hardware.seh5, latchReversed, initialState.latchPos);
             leftServo.forceUpdate();
             rightServo.forceUpdate();
             latchServo.forceUpdate();

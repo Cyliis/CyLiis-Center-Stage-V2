@@ -86,6 +86,8 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Active intake state", activeIntake.getState());
         telemetry.addData("Bottom gripper state", bottomGripper.getState());
         telemetry.addData("Top gripper state", topGripper.getState());
+        telemetry.addData("Climb state", climb.getState());
+        telemetry.addData("Drive mode", drive.getRunMode());
     }
 
     @Override
