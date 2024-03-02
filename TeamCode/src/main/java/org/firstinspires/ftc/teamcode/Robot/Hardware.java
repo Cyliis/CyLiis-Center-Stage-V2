@@ -4,11 +4,13 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.Localizer;
+import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
@@ -30,6 +32,8 @@ public class Hardware {
 
     public VoltageSensor voltageSensor;
 
+    public CoolDigitalSensor beamBreak0, beamBreak1;
+
     public enum Color{
         Red, Blue
     }
@@ -41,7 +45,7 @@ public class Hardware {
         this.color = color;
 
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
 //        chub = hardwareMap.getAll(LynxModule.class).get(0).isParent() ?
@@ -88,6 +92,9 @@ public class Hardware {
 
 //        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
 
+        beamBreak0 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb0"));
+        beamBreak1 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb1"));
+
         imu = new CoolIMU(hm);
 
         localizer = new Localizer(this);
@@ -98,9 +105,9 @@ public class Hardware {
     }
 
     public void update(){
-//        for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-//            hub.clearBulkCache();
-//        }
+        for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
+            hub.clearBulkCache();
+        }
     }
 
 

@@ -50,7 +50,7 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     public enum State {
         IDLE,
-        START_INTAKE, PREPARE_DROPDOWN, OPENING_GRIPPERS, INTAKE,
+        START_INTAKE, PREPARE_DROPDOWN, OPENING_GRIPPERS, INTAKE, AUTO_REVERSE,
         STOP_INTAKE, REVERSE, GOING_IN, CLOSING_GRIPPERS
     }
 
@@ -82,8 +82,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 setState(State.OPENING_GRIPPERS);
                 break;
             case OPENING_GRIPPERS:
-                bottomGripper.setState(BottomGripper.State.OPENING);
-                topGripper.setState(TopGripper.State.OPENING);
+                if(bottomGripper.getState() != BottomGripper.State.OPEN) bottomGripper.setState(BottomGripper.State.OPENING);
+                if(topGripper.getState() != TopGripper.State.OPEN) topGripper.setState(TopGripper.State.OPENING);
                 break;
             case INTAKE:
                 activeIntake.setState(ActiveIntake.State.RUNNING);
@@ -93,6 +93,7 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 activeIntake.setState(ActiveIntake.State.IDLE);
                 setState(State.IDLE);
                 break;
+            case AUTO_REVERSE:
             case REVERSE:
                 dropDown.setState(DropDown.State.UP);
                 activeIntake.setState(ActiveIntake.State.REVERSE);

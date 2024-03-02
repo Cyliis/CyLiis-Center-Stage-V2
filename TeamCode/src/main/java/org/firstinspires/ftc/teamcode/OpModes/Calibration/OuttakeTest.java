@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Calibration;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruDriveTrainCon
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
+@Disabled
 @TeleOp
 public class OuttakeTest extends LinearOpMode {
     FtcDashboard dash;
@@ -112,7 +114,6 @@ public class OuttakeTest extends LinearOpMode {
 
 //            robotModules.telemetry(telemetry);
 
-            hardware.update();
             telemetry.addData("Outtake state", outtake.getState());
             telemetry.addData("Lift state", lift.getState());
             telemetry.addData("Extension state", extension.getState());

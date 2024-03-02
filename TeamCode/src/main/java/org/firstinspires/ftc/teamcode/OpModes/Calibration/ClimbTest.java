@@ -65,8 +65,6 @@ public class ClimbTest extends LinearOpMode {
 
 //            robotModules.telemetry(telemetry);
 
-            hardware.update();
-
 //            while (loopTimer.seconds() <= 0.025){}
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());

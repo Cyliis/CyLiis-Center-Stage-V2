@@ -57,9 +57,9 @@ public class MecanumDrive implements IRobotModule {
         }
 
         this.localizer = hardware.localizer;
-        frontLeft = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
-        frontRight = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
-        backLeft = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        frontLeft = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, backLeftMotorReversed);
         backRight = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RUN, backRightMotorReversed);
 
         if(brake){

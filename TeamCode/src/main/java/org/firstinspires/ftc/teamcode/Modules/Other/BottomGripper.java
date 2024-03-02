@@ -16,7 +16,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double openPosition = 1, closedPosition = 0.1;
+    public static double openPosition = 0.92, closedPosition = 0.05;
     public static double motionTime = 0.2;
 
     public enum State{
@@ -59,7 +59,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
 
     public BottomGripper(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.seh4, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.seh1, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

@@ -35,8 +35,8 @@ public class GrippersCalibration extends LinearOpMode {
         gamepad = new StickyGamepad(gamepad1);
 
         hardware.startThreads(this);
-        topGripper = new TopGripper(hardware, TopGripper.State.OPEN);
-        bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPEN);
+        topGripper = new TopGripper(hardware, TopGripper.State.CLOSED);
+        bottomGripper = new BottomGripper(hardware, BottomGripper.State.CLOSED);
 
         while(opModeInInit() && !isStopRequested()){
 
@@ -67,8 +67,6 @@ public class GrippersCalibration extends LinearOpMode {
             gamepad.update();
 
 //            robotModules.telemetry(telemetry);
-
-            hardware.update();
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             telemetry.addData("Top gripper state", topGripper.getState());

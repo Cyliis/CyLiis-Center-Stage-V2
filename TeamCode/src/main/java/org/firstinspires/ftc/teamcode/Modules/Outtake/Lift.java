@@ -21,12 +21,13 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 280, increment = 80, level = 0, positionThresh = 10, passthroughPosition = 230;
+    public static int groundPos = 0, firstLevel = 280, increment = 80, level = 0, positionThresh = 10,
+            passthroughPosition = 270, purplePosition = 20;
 
     public static double resetPower = -0.5, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0.015,0.15,0.0007);
-    public static double ff1 = 0.00007, ff2 = 0.0002;
+    public static PIDCoefficients pid = new PIDCoefficients(0,0,0);
+    public static double ff1 = 0, ff2 = 0;
 
     private final ElapsedTime timer = new ElapsedTime();
     public static double timeOut = 0.25;
@@ -34,7 +35,8 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
         UP(firstLevel + increment * level), GOING_UP(firstLevel + increment * level, UP),
-        PASSTHROUGH(passthroughPosition), GOING_PASSTHROUGH(passthroughPosition, PASSTHROUGH);
+        PASSTHROUGH(passthroughPosition), GOING_PASSTHROUGH(passthroughPosition, PASSTHROUGH),
+        PURPLE(purplePosition), GOING_PURPLE(purplePosition, PURPLE);
 
         public int position;
         public final State nextState;

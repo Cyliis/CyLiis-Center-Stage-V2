@@ -22,7 +22,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.67, outPosition1 = 0.21, inPosition2 = 0.29, outPosition2 = 0.85;
+    public static double inPosition1 = 0.73, outPosition1 = 0.21, inPosition2 = 0.29, closePosition = 0.5, outPosition2 = 0.85;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
@@ -78,7 +78,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public enum State{
         IN(inPosition1, inPosition2), GOING_IN(inPosition1, inPosition2, IN),
-        CLOSE(outPosition1, inPosition2), GOING_CLOSE(outPosition1, inPosition2, CLOSE),
+        CLOSE(outPosition1, closePosition), GOING_CLOSE(outPosition1, closePosition, CLOSE),
         FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
         BACKDROP(outPosition1, inPosition2);
 
@@ -105,9 +105,9 @@ public class Extension implements IStateBasedModule, IRobotModule {
         State.GOING_IN.position1 = inPosition1;
         State.GOING_IN.position2 = inPosition2;
         State.CLOSE.position1 = outPosition1;
-        State.CLOSE.position2 = inPosition2;
+        State.CLOSE.position2 = closePosition;
         State.GOING_CLOSE.position1 = outPosition1;
-        State.GOING_CLOSE.position2 = inPosition2;
+        State.GOING_CLOSE.position2 = closePosition;
         State.FAR.position1 = outPosition1;
         State.FAR.position2 = outPosition2;
         State.GOING_FAR.position1 = outPosition1;
@@ -134,7 +134,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
         if(!ENABLED) servo1 = null;
         else servo1 = new CoolServo(hardware.seh0, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
         if(!ENABLED) servo2 = null;
-        else servo2 = new CoolServo(hardware.seh1, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
+        else servo2 = new CoolServo(hardware.seh2, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
         if(ENABLED){
             servo1.forceUpdate();
             servo2.forceUpdate();

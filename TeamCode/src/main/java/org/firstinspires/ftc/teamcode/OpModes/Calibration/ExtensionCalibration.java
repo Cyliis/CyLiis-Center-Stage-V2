@@ -61,8 +61,6 @@ public class ExtensionCalibration extends LinearOpMode {
 
 //            robotModules.telemetry(telemetry);
 
-            hardware.update();
-
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             telemetry.addData("Extension state", extension.getState());
             telemetry.addLine("Press X to toggle state (IN/FAR)");

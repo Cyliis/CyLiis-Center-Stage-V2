@@ -56,15 +56,10 @@ public class BuruSebiGamepadControl implements IRobotModule {
         if(stickyGamepad2.left_bumper){
             DropDown.index = Math.max(0, DropDown.index - 1);
         }
-        if(robotModules.outtake.getState() != Outtake.State.DOWN) {
-            if(gamepad2.left_trigger >= triggerThreshold || gamepad1.left_bumper) robotModules.activeIntake.setState(ActiveIntake.State.REVERSE);
-            else robotModules.activeIntake.setState(ActiveIntake.State.IDLE);
-            return;
-        }
         if(Math.abs(gamepad1.right_stick_y) > extensionDeadZone && gamepad1.right_stick_y < 0
                 && robotModules.intake.getState()!= Intake.State.GOING_IN){ // extendo out
             if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN &&
-            robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
+                    robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
                 robotModules.extendo.setState(Extendo.State.OUT);
                 if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos < Extendo.extensionLimit)
                     robotModules.extendo.setPower(-gamepad1.right_stick_y);
@@ -97,10 +92,15 @@ public class BuruSebiGamepadControl implements IRobotModule {
 //            if(robotModules.extendo.getState() == Extendo.State.OUT)
 //                robotModules.intake.setState(Intake.State.GOING_IN);
 //        }
+        if(robotModules.outtake.getState() != Outtake.State.DOWN) {
+            if(gamepad2.left_trigger >= triggerThreshold || gamepad1.left_bumper) robotModules.activeIntake.setState(ActiveIntake.State.REVERSE);
+            else robotModules.activeIntake.setState(ActiveIntake.State.IDLE);
+            return;
+        }
         if(gamepad2.left_trigger >= triggerThreshold){ // press to reverse
             if(robotModules.intake.getState() == Intake.State.IDLE || robotModules.intake.getState() == Intake.State.OPENING_GRIPPERS
             || robotModules.intake.getState() == Intake.State.INTAKE || robotModules.intake.getState() == Intake.State.GOING_IN
-            || robotModules.intake.getState() == Intake.State.CLOSING_GRIPPERS){
+            || robotModules.intake.getState() == Intake.State.CLOSING_GRIPPERS || robotModules.intake.getState() == Intake.State.AUTO_REVERSE){
                 if(robotModules.activeIntake.getState() != ActiveIntake.State.REVERSE) robotModules.intake.setState(Intake.State.REVERSE);
                 if(robotModules.extendo.getState() == Extendo.State.IN)
                     if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN || robotModules.bottomGripper.getState() == BottomGripper.State.OPENING
@@ -113,7 +113,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
                 robotModules.intake.setState(Intake.State.START_INTAKE);
         } else { // idle
             if(robotModules.intake.getState() == Intake.State.OPENING_GRIPPERS || robotModules.intake.getState() == Intake.State.INTAKE
-            || robotModules.intake.getState() == Intake.State.REVERSE)
+            || robotModules.intake.getState() == Intake.State.REVERSE || robotModules.intake.getState() == Intake.State.AUTO_REVERSE)
                 robotModules.intake.setState(Intake.State.STOP_INTAKE);
             if(robotModules.extendo.getState() == Extendo.State.IN)
                 if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN || robotModules.bottomGripper.getState() == BottomGripper.State.OPENING
@@ -210,6 +210,25 @@ public class BuruSebiGamepadControl implements IRobotModule {
         }
     }
 
+    boolean detected0, detected1;
+
+    void beamBreakLogic(){
+        boolean newDetection0 = !robotModules.beamBreak0.getState();
+        boolean newDetection1 = !robotModules.beamBreak1.getState();
+
+        if(!detected0 && newDetection0 && robotModules.intake.getState() == Intake.State.INTAKE){
+            gamepad1.rumble(0,1,500);
+            gamepad2.rumble(0,1,500);
+        }if(!detected1 && newDetection1 && robotModules.intake.getState() == Intake.State.INTAKE){
+            gamepad1.rumble(1,0,500);
+            gamepad2.rumble(1,0,500);
+        }
+
+        detected0 = newDetection0;
+        detected1 = newDetection1;
+
+    }
+
     @Override
     public void update() {
         updateIntake();
@@ -217,6 +236,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
         updatePlane();
         updateClimb();
         updateGrippers();
+        beamBreakLogic();
         stickyGamepad1.update();
         stickyGamepad2.update();
         unStickyGamepad1.update();

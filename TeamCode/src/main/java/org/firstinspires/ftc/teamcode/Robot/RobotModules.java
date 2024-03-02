@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
+import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,8 @@ public class RobotModules implements IRobotModule {
     public final Climb climb;
 
     private final ArrayList<IRobotModule> modules = new ArrayList<>();
+
+    public final CoolDigitalSensor beamBreak0, beamBreak1;
 
     public RobotModules(Hardware hardware, MecanumDrive drive){
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
@@ -71,6 +74,9 @@ public class RobotModules implements IRobotModule {
 
         modules.add(plane);
         modules.add(climb);
+
+        beamBreak0 = hardware.beamBreak0;
+        beamBreak1 = hardware.beamBreak1;
 
         this.drive = drive;
     }
