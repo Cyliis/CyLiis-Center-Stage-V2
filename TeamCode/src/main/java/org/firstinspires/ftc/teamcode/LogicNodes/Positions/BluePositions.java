@@ -23,6 +23,8 @@ public class BluePositions {
             new Pose(0,0,0),
             new Pose(0,0,0)
     };
+    public static double[] extendoDistanceTolerance1 = {30,30,10,10};
+    public static double[] extendoHeadingTolerance1 = {0.1,0.1,0.1,0.1};
     public static int[] extendoPositions1 = {0,0,0,0};
     public static Pose[] scorePositions1 = {
             new Pose(0,0,0),
@@ -31,6 +33,7 @@ public class BluePositions {
             new Pose(0,0,0)
     };
     public static Pose[] parkingPositions1 = {
+            new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
@@ -54,6 +57,8 @@ public class BluePositions {
             new Pose(0,0,0),
             new Pose(0,0,0)
     };
+    public static double[] extendoDistanceTolerance2 = {30,30,10,10};
+    public static double[] extendoHeadingTolerance2 = {0.1,0.1,0.1,0.1};
     public static int[] extendoPositions2 = {0,0,0,0};
     public static Pose[] scorePositions2 = {
             new Pose(0,0,0),
@@ -62,6 +67,7 @@ public class BluePositions {
             new Pose(0,0,0)
     };
     public static Pose[] parkingPositions2 = {
+            new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
@@ -85,6 +91,8 @@ public class BluePositions {
             new Pose(0,0,0),
             new Pose(0,0,0)
     };
+    public static double[] extendoDistanceTolerance3 = {30,30,10,10};
+    public static double[] extendoHeadingTolerance3 = {0.1,0.1,0.1,0.1};
     public static int[] extendoPositions3 = {0,0,0,0};
     public static Pose[] scorePositions3 = {
             new Pose(0,0,0),
@@ -93,6 +101,7 @@ public class BluePositions {
             new Pose(0,0,0)
     };
     public static Pose[] parkingPositions3 = {
+            new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
             new Pose(0,0,0),
