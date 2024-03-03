@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
-@Disabled
 @Config
 @TeleOp
 public class LiftCalibration extends LinearOpMode {
@@ -43,8 +42,8 @@ public class LiftCalibration extends LinearOpMode {
 
         hardware.startThreads(this);
 
-        leftMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, Lift.leftMotorReversed);
-        rightMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, Lift.rightMotorReversed);
+        leftMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, Lift.leftMotorReversed);
+        rightMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, Lift.rightMotorReversed);
 
         encoder = hardware.ech1;
         if(Lift.encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);

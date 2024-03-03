@@ -32,7 +32,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static PIDFCoefficients pidf = new PIDFCoefficients(0.035,0,0.0001,0);
 
-    public static double timeOut = 0.25;
+    public static double timeOut = 0.1;
     private final ElapsedTime timer = new ElapsedTime();
 
     public enum State{
@@ -66,7 +66,8 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
-
+        State.OUT.position = extendedPos;
+        State.GOING_OUT.position = extendedPos;
     }
 
     public Extendo(Hardware hardware, State initialState){

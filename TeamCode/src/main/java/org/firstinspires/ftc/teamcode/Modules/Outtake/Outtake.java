@@ -13,8 +13,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE, GOING_UP_FAR, EXTEND_FAR,
         UP, CHANGING_LIFT_POSITION, GOING_DOWN, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
-        GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE,
-        GO_PASSTHROUGH, RETRACTING, GOING_DOWN_FROM_PASSTHROUGH
+        GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE
     }
 
     State state;
@@ -46,7 +45,6 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 turret.setState(Turret.State.GOING_MIDDLE);
                 break;
             case RETRACT_GO_PASSTHROUGH:
-                extension.setState(Extension.State.GOING_IN);
                 lift.setState(Lift.State.GOING_PASSTHROUGH);
                 break;
             case GO_DOWN:
@@ -62,6 +60,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 extension.setState(Extension.State.GOING_CLOSE);
                 break;
             case LIFT_GOING_PURPLE_POSITION:
+                lift.setState(Lift.State.GOING_PURPLE);
+                break;
 
         }
     }
@@ -134,13 +134,32 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     setState(State.RETRACT_GO_PASSTHROUGH);
                 break;
             case RETRACT_GO_PASSTHROUGH:
-                if(extension.getState() == Extension.State.IN)
+                if(extension.getState() == Extension.State.IN){
                     setState(State.GO_DOWN);
+                    break;
+                }
+                if(extension.getState() != Extension.State.GOING_IN){
+                    if(lift.encoder.getCurrentPosition() - Lift.groundPos >= Lift.passthroughPosition - Lift.positionThresh/2)
+                        extension.setState(Extension.State.GOING_IN);
+                }
                 break;
             case GO_DOWN:
                 if(lift.getState() == Lift.State.DOWN)
                     setState(State.DOWN);
                 break;
+            case GOING_PASSTHROUGH:
+                if(lift.getState() == Lift.State.PASSTHROUGH)
+                    setState(State.EXTENDING_CLOSE);
+                break;
+            case EXTENDING_CLOSE:
+                if(extension.getState() == Extension.State.CLOSE)
+                    lift.setState(Lift.State.GOING_PURPLE);
+                break;
+            case LIFT_GOING_PURPLE_POSITION:
+                if(lift.getState() == Lift.State.PURPLE)
+                    setState(State.PURPLE);
+                break;
+
         }
     }
 
