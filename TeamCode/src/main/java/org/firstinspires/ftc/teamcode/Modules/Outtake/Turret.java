@@ -21,7 +21,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     public static double middle = 0.485;
     public static double range = Math.toRadians(355);
-    public static double limit = Math.toRadians(90);
+    public static double limit = Math.toRadians(60);
 
     public static double profileMaxVelocity = 20, profileAcceleration = 32;
     private final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(profileMaxVelocity, profileAcceleration, profileAcceleration);

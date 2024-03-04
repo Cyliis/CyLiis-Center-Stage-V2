@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
-@Disabled
 @Config
 @TeleOp
 public class ExtendoCalibration extends LinearOpMode {
@@ -29,6 +28,8 @@ public class ExtendoCalibration extends LinearOpMode {
     StickyGamepad gamepad;
 
     public static double target = 0;
+
+    public static double hertz = 30;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,10 +63,12 @@ public class ExtendoCalibration extends LinearOpMode {
             hardware.update();
 
             motor.setMode(CoolMotor.RunMode.PID);
-            motor.setPIDF(Extendo.pidf, Extendo.pidf.f * Math.signum(target - encoder.getCurrentPosition()));
+            motor.setPIDF(Extendo.pidf, Extendo.pidf.f * Math.signum(motor.getPower(encoder.getCurrentPosition(), target)));
             motor.calculatePower(encoder.getCurrentPosition(), target);
 
             motor.update();
+
+            while (loopTimer.seconds() <= (1.0/hertz));
 
             telemetry.addData("Target", target);
             telemetry.addData("Current", encoder.getCurrentPosition());

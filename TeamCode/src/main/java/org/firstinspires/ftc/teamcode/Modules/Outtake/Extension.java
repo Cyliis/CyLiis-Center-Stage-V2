@@ -76,11 +76,14 @@ public class Extension implements IStateBasedModule, IRobotModule {
         return inPosition2 + servoDelta;
     }
 
+    public static double boopTime = 0.2;
+
     public enum State{
         IN(inPosition1, inPosition2), GOING_IN(inPosition1, inPosition2, IN),
         CLOSE(outPosition1, closePosition), GOING_CLOSE(outPosition1, closePosition, CLOSE),
+        MID(outPosition1, inPosition2), GOING_MID(outPosition1, inPosition2, MID),
         FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
-        BACKDROP(outPosition1, inPosition2);
+        BACKDROP(outPosition1, inPosition2), BOOP(outPosition1, inPosition2);
 
         public double position1, position2;
         public final State nextState;
@@ -158,6 +161,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateState() {
+        if(timer.seconds() >= boopTime && state == State.BOOP) setState(State.GOING_CLOSE);
         if(servo1.getTimeToMotionEnd() == 0 && servo2.getTimeToMotionEnd() == 0)
             setState(state.nextState);
     }

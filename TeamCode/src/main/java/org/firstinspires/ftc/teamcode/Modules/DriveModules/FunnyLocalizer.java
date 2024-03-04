@@ -19,16 +19,16 @@ public class FunnyLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 0.6889763779527559; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = 2.7952; // X is the up and down direction
-    public static double PARALLEL_Y = -3.9; // Y is the strafe direction
+    public static double PARALLEL_X = 1.52440; // X is the up and down direction
+    public static double PARALLEL_Y = -5.4641732; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = -4.218;
-    public static double PERPENDICULAR_Y = 1.6929;
+    public static double PERPENDICULAR_X = 2.697047;
+    public static double PERPENDICULAR_Y = 4.62716;
 
     public static double X_MULTIPLIER = 1; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
 
-    public static boolean parallelEncoderReversed = true, perpendicularEncoderReversed = true;
+    public static boolean parallelEncoderReversed = true, perpendicularEncoderReversed = false;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -45,8 +45,8 @@ public class FunnyLocalizer extends TwoTrackingWheelLocalizer {
 
         this.imu = hardware.imu;
 
-        parallelEncoder = hardware.ech0;
-        perpendicularEncoder = hardware.ech3;
+        parallelEncoder = hardware.ech3;
+        perpendicularEncoder = hardware.ech0;
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 

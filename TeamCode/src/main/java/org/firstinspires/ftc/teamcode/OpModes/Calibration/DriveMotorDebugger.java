@@ -10,10 +10,10 @@ public class DriveMotorDebugger extends OpMode {
 
     @Override
     public void init() {
-        m0 = hardwareMap.get(DcMotorEx.class, "eh0");
-        m1 = hardwareMap.get(DcMotorEx.class, "eh1");
-        m2 = hardwareMap.get(DcMotorEx.class, "eh2");
-        m3 = hardwareMap.get(DcMotorEx.class, "eh3");
+        m0 = hardwareMap.get(DcMotorEx.class, "eh0");//fata dreapta
+        m1 = hardwareMap.get(DcMotorEx.class, "eh1");//spate dreapta
+        m2 = hardwareMap.get(DcMotorEx.class, "eh2");//spate stanga
+        m3 = hardwareMap.get(DcMotorEx.class, "eh3");//fata stanga
     }
 
     @Override

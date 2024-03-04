@@ -21,16 +21,21 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 220, increment = 60, level = 0, positionThresh = 8,
-            passthroughPosition = 220, purplePosition = 20;
+    public static int groundPos = 0, firstLevel = 200, increment = 69, level = 0, positionThresh = 12,
+            passthroughPosition = 200, purplePosition = 0;
 
     public static double resetPower = -0.8, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0.1,0.05,0.0005);
-    public static double ff1 = 0, ff2 = 0.0002;
+    public static PIDCoefficients pid = new PIDCoefficients(0.04,0,0.001);
+    public static PIDCoefficients pidJos = new PIDCoefficients(0.02,0.05,0.0005);
+    public static double ff1 = 0.25, ff2 = 0.0001;
 
     private final ElapsedTime timer = new ElapsedTime();
     public static double timeOut = 0.15;
+
+    public static double maxVelocity = 12000, acceleration = 10000, deceleration = 3500;
+    public final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
+    public static boolean profiled = false;
 
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
@@ -61,6 +66,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public void setState(State newState){
         updateStateValues();
         if(state == newState) return;
+        profile.setMotion(profile.getPosition(), newState.position, profile.getSignedVelocity());
         timer.reset();
         this.state = newState;
     }
@@ -115,18 +121,26 @@ public class Lift implements IStateBasedModule, IRobotModule {
     @Override
     public void updateHardware() {
 
+        profile.update();
+
         if(state == State.RESETTING){
             leftMotor.setMode(CoolMotor.RunMode.RUN);
             rightMotor.setMode(CoolMotor.RunMode.RUN);
             leftMotor.setPower(resetPower);
             rightMotor.setPower(resetPower);
-        }else{
-            target = state.position + groundPos;
+        }else {
+            if(!profiled)target = state.position + groundPos;
+            else target = (int)profile.getPosition() + groundPos;
 
             leftMotor.setMode(CoolMotor.RunMode.PID);
             rightMotor.setMode(CoolMotor.RunMode.PID);
-            leftMotor.setPIDF(pid, ff1 + ff2 * (double)(target - groundPos));
-            rightMotor.setPIDF(pid, ff1 + ff2 * (double)(target - groundPos));
+            if (state == State.DOWN || state == State.GOING_DOWN) {
+                leftMotor.setPIDF(pidJos, ff1 + ff2 * (double) (target - groundPos));
+                rightMotor.setPIDF(pidJos, ff1 + ff2 * (double) (target - groundPos));
+            } else {
+                leftMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
+                rightMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
+            }
             leftMotor.calculatePower(encoder.getCurrentPosition(), target);
             rightMotor.calculatePower(encoder.getCurrentPosition(), target);
         }

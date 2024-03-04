@@ -11,7 +11,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public static boolean ENABLED = true;
 
     public enum State{
-        DOWN, GOING_UP_CLOSE, EXTEND_CLOSE, GOING_UP_FAR, EXTEND_FAR,
+        DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
         UP, CHANGING_LIFT_POSITION, GOING_DOWN, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
         GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE
     }
@@ -26,16 +26,26 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         switch (newState){
             case GOING_UP_CLOSE:
             case GOING_UP_FAR:
+                if(Lift.State.GOING_UP.position < Lift.passthroughPosition) lift.setState(Lift.State.GOING_PASSTHROUGH);
+                else lift.setState(Lift.State.GOING_UP);
+                break;
             case CHANGING_LIFT_POSITION:
                 lift.setState(Lift.State.GOING_UP);
                 break;
-            case EXTEND_CLOSE:
+            case EXTEND_CLOSE1:
+                extension.setState(Extension.State.GOING_MID);
+                break;
+            case EXTEND_CLOSE2:
                 extension.setState(Extension.State.GOING_CLOSE);
                 break;
             case EXTEND_FAR:
                 extension.setState(Extension.State.GOING_FAR);
                 break;
+            case LIFT_GOING_UP:
+                lift.setState(Lift.State.GOING_UP);
+                break;
             case UP:
+                lift.setState(Lift.State.GOING_UP);
                 turret.setState(Turret.State.BACKDROP);
                 break;
             case GOING_DOWN:
@@ -114,7 +124,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         switch (state){
             case GOING_UP_CLOSE:
                 if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
-                    setState(State.EXTEND_CLOSE);
+                    setState(State.EXTEND_CLOSE1);
                 break;
             case GOING_UP_FAR:
                 if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
@@ -124,9 +134,20 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 if(lift.getState() == Lift.State.UP)
                     setState(State.UP);
                 break;
-            case EXTEND_CLOSE:
+            case EXTEND_CLOSE1:
+                if(extension.getState() == Extension.State.MID)
+                    setState(State.EXTEND_CLOSE2);
+                break;
+            case EXTEND_CLOSE2:
+                if(extension.getState() == Extension.State.CLOSE)
+                    setState(State.LIFT_GOING_UP);
+                break;
             case EXTEND_FAR:
                 if(extension.getState() == extension.getState().nextState)
+                    setState(State.LIFT_GOING_UP);
+                break;
+            case LIFT_GOING_UP:
+                if(lift.getState() == Lift.State.UP)
                     setState(State.UP);
                 break;
             case HOME_TURRET:
@@ -153,7 +174,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 break;
             case EXTENDING_CLOSE:
                 if(extension.getState() == Extension.State.CLOSE)
-                    lift.setState(Lift.State.GOING_PURPLE);
+                    setState(State.LIFT_GOING_PURPLE_POSITION);
                 break;
             case LIFT_GOING_PURPLE_POSITION:
                 if(lift.getState() == Lift.State.PURPLE)

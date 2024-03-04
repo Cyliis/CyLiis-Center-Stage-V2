@@ -21,8 +21,6 @@ import org.firstinspires.ftc.teamcode.Utils.DoubleStickyGamepad;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 import org.firstinspires.ftc.teamcode.Utils.UnStickyGamepad;
 
-import javax.crypto.spec.OAEPParameterSpec;
-
 public class BuruSebiGamepadControl implements IRobotModule {
 
     private final RobotModules robotModules;
@@ -147,7 +145,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
             else if(robotModules.outtake.getState() == Outtake.State.DOWN &&
                     (robotModules.topGripper.getState() == TopGripper.State.CLOSED  && robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED))
                 robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
-            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE) robotModules.outtake.setState(Outtake.State.EXTEND_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE1) robotModules.outtake.setState(Outtake.State.EXTEND_FAR);
             else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_CLOSE) robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
             else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) {
                 if((robotModules.topGripper.getState() == TopGripper.State.OPEN || robotModules.topGripper.getState() == TopGripper.State.OPENING)
@@ -158,7 +156,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
         if(stickyGamepad2.a){
             if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GOING_FAR || robotModules.extension.getState() == Extension.State.FAR)) robotModules.extension.setState(Extension.State.GOING_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
-            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_FAR) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.EXTEND_FAR) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE1);
             else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION) {
                 if((robotModules.topGripper.getState() == TopGripper.State.OPEN || robotModules.topGripper.getState() == TopGripper.State.OPENING)
@@ -169,7 +167,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
         if(stickyGamepad2.b){
             if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION
             || robotModules.outtake.getState() == Outtake.State.GOING_UP_CLOSE || robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR
-                    || robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE || robotModules.outtake.getState() == Outtake.State.EXTEND_FAR){
+                    || robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE1 || robotModules.outtake.getState() == Outtake.State.EXTEND_FAR){
                 robotModules.outtake.setState(Outtake.State.GOING_DOWN);
                 if(robotModules.topGripper.getState() != TopGripper.State.OPEN)
                     robotModules.topGripper.setState(TopGripper.State.OPENING);

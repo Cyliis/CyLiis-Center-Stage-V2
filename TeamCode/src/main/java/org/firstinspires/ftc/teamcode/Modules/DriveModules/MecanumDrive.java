@@ -23,8 +23,8 @@ public class MecanumDrive implements IRobotModule {
     public final CoolMotor frontLeft, frontRight, backLeft, backRight;
     public static boolean frontLeftMotorReversed = false, frontRightMotorReversed = true, backLeftMotorReversed = false, backRightMotorReversed = true;
 
-    public static PIDCoefficients translationalPID = new PIDCoefficients(0,0 ,0),
-            headingPID = new PIDCoefficients(0,0,0);
+    public static PIDCoefficients translationalPID = new PIDCoefficients(0.15,0 ,0),
+            headingPID = new PIDCoefficients(2.5,0,0.19);
     public final PIDController tpid= new PIDController(0,0,0), hpid = new PIDController(0,0,0);
 
     public static double lateralMultiplier = 2;
@@ -33,7 +33,7 @@ public class MecanumDrive implements IRobotModule {
 
     public double velocityThreshold = 0.5;
 
-    public static double ks = 0;
+    public static double ks = 0.03;
 
     private final VoltageSensor voltageSensor;
     public static double voltage = 0;
@@ -57,10 +57,10 @@ public class MecanumDrive implements IRobotModule {
         }
 
         this.localizer = hardware.localizer;
-        frontLeft = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
-        frontRight = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontRightMotorReversed);
-        backLeft = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, backLeftMotorReversed);
-        backRight = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RUN, backRightMotorReversed);
+        frontLeft = new CoolMotor(hardware.meh3, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        backRight = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RUN, backRightMotorReversed);
 
         if(brake){
             frontLeft.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);

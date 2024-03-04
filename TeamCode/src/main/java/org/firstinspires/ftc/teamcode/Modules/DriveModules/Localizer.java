@@ -30,7 +30,7 @@ public class Localizer implements IRobotModule {
         localizer.setPoseEstimate(new Pose2d(initialPose.getX(), initialPose.getY(), initialPose.getHeading()));
     }
 
-    public Localizer(Hardware hardware) {
+    public  Localizer(Hardware hardware) {
         this.pose = new Pose();
         this.imu = hardware.imu;
         this.localizer = new FunnyLocalizer(hardware);
@@ -61,7 +61,7 @@ public class Localizer implements IRobotModule {
     private final LowPassFilter xVelocityFilter = new LowPassFilter(filterParameter, 0),
             yVelocityFilter = new LowPassFilter(filterParameter, 0);
 
-    public static double xDeceleration = 0, yDeceleration = 0;
+    public static double xDeceleration = 100, yDeceleration = 130;
 
     public Vector getVelocity(){
         return velocity;

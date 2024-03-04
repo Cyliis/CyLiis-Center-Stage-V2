@@ -16,9 +16,9 @@ public class Climb implements IRobotModule, IStateBasedModule {
     private final CoolServo leftServo, rightServo, latchServo;
     public static boolean leftReversed = false, rightReversed = false, latchReversed = false;
 
-    public static double leftDisengagedPosition=0.07, leftEngagedPosition=0.5;
-    public static double rightDisengagedPosition=0.53, rightEngagedPosition=0.05;
-    public static double latchOpenPosition = 0.5, latchClosedPosition = 0.5;
+    public static double leftDisengagedPosition=0.05, leftEngagedPosition=0.5;
+    public static double rightDisengagedPosition=0.55, rightEngagedPosition=0.06;
+    public static double latchOpenPosition = 1, latchClosedPosition = 1;
 
     public enum State{
         DISENGAGED(leftDisengagedPosition, rightDisengagedPosition, latchClosedPosition),
@@ -68,7 +68,7 @@ public class Climb implements IRobotModule, IStateBasedModule {
         }
         else {
             leftServo = new CoolServo(hardware.sch2, leftReversed, initialState.leftPos);
-            rightServo = new CoolServo(hardware.sch3, rightReversed, initialState.rightPos);
+            rightServo = new CoolServo(hardware.sch5, rightReversed, initialState.rightPos);
             latchServo = new CoolServo(hardware.seh5, latchReversed, initialState.latchPos);
             leftServo.forceUpdate();
             rightServo.forceUpdate();

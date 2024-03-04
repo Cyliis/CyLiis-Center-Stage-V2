@@ -8,15 +8,15 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 public class BluePositions {
     //Left
 
-    public static Pose purplePosition1 = new Pose(0,0,0);
-    public static int preloadIntakeExtendoPosition1 = 0;
+    public static Pose purplePosition1 = new Pose(35.5,4,1.93);
+    public static int preloadIntakeExtendoPosition1 = 825;
 
-    public static Pose alignToCrossFieldForYellowPosition1 = new Pose(0,0,0);
-    public static Pose crossFieldYellowPosition1 = new Pose(0,0,0);
-    public static Pose scoreYellowPosition1 = new Pose(0,0,0);
-    public static Pose scoreWhitePosition1 = new Pose(0,0,0);
+    public static Pose alignToCrossFieldForYellowPosition1 = new Pose(49.6,0.4,Math.PI/2);
+    public static Pose crossFieldYellowPosition1 = new Pose(48.5,76.5,Math.PI/2);
+    public static Pose scoreWhitePosition1 = new Pose(33,91.5,Math.PI/2);
+    public static Pose scoreYellowPosition1 = new Pose(21.5,91.5,Math.PI/2);
 
-    public static Pose alignToCrossBackPosition1 = new Pose(0,0,0);
+    public static Pose alignToCrossBackPosition1 = new Pose(48.8,75.9,Math.PI/2);
     public static Pose[] intakePositions1 = {
             new Pose(0,0,0),
             new Pose(0,0,0),

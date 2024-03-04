@@ -28,6 +28,7 @@ public class LiftCalibration extends LinearOpMode {
     StickyGamepad gamepad;
 
     public static double target = 0;
+    public static double hertz = 50;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,6 +71,8 @@ public class LiftCalibration extends LinearOpMode {
 
             leftMotor.update();
             rightMotor.update();
+
+            while (loopTimer.seconds() <= (1.0/hertz));
 
             telemetry.addData("Target", target);
             telemetry.addData("Current", encoder.getCurrentPosition());

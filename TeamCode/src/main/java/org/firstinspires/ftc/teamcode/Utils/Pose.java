@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 @Config
 public class Pose {
@@ -55,6 +56,9 @@ public class Pose {
         return new Pose(x + other.x, y + other.y, heading + other.heading);
     }
 
+    public Pose2d toPose2d(){
+        return new Pose2d(x,y,heading);
+    }
     @Override
     public String toString(){
         return String.valueOf(x) + " " + String.valueOf(y) + " " + String.valueOf(heading);

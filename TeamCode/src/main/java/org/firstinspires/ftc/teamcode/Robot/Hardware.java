@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Robot;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -41,6 +42,10 @@ public class Hardware {
     public final Color color;
 
     public Hardware(HardwareMap hm, Color color){
+        this(hm, color, false);
+    }
+
+    public Hardware(HardwareMap hm, Color color, boolean reset){
         this.hardwareMap = hm;
         this.color = color;
 
@@ -68,6 +73,26 @@ public class Hardware {
         ech1 = new Encoder(mch1);
         ech2 = new Encoder(mch2);
         ech3 = new Encoder(mch3);
+
+        if(reset){
+            mch0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            mch1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            mch2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            mch3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            meh0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            meh1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            meh2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            meh3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            mch0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mch1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mch2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mch3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            meh0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            meh1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            meh2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            meh3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
 //        eeh0 = new Encoder(meh0);
 //        eeh1 = new Encoder(meh1);
@@ -106,7 +131,7 @@ public class Hardware {
 
     public void update(){
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-            hub.clearBulkCache();
+            if(hub.isParent()) hub.clearBulkCache();
         }
     }
 

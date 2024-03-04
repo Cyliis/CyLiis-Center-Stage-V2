@@ -17,6 +17,7 @@ public class CoolMotor {
     public final DcMotorFunny motor;
 
     private final PIDController pidController = new PIDController(0,0,0);
+    private final PIDController controlPidController = new PIDController(0,0,0);
     private PIDCoefficients pidCoefficients = new PIDCoefficients(0,0,0);
 
     private RunMode runMode;
@@ -108,6 +109,11 @@ public class CoolMotor {
         if(runMode == RunMode.RUN) return;
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         power = feedforward + pidController.calculate(current,target);
+    }
+    public double getPower(double current, double target){
+        if(runMode == RunMode.RUN) return 0;
+        controlPidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
+        return controlPidController.calculate(current,target);
     }
 
     public void update(){

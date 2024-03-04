@@ -17,7 +17,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
     public static boolean reversedServo = false;
 
     public static double openPosition = 0.92, closedPosition = 0.05;
-    public static double motionTime = 0.2;
+    public static double motionTime = 0.3;
 
     public enum State{
         OPEN(openPosition), OPENING(openPosition, OPEN), CLOSED(openPosition), CLOSING(openPosition, CLOSED);

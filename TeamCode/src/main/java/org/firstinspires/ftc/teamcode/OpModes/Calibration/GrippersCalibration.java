@@ -39,9 +39,13 @@ public class GrippersCalibration extends LinearOpMode {
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.CLOSED);
 
         while(opModeInInit() && !isStopRequested()){
-
+            topGripper.setState(TopGripper.State.OPEN);
+            bottomGripper.setState(BottomGripper.State.OPEN);
             telemetry.update();
         }
+
+        topGripper.setState(TopGripper.State.CLOSING);
+        bottomGripper.setState(BottomGripper.State.CLOSING);
 
         waitForStart();
 
