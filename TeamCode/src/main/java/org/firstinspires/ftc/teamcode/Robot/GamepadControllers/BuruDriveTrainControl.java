@@ -19,7 +19,7 @@ public class BuruDriveTrainControl implements IRobotModule {
         this.drive = drive;
     }
 
-    double driveDeadZone = 0.03;
+    double driveDeadZone = 0.05;
 
     @Override
     public void update() {

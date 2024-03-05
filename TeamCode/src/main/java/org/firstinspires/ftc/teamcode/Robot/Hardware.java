@@ -32,6 +32,7 @@ public class Hardware {
     public Localizer localizer;
 
     public VoltageSensor voltageSensor;
+    public static double voltage;
 
     public CoolDigitalSensor beamBreak0, beamBreak1;
 
@@ -132,7 +133,9 @@ public class Hardware {
     public void update(){
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
             if(hub.isParent()) hub.clearBulkCache();
+            localizer.updateTime = System.nanoTime();
         }
+        voltage = voltageSensor.getVoltage();
     }
 
 

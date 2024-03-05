@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Modules.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
@@ -17,6 +18,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     }
 
     State state;
+
+    public ElapsedTime timer = new ElapsedTime();
 
     public void setState(State newState){
         if(state == newState) return;
@@ -74,6 +77,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 break;
 
         }
+
+        timer.reset();
     }
 
     public State getState(){
@@ -89,6 +94,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         this.extension = extension;
         this.turret = turret;
         this.state = initialState;
+        timer.startTime();
     }
 
     @Override
@@ -123,11 +129,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public void updateState() {
         switch (state){
             case GOING_UP_CLOSE:
-                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
+                if(lift.encoder.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
                     setState(State.EXTEND_CLOSE1);
                 break;
             case GOING_UP_FAR:
-                if(lift.encoder.getCurrentPosition() >= Lift.passthroughPosition + Lift.groundPos)
+                if(lift.encoder.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
                     setState(State.EXTEND_FAR);
                 break;
             case CHANGING_LIFT_POSITION:

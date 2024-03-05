@@ -94,6 +94,11 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Top gripper state", topGripper.getState());
         telemetry.addData("Climb state", climb.getState());
         telemetry.addData("Drive mode", drive.getRunMode());
+        telemetry.addData("Lift power", lift.leftMotor.power);
+        telemetry.addData("Voltage", Hardware.voltage);
+        telemetry.addData("Left power lift", lift.leftMotor.power);
+        telemetry.addData("Right power lift", lift.rightMotor.power);
+        telemetry.addData("Power extendo", extendo.motor.power);
     }
 
     @Override

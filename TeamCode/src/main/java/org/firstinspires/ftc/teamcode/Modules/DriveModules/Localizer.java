@@ -67,9 +67,15 @@ public class Localizer implements IRobotModule {
         return velocity;
     }
 
+    public double updateTime;
+    private double lastUpdateTime = 0;
+
     @Override
     public void update() {
         if(!ENABLED) return;
+
+        if(lastUpdateTime == updateTime) return;
+        lastUpdateTime = updateTime;
 
         localizer.update();
         Pose2d pose2d = localizer.getPoseEstimate();

@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.Modules.Intake;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
@@ -18,7 +16,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
-    private final CoolMotor motor;
+    public final CoolMotor motor;
     public static boolean motorReversed = true;
     public final Encoder encoder;
     public static boolean encoderReversed = true;
@@ -30,7 +28,8 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 10, inThreshold = 100;
 
-    public static PIDFCoefficients pidf = new PIDFCoefficients(0.02,0.1,0.0006,0.02);
+    public static PIDFCoefficients PIDF = new PIDFCoefficients(0.03,0.1,0.0008,0);
+//    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
 
     public static double timeOut = 0.1;
     private final ElapsedTime timer = new ElapsedTime();
@@ -79,7 +78,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
         if(!ENABLED) encoder = null;
         else {
-            encoder = hardware.ech2;
+            encoder = hardware.ech1;
             if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
         }
 
@@ -127,10 +126,10 @@ public class Extendo implements IStateBasedModule, IRobotModule {
         else if(state == State.OUT){
             motor.setMode(CoolMotor.RunMode.RUN);
             motor.setPower(extensionPower);
-        }else{
+        }else {
             target = state.position + zeroPos;
             motor.setMode(CoolMotor.RunMode.PID);
-            motor.setPIDF(pidf, pidf.f * Math.signum(motor.getPower(encoder.getCurrentPosition(), target)));
+            motor.setPIDF(PIDF, PIDF.f * Math.signum(motor.getPower(encoder.getCurrentPosition(), target)));
             motor.calculatePower(encoder.getCurrentPosition(), target);
         }
         motor.update();

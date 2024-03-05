@@ -24,7 +24,7 @@ public class MecanumDrive implements IRobotModule {
     public static boolean frontLeftMotorReversed = false, frontRightMotorReversed = true, backLeftMotorReversed = false, backRightMotorReversed = true;
 
     public static PIDCoefficients translationalPID = new PIDCoefficients(0.15,0 ,0),
-            headingPID = new PIDCoefficients(2.5,0,0.19);
+            headingPID = new PIDCoefficients(2,0,0.19);
     public final PIDController tpid= new PIDController(0,0,0), hpid = new PIDController(0,0,0);
 
     public static double lateralMultiplier = 2;
@@ -35,9 +35,6 @@ public class MecanumDrive implements IRobotModule {
 
     public static double ks = 0.03;
 
-    private final VoltageSensor voltageSensor;
-    public static double voltage = 0;
-
     public enum RunMode{
         PID, Vector, Climb
     }
@@ -46,7 +43,6 @@ public class MecanumDrive implements IRobotModule {
 
     public MecanumDrive(Hardware hardware, RunMode runMode, boolean brake){
         this.runMode = runMode;
-        this.voltageSensor = hardware.voltageSensor;
         if(!ENABLED) {
             this.localizer = null;
             frontLeft = null;
@@ -157,7 +153,7 @@ public class MecanumDrive implements IRobotModule {
 
     private void updateMotors(){
         if(runMode != RunMode.Climb) {
-            voltage = voltageSensor.getVoltage();
+            double voltage = Hardware.voltage;
             double actualKs = ks * 12.0 / voltage;
 
             frontLeft.setPower((powerVector.getX() - powerVector.getY() - powerVector.getZ()) * (1 - actualKs) + actualKs * Math.signum(powerVector.getX() - powerVector.getY() - powerVector.getZ()));

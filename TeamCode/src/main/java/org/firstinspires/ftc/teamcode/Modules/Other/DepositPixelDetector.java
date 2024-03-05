@@ -22,14 +22,20 @@ public class DepositPixelDetector {
     }
 
     private int pixels = 0;
+    private int prevPixels = 0;
 
     public int getPixels(){
         return pixels;
+    }
+    public int getPrevPixels(){
+        return prevPixels;
     }
 
     public void update(){
         boolean detection0 = !bb0.getState();
         boolean detection1 = !bb1.getState();
+
+        prevPixels = pixels;
 
         if(detection0 && detection1){
             if(doublePixelTimer.seconds() >= doublePixelTime) pixels = 2;

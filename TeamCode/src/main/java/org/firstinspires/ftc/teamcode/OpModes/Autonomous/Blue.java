@@ -34,7 +34,7 @@ public class Blue extends LinearOpMode {
 
         hardware = new Hardware(hardwareMap, Hardware.Color.Blue, true);
 
-        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, true);
+        drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, false);
 
         robotModules = new RobotModules(hardware, drive);
 

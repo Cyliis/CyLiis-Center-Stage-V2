@@ -47,6 +47,7 @@ public class BlueNodes {
     private Pose[] parkingPositions;
 
     public static double intakeTimeOut = 1, reverseTime = 0.2;
+    public static double outtakeWaitTime = 0.5;
 
     private final double[] cycleTime = {6,6,6,6};
     private final double[] goBackTime = {2.5,2.5,3,3};
@@ -153,7 +154,7 @@ public class BlueNodes {
             drive.setTargetPose(purplePosition);
             robot.outtake.setState(Outtake.State.GO_PURPLE);
             DropDown.index = 4;
-            Lift.profiled = true;
+//            Lift.profiled = true;
             Lift.level = 0;
         }, scorePurple);
 
@@ -173,6 +174,9 @@ public class BlueNodes {
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             intakeTries = 0;
                 }, intake);
+
+        intake.addCondition(()->detector.getPrevPixels() == 0 && detector.getPixels() == 1,
+                ()->DropDown.index = Math.max(DropDown.index -1, 0), intake);
 
         intake.addCondition(()->detector.getPixels() == 2, ()-> {
             robot.intake.setState(Intake.State.REVERSE);
@@ -266,7 +270,7 @@ public class BlueNodes {
         waitYellow.addCondition(()->timer.seconds() >= fallTime, ()->{
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             Lift.level = 4;
-            Lift.profiled = false;
+//            Lift.profiled = false;
             drive.setTargetPose(alignToCrossBackPosition);
         }, alignToCrossBack);
 
@@ -326,15 +330,17 @@ public class BlueNodes {
             drive.setTargetPose(parkingPositions[cycle+1]);
         }, park);
 
-        waitForOuttake.addCondition(()->drive.reachedTarget(2) && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && ((30-parkTime) - globalTimer.seconds() >= (cycleTime[cycle+1])), ()->{
+        waitForOuttake.addCondition(()->drive.reachedTarget(2) && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && robot.outtake.timer.seconds() >= outtakeWaitTime && ((30-parkTime) - globalTimer.seconds() >= (cycleTime[cycle+1])), ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
             robot.bottomGripper.setState(BottomGripper.State.OPENING);
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             drive.setTargetPose(intakePositions[cycle+1]);
             cycle++;
+            DropDown.index = Math.max(DropDown.index -1, 0);
+            if(cycle == 2) DropDown.index = 4;
         }, goToIntakePosition);
 
-        waitForOuttake.addCondition(()->drive.reachedTarget(2) && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && ((30-parkTime) - globalTimer.seconds() < (cycleTime[cycle+1])), ()->{
+        waitForOuttake.addCondition(()->drive.reachedTarget(2) && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && robot.outtake.timer.seconds() >= outtakeWaitTime && ((30-parkTime) - globalTimer.seconds() < (cycleTime[cycle+1])), ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
             robot.bottomGripper.setState(BottomGripper.State.OPENING);
             robot.outtake.setState(Outtake.State.GOING_DOWN);

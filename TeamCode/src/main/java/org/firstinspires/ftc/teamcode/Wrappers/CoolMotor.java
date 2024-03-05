@@ -67,7 +67,7 @@ public class CoolMotor {
     }
 
     public CoolMotor(DcMotorEx motor, boolean reversed){
-        this(motor, RunMode.RUN, false);
+        this(motor, RunMode.RUN, reversed);
     }
 
     public void setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior zeroPowerBehaviour){
@@ -78,7 +78,7 @@ public class CoolMotor {
         this.runMode = runMode;
     }
 
-    private double power;
+    public double power;
 
     public void setPower(double power){
         if(runMode == RunMode.PID) return;
@@ -110,6 +110,13 @@ public class CoolMotor {
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         power = feedforward + pidController.calculate(current,target);
     }
+
+    public void calculatePower(double current, double target, double voltage){
+        if(runMode == RunMode.RUN) return;
+        pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
+        power = (feedforward + pidController.calculate(current,target)) * (12.0/voltage);
+    }
+
     public double getPower(double current, double target){
         if(runMode == RunMode.RUN) return 0;
         controlPidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Modules.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
+import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.IStateBasedModule;
@@ -24,11 +26,10 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public static int groundPos = 0, firstLevel = 200, increment = 69, level = 0, positionThresh = 12,
             passthroughPosition = 200, purplePosition = 0;
 
-    public static double resetPower = -0.8, velocityThreshold = 0;
+    public static double resetPower = -0.5, maxHoldPower = -0.2, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0.04,0,0.001);
-    public static PIDCoefficients pidJos = new PIDCoefficients(0.02,0.05,0.0005);
-    public static double ff1 = 0.25, ff2 = 0.0001;
+    public static PIDCoefficients pid = new PIDCoefficients(0.06,0.1,0.002);
+    public static double ff1 = 0.25, ff2 = 0.0002;
 
     private final ElapsedTime timer = new ElapsedTime();
     public static double timeOut = 0.15;
@@ -36,6 +37,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public static double maxVelocity = 12000, acceleration = 10000, deceleration = 3500;
     public final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
     public static boolean profiled = false;
+    public static boolean defaultProfiledState = false;
 
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
@@ -78,13 +80,23 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public Lift(Hardware hardware, State initialState){
         if(!ENABLED) leftMotor = null;
-        else leftMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, leftMotorReversed);
+        else {
+            leftMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, leftMotorReversed);
+//            leftMotor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
         if(!ENABLED) rightMotor = null;
-        else rightMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, rightMotorReversed);
+        else {
+            rightMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, rightMotorReversed);
+//            rightMotor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
         if(!ENABLED) encoder = null;
-        else encoder = hardware.ech1;
-        if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
+        else {
+            encoder = hardware.ech2;
+            if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
+        }
+
+        profiled = defaultProfiledState;
 
         timer.startTime();
 
@@ -131,18 +143,16 @@ public class Lift implements IStateBasedModule, IRobotModule {
         }else {
             if(!profiled)target = state.position + groundPos;
             else target = (int)profile.getPosition() + groundPos;
-
             leftMotor.setMode(CoolMotor.RunMode.PID);
             rightMotor.setMode(CoolMotor.RunMode.PID);
-            if (state == State.DOWN || state == State.GOING_DOWN) {
-                leftMotor.setPIDF(pidJos, ff1 + ff2 * (double) (target - groundPos));
-                rightMotor.setPIDF(pidJos, ff1 + ff2 * (double) (target - groundPos));
-            } else {
-                leftMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
-                rightMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
-            }
+            leftMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
+            rightMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
             leftMotor.calculatePower(encoder.getCurrentPosition(), target);
             rightMotor.calculatePower(encoder.getCurrentPosition(), target);
+            if(state == State.DOWN){
+                leftMotor.power = Math.max(leftMotor.power, maxHoldPower);
+                rightMotor.power = Math.max(rightMotor.power, maxHoldPower);
+            }
         }
         leftMotor.update();
         rightMotor.update();

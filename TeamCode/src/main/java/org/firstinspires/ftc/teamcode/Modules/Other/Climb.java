@@ -16,7 +16,7 @@ public class Climb implements IRobotModule, IStateBasedModule {
     private final CoolServo leftServo, rightServo, latchServo;
     public static boolean leftReversed = false, rightReversed = false, latchReversed = false;
 
-    public static double leftDisengagedPosition=0.05, leftEngagedPosition=0.5;
+    public static double leftDisengagedPosition=0.15, leftEngagedPosition=0.58;
     public static double rightDisengagedPosition=0.55, rightEngagedPosition=0.06;
     public static double latchOpenPosition = 1, latchClosedPosition = 1;
 

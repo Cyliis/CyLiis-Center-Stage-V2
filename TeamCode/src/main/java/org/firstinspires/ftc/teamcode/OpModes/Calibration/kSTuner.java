@@ -61,7 +61,7 @@ public class kSTuner extends LinearOpMode {
 //            telemetry.addData("velocity X", drive.getLocalizer().localizer.getPoseVelocity().getX());
 //            telemetry.addData("velocity Y", drive.getLocalizer().localizer.getPoseVelocity().getY());
 
-            telemetry.addData("Voltage", drive.voltage);
+            telemetry.addData("Voltage", Hardware.voltage);
             telemetry.update();
         }
     }

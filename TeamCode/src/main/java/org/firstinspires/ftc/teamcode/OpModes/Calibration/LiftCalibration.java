@@ -76,6 +76,7 @@ public class LiftCalibration extends LinearOpMode {
 
             telemetry.addData("Target", target);
             telemetry.addData("Current", encoder.getCurrentPosition());
+            telemetry.addData("Voltage", Hardware.voltage);
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
 
             loopTimer.reset();
