@@ -44,7 +44,7 @@ public class ExtendoCalibration extends LinearOpMode {
 
         motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.PID, Extendo.motorReversed);
 
-        encoder = hardware.ech2;
+        encoder = hardware.ech1;
         if(Extendo.encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
 
         while(opModeInInit() && !isStopRequested()){

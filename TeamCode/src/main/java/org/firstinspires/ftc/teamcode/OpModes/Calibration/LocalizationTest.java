@@ -76,7 +76,7 @@ public class LocalizationTest extends LinearOpMode {
 
             telemetry.addData("extendo pos", robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos);
 
-//            telemetry.addData("Hz", 1.0/loopTimer.seconds());
+            telemetry.addData("Hz", 1.0/loopTimer.seconds());
             loopTimer.reset();
 
             telemetry.update();

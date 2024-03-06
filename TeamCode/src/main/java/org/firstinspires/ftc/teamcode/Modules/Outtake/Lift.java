@@ -23,13 +23,13 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 200, increment = 69, level = 0, positionThresh = 12,
-            passthroughPosition = 200, purplePosition = 0;
+    public static int groundPos = 0, firstLevel = 300, increment = 80, level = 0, positionThresh = 12,
+            passthroughPosition = 250, purplePosition = 0;
 
     public static double resetPower = -0.5, maxHoldPower = -0.2, velocityThreshold = 0;
 
-    public static PIDCoefficients pid = new PIDCoefficients(0.06,0.1,0.002);
-    public static double ff1 = 0.25, ff2 = 0.0002;
+    public static PIDCoefficients pid = new PIDCoefficients(0.02,0.1,0.0005);
+    public static double ff1 = 0.05, ff2 = 0.00003;
 
     private final ElapsedTime timer = new ElapsedTime();
     public static double timeOut = 0.15;
@@ -81,12 +81,12 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public Lift(Hardware hardware, State initialState){
         if(!ENABLED) leftMotor = null;
         else {
-            leftMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, leftMotorReversed);
+            leftMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, leftMotorReversed);
 //            leftMotor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         if(!ENABLED) rightMotor = null;
         else {
-            rightMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, rightMotorReversed);
+            rightMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, rightMotorReversed);
 //            rightMotor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 

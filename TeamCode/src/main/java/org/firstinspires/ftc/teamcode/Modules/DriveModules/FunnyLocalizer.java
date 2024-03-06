@@ -45,8 +45,8 @@ public class FunnyLocalizer extends TwoTrackingWheelLocalizer {
 
         this.imu = hardware.imu;
 
-        parallelEncoder = hardware.ech3;
-        perpendicularEncoder = hardware.ech0;
+        parallelEncoder = hardware.ech0;
+        perpendicularEncoder = hardware.ech3;
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 

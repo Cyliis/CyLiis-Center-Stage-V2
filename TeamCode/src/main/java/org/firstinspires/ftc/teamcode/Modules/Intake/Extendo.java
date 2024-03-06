@@ -28,14 +28,16 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
     public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 10, inThreshold = 100;
 
-    public static PIDFCoefficients PIDF = new PIDFCoefficients(0.03,0.1,0.0008,0);
+    public static PIDFCoefficients PIDF = new PIDFCoefficients(0.04,0.15,0.0007,0);
 //    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
 
     public static double timeOut = 0.1;
     private final ElapsedTime timer = new ElapsedTime();
 
     public enum State{
-        IN(0), RESETTING(0, IN), GOING_IN(0, RESETTING), OUT(0), GOING_OUT(0, OUT);
+        IN(0), RESETTING(0, IN), GOING_IN(0, RESETTING),
+        OUT(0), GOING_OUT(0, OUT),
+        LOCK(extendedPos), GOING_LOCK(extendedPos, LOCK);
 
         public int position;
         public final State nextState;
@@ -65,8 +67,8 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
-        State.OUT.position = extendedPos;
-        State.GOING_OUT.position = extendedPos;
+        State.LOCK.position = extendedPos;
+        State.GOING_LOCK.position = extendedPos;
     }
 
     public Extendo(Hardware hardware, State initialState){

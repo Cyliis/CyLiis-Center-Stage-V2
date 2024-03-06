@@ -72,11 +72,6 @@ public class BuruSebiGamepadControl implements IRobotModule {
                 robotModules.extendo.setState(Extendo.State.GOING_OUT);
             }
         }
-        if(robotModules.outtake.getState() != Outtake.State.DOWN) {
-            if(gamepad2.left_trigger >= triggerThreshold || gamepad1.left_bumper) robotModules.activeIntake.setState(ActiveIntake.State.REVERSE);
-            else robotModules.activeIntake.setState(ActiveIntake.State.IDLE);
-            return;
-        }
         if(Math.abs(gamepad1.right_stick_y) > extensionDeadZone && gamepad1.right_stick_y > 0){ // extendo in
             if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos > 0)
                 robotModules.extendo.setPower(-gamepad1.right_stick_y);
@@ -185,8 +180,9 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
     public void updateClimb(){
         if(!Climb.ENABLED) return;
-        if(doubleStickyGamepad.y && robotModules.plane.getState() == Plane.State.OPEN){
-            if(robotModules.climb.getState() == Climb.State.DISENGAGED) robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
+        if(doubleStickyGamepad.y && (robotModules.plane.getState() == Plane.State.OPEN || !Plane.ENABLED)){
+            if(robotModules.climb.getState() == Climb.State.DISENGAGED) robotModules.climb.setState(Climb.State.DEPLOYING1);
+            else if(robotModules.climb.getState() == Climb.State.DEPLOYED1) robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
             else if(robotModules.climb.getState() == Climb.State.HOOKS_DEPLOYED) {
                 robotModules.climb.setState(Climb.State.ENGAGED);
                 robotModules.drive.setRunMode(MecanumDrive.RunMode.Climb);
@@ -238,8 +234,8 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public void update() {
         updateIntake();
         updateOuttake();
-        updatePlane();
         updateClimb();
+        updatePlane();
         updateGrippers();
         beamBreakLogic();
         stickyGamepad1.update();

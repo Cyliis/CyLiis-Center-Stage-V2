@@ -43,10 +43,10 @@ public class LiftCalibration extends LinearOpMode {
 
         hardware.startThreads(this);
 
-        leftMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, Lift.leftMotorReversed);
-        rightMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, Lift.rightMotorReversed);
+        leftMotor = new CoolMotor(hardware.mch2, CoolMotor.RunMode.PID, Lift.leftMotorReversed);
+        rightMotor = new CoolMotor(hardware.mch1, CoolMotor.RunMode.PID, Lift.rightMotorReversed);
 
-        encoder = hardware.ech1;
+        encoder = hardware.ech2;
         if(Lift.encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
 
         while(opModeInInit() && !isStopRequested()){
