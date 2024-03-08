@@ -23,7 +23,7 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public final Encoder encoder;
     public static boolean encoderReversed = false;
 
-    public static int groundPos = 0, firstLevel = 290, increment = 82, level = 0, positionThresh = 12,
+    public static int groundPos = 0, firstLevel = 295, increment = 82, level = 0, positionThresh = 12,
             passthroughPosition = 250, purplePosition = 20;
 
     public static double resetPower = -0.5, maxHoldPower = -0.2, velocityThreshold = 0;

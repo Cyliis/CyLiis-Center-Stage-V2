@@ -71,7 +71,8 @@ public class Blue extends LinearOpMode {
             detectionCase = processor.detection;
 
             robotModules.initUpdate();
-            robotModules.telemetry(telemetry);
+//            robotModules.telemetry(telemetry);
+            telemetry.addData("detection", detectionCase);
             telemetry.update();
         }
         portal.close();

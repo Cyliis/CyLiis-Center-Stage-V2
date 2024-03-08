@@ -83,7 +83,7 @@ public class BluePositions {
 
     public static Pose alignToCrossBackPosition3 = new Pose(52,75,Math.PI/2);
     public static Pose[] intakePositions3 = {
-            new Pose(51,13,Math.PI/2),
+            new Pose(52,13,Math.PI/2),
             new Pose(52,13,Math.PI/2),
             new Pose(54,13,1.3),
             new Pose(0,0,0)

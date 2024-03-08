@@ -11,7 +11,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
-    public static double waitTime = 0.5;
+    public static double waitTime = 0.7;
 
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
