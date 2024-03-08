@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Modules.Other.Climb;
+import org.firstinspires.ftc.teamcode.Modules.Other.Hooks;
+import org.firstinspires.ftc.teamcode.Modules.Other.PTOs;
 import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
@@ -179,18 +180,15 @@ public class BuruSebiGamepadControl implements IRobotModule {
     }
 
     public void updateClimb(){
-        if(!Climb.ENABLED) return;
+        if(!PTOs.ENABLED || !Hooks.ENABLED) return;
         if(doubleStickyGamepad.y && (robotModules.plane.getState() == Plane.State.OPEN || !Plane.ENABLED)){
-            if(robotModules.climb.getState() == Climb.State.DISENGAGED) robotModules.climb.setState(Climb.State.DEPLOYING1);
-            else if(robotModules.climb.getState() == Climb.State.DEPLOYED1) robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
-            else if(robotModules.climb.getState() == Climb.State.HOOKS_DEPLOYED) {
-                robotModules.climb.setState(Climb.State.ENGAGED);
-                robotModules.drive.setRunMode(MecanumDrive.RunMode.Climb);
-            }
-            else if(robotModules.climb.getState() == Climb.State.ENGAGED) {
-                robotModules.climb.setState(Climb.State.HOOKS_DEPLOYED);
-                robotModules.drive.setRunMode(MecanumDrive.RunMode.Vector);
-            }
+            if(robotModules.hooks.getState() == Hooks.State.IDLE || robotModules.hooks.getState() == Hooks.State.HOOK2)
+                robotModules.hooks.setState(Hooks.State.HOOK1);
+            else robotModules.hooks.setState(Hooks.State.HOOK2);
+        }
+        if(gamepad2.y && stickyGamepad1.ps){
+            if(robotModules.ptos.getState() == PTOs.State.DISENGAGED) robotModules.ptos.setState(PTOs.State.ENGAGED);
+            else robotModules.ptos.setState(PTOs.State.DISENGAGED);
         }
     }
 

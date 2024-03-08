@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
@@ -9,7 +8,8 @@ import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
-import org.firstinspires.ftc.teamcode.Modules.Other.Climb;
+import org.firstinspires.ftc.teamcode.Modules.Other.Hooks;
+import org.firstinspires.ftc.teamcode.Modules.Other.PTOs;
 import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
@@ -40,7 +40,8 @@ public class RobotModules implements IRobotModule {
     public final Outtake outtake;
 
     public final Plane plane;
-    public final Climb climb;
+    public final PTOs ptos;
+    public final Hooks hooks;
 
     private final ArrayList<IRobotModule> modules = new ArrayList<>();
 
@@ -70,10 +71,12 @@ public class RobotModules implements IRobotModule {
         modules.add(outtake);
 
         plane = new Plane(hardware, Plane.State.CLOSED);
-        climb = new Climb(hardware, Climb.State.DISENGAGED);
+        ptos = new PTOs(hardware, PTOs.State.DISENGAGED);
+        hooks = new Hooks(hardware, Hooks.State.IDLE);
 
         modules.add(plane);
-        modules.add(climb);
+        modules.add(ptos);
+        modules.add(hooks);
 
         beamBreak0 = hardware.beamBreak0;
         beamBreak1 = hardware.beamBreak1;
@@ -92,7 +95,8 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Active intake state", activeIntake.getState());
         telemetry.addData("Bottom gripper state", bottomGripper.getState());
         telemetry.addData("Top gripper state", topGripper.getState());
-        telemetry.addData("Climb state", climb.getState());
+        telemetry.addData("PTOs state", ptos.getState());
+        telemetry.addData("Hooks state", hooks.getState());
         telemetry.addData("Drive mode", drive.getRunMode());
         telemetry.addData("Lift power", lift.leftMotor.power);
         telemetry.addData("Voltage", Hardware.voltage);
