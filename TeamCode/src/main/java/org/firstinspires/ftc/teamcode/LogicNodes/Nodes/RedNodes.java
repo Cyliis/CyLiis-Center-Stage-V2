@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.LogicNodes.LogicNode;
-import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BluePositions;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.RedPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
 @Config
-public class BlueNodes {
+public class RedNodes {
 
     private Pose purplePosition;
     private int preloadIntakeExtendoPosition;
@@ -42,14 +42,14 @@ public class BlueNodes {
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
     private Pose[] scorePositions;
-    public static double outtakeActivationLine = 60;
+    public static double outtakeActivationLine = -60;
     private Pose[] parkingPositions;
 
     public static double intakeTimeOut = 0.8, reverseTime = 0.2;
     public static double outtakeWaitTime = 0.2, extensionRetractTime = 0.2;
 
     private final double[] cycleTime = {7,7,100,100};
-    private final double[] goBackTime = {3.5,3.5,3.5,100};
+    private final double[] goBackTime = {3.5,3.5,100,100};
 
     public static double parkTime = 0.2;
 
@@ -58,7 +58,7 @@ public class BlueNodes {
     private final ElapsedTime timer = new ElapsedTime();
     private final ElapsedTime globalTimer = new ElapsedTime();
 
-    public BlueNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
+    public RedNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
         drive.setRunMode(MecanumDrive.RunMode.PID);
         CoolIMU.imuOffset = 0;
         detector = new DepositPixelDetector(robot);
@@ -71,49 +71,49 @@ public class BlueNodes {
     private void initPositions(int detectionCase){
         switch (detectionCase){
             case 1:
-                purplePosition = BluePositions.purplePosition1;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition1;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition1;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition1;
-                scoreYellowPosition = BluePositions.scoreYellowPosition1;
-                scoreWhitePosition = BluePositions.scoreWhitePosition1;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition1;
-                intakePositions = BluePositions.intakePositions1;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance1;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance1;
-                extendoPositions = BluePositions.extendoPositions1;
-                scorePositions = BluePositions.scorePositions1;
-                parkingPositions = BluePositions.parkingPositions1;
+                purplePosition = RedPositions.purplePosition1;
+                preloadIntakeExtendoPosition = RedPositions.preloadIntakeExtendoPosition1;
+                alignToCrossFieldForYellowPosition = RedPositions.alignToCrossFieldForYellowPosition1;
+                crossFieldYellowPosition = RedPositions.crossFieldYellowPosition1;
+                scoreYellowPosition = RedPositions.scoreYellowPosition1;
+                scoreWhitePosition = RedPositions.scoreWhitePosition1;
+                alignToCrossBackPosition = RedPositions.alignToCrossBackPosition1;
+                intakePositions = RedPositions.intakePositions1;
+                extendoDistanceTolerance = RedPositions.extendoDistanceTolerance1;
+                extendoHeadingTolerance = RedPositions.extendoHeadingTolerance1;
+                extendoPositions = RedPositions.extendoPositions1;
+                scorePositions = RedPositions.scorePositions1;
+                parkingPositions = RedPositions.parkingPositions1;
                 break;
             case 2:
-                purplePosition = BluePositions.purplePosition2;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition2;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition2;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition2;
-                scoreYellowPosition = BluePositions.scoreYellowPosition2;
-                scoreWhitePosition = BluePositions.scoreWhitePosition2;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition2;
-                intakePositions = BluePositions.intakePositions2;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance2;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance2;
-                extendoPositions = BluePositions.extendoPositions2;
-                scorePositions = BluePositions.scorePositions2;
-                parkingPositions = BluePositions.parkingPositions2;
+                purplePosition = RedPositions.purplePosition2;
+                preloadIntakeExtendoPosition = RedPositions.preloadIntakeExtendoPosition2;
+                alignToCrossFieldForYellowPosition = RedPositions.alignToCrossFieldForYellowPosition2;
+                crossFieldYellowPosition = RedPositions.crossFieldYellowPosition2;
+                scoreYellowPosition = RedPositions.scoreYellowPosition2;
+                scoreWhitePosition = RedPositions.scoreWhitePosition2;
+                alignToCrossBackPosition = RedPositions.alignToCrossBackPosition2;
+                intakePositions = RedPositions.intakePositions2;
+                extendoDistanceTolerance = RedPositions.extendoDistanceTolerance2;
+                extendoHeadingTolerance = RedPositions.extendoHeadingTolerance2;
+                extendoPositions = RedPositions.extendoPositions2;
+                scorePositions = RedPositions.scorePositions2;
+                parkingPositions = RedPositions.parkingPositions2;
                 break;
             case 3:
-                purplePosition = BluePositions.purplePosition3;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition3;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition3;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition3;
-                scoreYellowPosition = BluePositions.scoreYellowPosition3;
-                scoreWhitePosition = BluePositions.scoreWhitePosition3;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition3;
-                intakePositions = BluePositions.intakePositions3;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance3;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance3;
-                extendoPositions = BluePositions.extendoPositions3;
-                scorePositions = BluePositions.scorePositions3;
-                parkingPositions = BluePositions.parkingPositions3;
+                purplePosition = RedPositions.purplePosition3;
+                preloadIntakeExtendoPosition = RedPositions.preloadIntakeExtendoPosition3;
+                alignToCrossFieldForYellowPosition = RedPositions.alignToCrossFieldForYellowPosition3;
+                crossFieldYellowPosition = RedPositions.crossFieldYellowPosition3;
+                scoreYellowPosition = RedPositions.scoreYellowPosition3;
+                scoreWhitePosition = RedPositions.scoreWhitePosition3;
+                alignToCrossBackPosition = RedPositions.alignToCrossBackPosition3;
+                intakePositions = RedPositions.intakePositions3;
+                extendoDistanceTolerance = RedPositions.extendoDistanceTolerance3;
+                extendoHeadingTolerance = RedPositions.extendoHeadingTolerance3;
+                extendoPositions = RedPositions.extendoPositions3;
+                scorePositions = RedPositions.scorePositions3;
+                parkingPositions = RedPositions.parkingPositions3;
                 break;
         }
     }
@@ -159,7 +159,7 @@ public class BlueNodes {
         }, scorePurple);
 
         scorePurple.addCondition(()->
-                (drive.reachedTarget(1) && drive.reachedHeading(0.2) && drive.stopped() && robot.outtake.getState() == Outtake.State.PURPLE),
+                        (drive.reachedTarget(1) && drive.reachedHeading(0.2) && drive.stopped() && robot.outtake.getState() == Outtake.State.PURPLE),
                 ()->{
                     robot.bottomGripper.setState(BottomGripper.State.OPENING);
                     Extendo.extendedPos = preloadIntakeExtendoPosition;
@@ -173,7 +173,7 @@ public class BlueNodes {
             timer.reset();
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             intakeTries = 0;
-                }, intake);
+        }, intake);
 
         intake.addCondition(()->detector.getPrevPixels() == 0 && detector.getPixels() == 1,
                 ()->DropDown.index = Math.max(DropDown.index -1, 0), intake);
@@ -220,11 +220,11 @@ public class BlueNodes {
 
         alignToCross.addPositionCondition(drive, 2, crossFieldYellowPosition, crossForYellow);
 
-        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
+        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
                 robot.extendo.getState() == Extendo.State.IN && robot.topGripper.getState() == TopGripper.State.CLOSED &&
                 robot.bottomGripper.getState() == BottomGripper.State.CLOSED, ()->{
             robot.outtake.setState(Outtake.State.GOING_UP_CLOSE);
-                }, crossForYellow);
+        }, crossForYellow);
 
         crossForYellow.addCondition(()->robot.extendo.getState() == Extendo.State.IN && drive.reachedTarget(8), ()->{
             drive.setTargetPose(scoreWhitePosition);
@@ -370,7 +370,7 @@ public class BlueNodes {
 
         goToIntakePosition.addCondition(()->robot.extendo.getState() == Extendo.State.LOCK, timer::reset, intake);
 
-        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED,
+        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED,
                 ()->robot.outtake.setState(Outtake.State.GOING_UP_FAR), waitForOuttake);
 
     }

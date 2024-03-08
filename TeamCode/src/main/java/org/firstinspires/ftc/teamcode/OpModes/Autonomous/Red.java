@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedFar;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name = "Daria albastra")
-public class Blue extends LinearOpMode {
+@Autonomous(name = "Daria rosie")
+public class Red extends LinearOpMode {
 
     FtcDashboard dash;
 
@@ -33,10 +33,10 @@ public class Blue extends LinearOpMode {
     MecanumDrive drive;
     RobotModules robotModules;
 
-    BlueNodes nodes;
+    RedNodes nodes;
 
     VisionPortal portal;
-    PropDetectionBlueFar processor;
+    PropDetectionRedFar processor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,7 +45,7 @@ public class Blue extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dash.getTelemetry());
 
-        hardware = new Hardware(hardwareMap, Hardware.Color.Blue, true);
+        hardware = new Hardware(hardwareMap, Hardware.Color.Red, true);
 
         drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, false);
 
@@ -53,7 +53,7 @@ public class Blue extends LinearOpMode {
 
         hardware.startThreads(this);
 
-        processor = new PropDetectionBlueFar();
+        processor = new PropDetectionRedFar();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -76,8 +76,8 @@ public class Blue extends LinearOpMode {
         }
         portal.close();
 
-//        detectionCase = 3;
-        nodes = new BlueNodes(drive, robotModules, detectionCase);
+//        detectionCase = 1;
+        nodes = new RedNodes(drive, robotModules, detectionCase);
 
         waitForStart();
 

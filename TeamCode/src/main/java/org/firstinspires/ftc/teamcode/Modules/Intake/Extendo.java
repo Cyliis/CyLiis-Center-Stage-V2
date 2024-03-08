@@ -26,9 +26,9 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public static double extensionLimit = 1320;
     private double extensionPower = 0;
 
-    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 10, inThreshold = 100;
+    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 20, inThreshold = 100;
 
-    public static PIDFCoefficients PIDF = new PIDFCoefficients(0.04,0.15,0.0007,0);
+    public static PIDFCoefficients PIDF = new PIDFCoefficients(0.011,0.12,0.00055,0);
 //    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
 
     public static double timeOut = 0.1;

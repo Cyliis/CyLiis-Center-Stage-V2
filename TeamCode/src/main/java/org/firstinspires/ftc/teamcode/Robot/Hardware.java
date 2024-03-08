@@ -127,7 +127,7 @@ public class Hardware {
     }
 
     public void startThreads(LinearOpMode opMode){
-        imu.startIMUThread(opMode, localizer);
+//        imu.startIMUThread(opMode, localizer);
     }
 
     public void update(){
@@ -136,6 +136,8 @@ public class Hardware {
             localizer.updateTime = System.nanoTime();
         }
         voltage = voltageSensor.getVoltage();
+        imu.update();
+        localizer.update();
     }
 
 

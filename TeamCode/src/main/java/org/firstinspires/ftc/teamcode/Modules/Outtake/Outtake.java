@@ -11,9 +11,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
+    public static double waitTime = 0.5;
+
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
-        UP, CHANGING_LIFT_POSITION, GOING_DOWN, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
+        UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_DELAY, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
         GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE
     }
 
@@ -186,7 +188,10 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 if(lift.getState() == Lift.State.PURPLE)
                     setState(State.PURPLE);
                 break;
-
+            case GOING_DOWN_DELAY:
+                if(timer.seconds()>=waitTime)
+                    setState(State.GOING_DOWN);
+                break;
         }
     }
 

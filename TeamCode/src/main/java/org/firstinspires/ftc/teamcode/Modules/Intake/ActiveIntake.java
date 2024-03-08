@@ -16,7 +16,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     private final CoolMotor motor;
     public static boolean reversedMotor = false;
 
-    public static double runningPower = 1, reversePower = -1;
+    public static double runningPower = 1, reversePower = -0.7;
 
     public static double pushTime = 0.1;
 
@@ -45,13 +45,8 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public void setState(State newState){
         if(newState == state) return;
-//        if(state!=State.PUSH) {
-            this.lastState = state;
-            this.state = newState;
-//        }
-//        else{
-//            this.lastState = newState;
-//        }
+        this.lastState = state;
+        this.state = newState;
         timer.reset();
     }
 

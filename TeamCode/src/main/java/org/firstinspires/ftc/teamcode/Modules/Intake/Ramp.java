@@ -16,8 +16,8 @@ public class Ramp implements IStateBasedModule, IRobotModule {
     private final CoolServo servo;
     public static boolean reversedServo = true;
 
-    public static double rampPosition = 0.5, upPosition = 0.56;
-    public static double pos0 = 0.37, pos1 =0.37, pos2 = 0.43, pos3 = 0.52, pos4 = 0.56;
+    public static double rampPosition = 0.5, upPosition = 0.77;
+    public static double pos0 = 0.47, pos1 =0.47, pos2 = 0.63, pos3 = 0.72, pos4 = 0.77;
 
     public enum State{
         UP(upPosition), DOWN(rampPosition);
@@ -61,7 +61,7 @@ public class Ramp implements IStateBasedModule, IRobotModule {
 
     public Ramp(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch1, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

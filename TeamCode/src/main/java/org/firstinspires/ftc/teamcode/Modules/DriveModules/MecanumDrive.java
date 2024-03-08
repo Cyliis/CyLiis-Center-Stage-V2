@@ -31,7 +31,7 @@ public class MecanumDrive implements IRobotModule {
 
     public double overallMultiplier = 1;
 
-    public double velocityThreshold = 0.5;
+    public double velocityThreshold = 1;
 
     public static double ks = 0.03;
 
@@ -127,11 +127,14 @@ public class MecanumDrive implements IRobotModule {
 
                 double distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 
+                double calculatedCos = xDiff/distance;
+                double calculatedSin = yDiff/distance;
+
                 tpid.setPID(translationalPID.p, translationalPID.i, translationalPID.d);
 
                 double translationalPower = tpid.calculate(-distance, 0);
 
-                powerVector = new Vector(translationalPower * Math.cos(Math.atan2(yDiff, xDiff)), translationalPower * Math.sin(Math.atan2(yDiff, xDiff)));
+                powerVector = new Vector(translationalPower * calculatedCos, translationalPower * calculatedSin);
                 powerVector = Vector.rotateBy(powerVector, currentPose.getHeading());
 
                 double headingDiff = Angles.normalize(targetPose.getHeading() - currentPose.getHeading());

@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
-@Disabled
 @TeleOp
 public class IntakeCalibration extends LinearOpMode {
     FtcDashboard dash;

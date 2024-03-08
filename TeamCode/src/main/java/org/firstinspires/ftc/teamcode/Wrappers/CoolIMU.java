@@ -75,6 +75,10 @@ public class CoolIMU {
         imu.resetYaw();
     }
 
+    public void update(){
+        imuAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+
     public double getHeading() {
         return imuAngle - imuOffset;
     }
