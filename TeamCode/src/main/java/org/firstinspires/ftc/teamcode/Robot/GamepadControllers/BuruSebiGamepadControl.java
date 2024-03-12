@@ -187,8 +187,14 @@ public class BuruSebiGamepadControl implements IRobotModule {
             else robotModules.hooks.setState(Hooks.State.HOOK2);
         }
         if(gamepad2.y && stickyGamepad1.ps){
-            if(robotModules.ptos.getState() == PTOs.State.DISENGAGED) robotModules.ptos.setState(PTOs.State.ENGAGED);
-            else robotModules.ptos.setState(PTOs.State.DISENGAGED);
+            if(robotModules.ptos.getState() == PTOs.State.DISENGAGED) {
+                robotModules.ptos.setState(PTOs.State.ENGAGED);
+                robotModules.drive.setRunMode(MecanumDrive.RunMode.Climb);
+            }
+            else {
+                robotModules.ptos.setState(PTOs.State.DISENGAGED);
+                robotModules.drive.setRunMode(MecanumDrive.RunMode.Vector);
+            }
         }
     }
 

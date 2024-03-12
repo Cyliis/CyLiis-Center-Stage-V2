@@ -51,7 +51,7 @@ public class BlueNodes {
     private final double[] cycleTime = {7,7,100,100};
     private final double[] goBackTime = {3.5,3.5,3.5,100};
 
-    public static double parkTime = 0.2;
+    public static double parkTime = 1;
 
     public final DepositPixelDetector detector;
 
@@ -84,6 +84,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions1;
                 scorePositions = BluePositions.scorePositions1;
                 parkingPositions = BluePositions.parkingPositions1;
+                startWaitTime = 4;
                 break;
             case 2:
                 purplePosition = BluePositions.purplePosition2;
@@ -99,6 +100,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions2;
                 scorePositions = BluePositions.scorePositions2;
                 parkingPositions = BluePositions.parkingPositions2;
+                startWaitTime = 4;
                 break;
             case 3:
                 purplePosition = BluePositions.purplePosition3;
@@ -114,6 +116,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions3;
                 scorePositions = BluePositions.scorePositions3;
                 parkingPositions = BluePositions.parkingPositions3;
+                startWaitTime = 4;
                 break;
         }
     }
@@ -142,20 +145,27 @@ public class BlueNodes {
     private LogicNode goToIntakePosition = new LogicNode("Going to intake position");
     private LogicNode goToScoringPosition = new LogicNode("Going to scoring position");
     private LogicNode waitForOuttake = new LogicNode("Waiting for outtake");
-    private LogicNode waitToFall = new LogicNode("Waiting to fall");
+    private LogicNode waitToOpen = new LogicNode("Waiting to open");
     private LogicNode park = new LogicNode("Parking");
+    private LogicNode startWait = new LogicNode("Waiting");
+
+    public static double startWaitTime;
 
     public static int extendoRetryPosition = 100;
 
     private void initNodes(MecanumDrive drive, RobotModules robot){
         currentNode.addCondition(()->true, ()->{
-            timer.reset();
-            globalTimer.reset();
-            drive.setTargetPose(purplePosition);
-            robot.outtake.setState(Outtake.State.GO_PURPLE);
             DropDown.index = 4;
 //            Lift.profiled = true;
             Lift.level = 0;
+            timer.reset();
+            globalTimer.reset();
+        }, startWait);
+
+        startWait.addCondition(()->timer.seconds()>= startWaitTime, ()->{
+            timer.reset();
+            drive.setTargetPose(purplePosition);
+            robot.outtake.setState(Outtake.State.GO_PURPLE);
         }, scorePurple);
 
         scorePurple.addCondition(()->
@@ -340,6 +350,9 @@ public class BlueNodes {
             robot.topGripper.setState(TopGripper.State.OPENING);
             robot.bottomGripper.setState(BottomGripper.State.OPENING);
             robot.outtake.setState(Outtake.State.GOING_DOWN_DELAY);
+        }, waitToOpen);
+
+        waitToOpen.addCondition(()->robot.topGripper.getState() == TopGripper.State.OPEN && robot.bottomGripper.getState() == BottomGripper.State.OPEN, ()->{
             drive.setTargetPose(intakePositions[cycle+1]);
             cycle++;
             DropDown.index = Math.max(DropDown.index -1, 0);

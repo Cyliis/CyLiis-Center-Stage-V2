@@ -56,7 +56,7 @@ public class Plane implements IStateBasedModule, IRobotModule {
 
     public Plane(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch4, reversedServo, initialState.position-0.01);
+        else servo = new CoolServo(hardware.seh4, reversedServo, initialState.position-0.01);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

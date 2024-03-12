@@ -34,7 +34,7 @@ public class EmergencyMeeting extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dash.getTelemetry());
 
-        hardware = new Hardware(hardwareMap, Hardware.Color.Blue);
+        hardware = new Hardware(hardwareMap, Hardware.Color.Red);
 
         drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, true);
 

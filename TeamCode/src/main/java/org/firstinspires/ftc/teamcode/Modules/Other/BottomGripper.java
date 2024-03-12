@@ -59,7 +59,7 @@ public class BottomGripper implements IStateBasedModule, IRobotModule {
 
     public BottomGripper(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.seh1, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch1, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

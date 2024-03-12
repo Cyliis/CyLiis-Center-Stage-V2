@@ -58,8 +58,8 @@ public class PTOs implements IRobotModule, IStateBasedModule {
             rightServo = null;
         }
         else {
-            leftServo = new CoolServo(hardware.sch2, leftReversed, initialState.leftPos);
-            rightServo = new CoolServo(hardware.sch5, rightReversed, initialState.rightPos);
+            leftServo = new CoolServo(hardware.seh2, leftReversed, initialState.leftPos);
+            rightServo = new CoolServo(hardware.seh5, rightReversed, initialState.rightPos);
             leftServo.forceUpdate();
             rightServo.forceUpdate();
         }

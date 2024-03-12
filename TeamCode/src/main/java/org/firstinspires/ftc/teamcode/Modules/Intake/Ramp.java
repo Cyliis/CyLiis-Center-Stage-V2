@@ -61,7 +61,7 @@ public class Ramp implements IStateBasedModule, IRobotModule {
 
     public Ramp(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch0, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.seh0, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

@@ -15,7 +15,7 @@ public class Hooks implements IRobotModule, IStateBasedModule {
     private final CoolServo servo;
     public static boolean latchReversed = false;
 
-    public static double latchOpenPosition1 = 0, latchOpenPosition2 = 1, latchClosedPosition = 0.5;
+    public static double latchOpenPosition1 = 0.67, latchOpenPosition2 = 0.3, latchClosedPosition = 0.5;
 
     public enum State{
         IDLE(latchClosedPosition), HOOK1(latchOpenPosition1), HOOK2(latchOpenPosition2);
@@ -52,7 +52,7 @@ public class Hooks implements IRobotModule, IStateBasedModule {
             servo = null;
         }
         else {
-            servo = new CoolServo(hardware.seh5, latchReversed, initialState.pos);
+            servo = new CoolServo(hardware.sch5, latchReversed, initialState.pos);
             servo.forceUpdate();
         }
         timer.startTime();

@@ -19,7 +19,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double middle = 0.5;
+    public static double middle = 0.515;
     public static double range = Math.toRadians(355);
     public static double limit = Math.toRadians(60);
 
@@ -71,7 +71,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     public Turret(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.seh4, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch4, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

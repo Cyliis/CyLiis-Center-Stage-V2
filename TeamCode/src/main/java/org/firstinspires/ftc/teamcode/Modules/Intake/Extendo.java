@@ -26,7 +26,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public static double extensionLimit = 1320;
     private double extensionPower = 0;
 
-    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 20, inThreshold = 100;
+    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 30, inThreshold = 100;
 
     public static PIDFCoefficients PIDF = new PIDFCoefficients(0.011,0.12,0.00055,0);
 //    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
@@ -74,7 +74,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public Extendo(Hardware hardware, State initialState){
         if(!ENABLED) motor = null;
         else {
-            motor = new CoolMotor(hardware.mch3, CoolMotor.RunMode.PID, motorReversed);
+            motor = new CoolMotor(hardware.ech0, CoolMotor.RunMode.PID, motorReversed);
             motor.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 

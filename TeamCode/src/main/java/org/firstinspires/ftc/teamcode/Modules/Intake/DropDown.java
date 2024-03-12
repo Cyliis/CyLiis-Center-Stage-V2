@@ -66,7 +66,7 @@ public class DropDown implements IStateBasedModule, IRobotModule {
     public DropDown(Hardware hardware, State initialState) {
         if (!ENABLED) servo = null;
             // maybe sch1
-        else servo = new CoolServo(hardware.sch1, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.seh1, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if (ENABLED) servo.forceUpdate();

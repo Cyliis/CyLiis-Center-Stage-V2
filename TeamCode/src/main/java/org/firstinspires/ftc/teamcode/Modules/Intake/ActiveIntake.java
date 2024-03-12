@@ -52,7 +52,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public ActiveIntake(Hardware hardware, State initialState){
         if(!ENABLED) motor = null;
-        else motor = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, reversedMotor);
+        else motor = new CoolMotor(hardware.ech3, CoolMotor.RunMode.RUN, reversedMotor);
         timer.startTime();
         state = initialState;
         setState(initialState);

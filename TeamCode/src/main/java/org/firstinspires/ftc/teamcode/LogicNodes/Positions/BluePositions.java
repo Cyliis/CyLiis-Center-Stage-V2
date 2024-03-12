@@ -9,7 +9,7 @@ public class BluePositions {
     //Left
 
     public static Pose purplePosition1 = new Pose(32,2,1.787);
-    public static int preloadIntakeExtendoPosition1 = 760;
+    public static int preloadIntakeExtendoPosition1 = 770;
 
     public static Pose alignToCrossFieldForYellowPosition1 = new Pose(52,-4,Math.PI/2);
     public static Pose crossFieldYellowPosition1 = new Pose(52,75,Math.PI/2);
@@ -18,8 +18,8 @@ public class BluePositions {
 
     public static Pose alignToCrossBackPosition1 = new Pose(52,75,Math.PI/2);
     public static Pose[] intakePositions1 = {
-            new Pose(51,12,Math.PI/2),
-            new Pose(53,12,Math.PI/2),
+            new Pose(51,10,Math.PI/2),
+            new Pose(53,10,Math.PI/2),
             new Pose(55,12,1.3),
             new Pose(0,0,0)
     };
@@ -50,8 +50,8 @@ public class BluePositions {
 
     public static Pose alignToCrossBackPosition2 = new Pose(52,75,Math.PI/2);
     public static Pose[] intakePositions2 = {
-            new Pose(51,12,Math.PI/2),
-            new Pose(52,12,Math.PI/2),
+            new Pose(51.5,10,Math.PI/2),
+            new Pose(53,10,Math.PI/2),
             new Pose(53,12,1.3),
             new Pose(0,0,0)
     };
@@ -83,9 +83,9 @@ public class BluePositions {
 
     public static Pose alignToCrossBackPosition3 = new Pose(52,75,Math.PI/2);
     public static Pose[] intakePositions3 = {
-            new Pose(52,13,Math.PI/2),
-            new Pose(52,13,Math.PI/2),
-            new Pose(54,13,1.3),
+            new Pose(52,11,Math.PI/2),
+            new Pose(52.5,11,Math.PI/2),
+            new Pose(54,12,1.3),
             new Pose(0,0,0)
     };
     public static double[] extendoDistanceTolerance3 = {45,45,10};

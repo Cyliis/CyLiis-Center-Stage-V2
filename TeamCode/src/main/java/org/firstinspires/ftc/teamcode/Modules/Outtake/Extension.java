@@ -135,9 +135,9 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public Extension(Hardware hardware, State initialState){
         if(!ENABLED) servo1 = null;
-        else servo1 = new CoolServo(hardware.seh0, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
+        else servo1 = new CoolServo(hardware.sch0, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
         if(!ENABLED) servo2 = null;
-        else servo2 = new CoolServo(hardware.seh2, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
+        else servo2 = new CoolServo(hardware.sch2, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
         if(ENABLED){
             servo1.forceUpdate();
             servo2.forceUpdate();
