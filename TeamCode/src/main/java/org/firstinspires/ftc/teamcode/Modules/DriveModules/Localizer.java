@@ -81,7 +81,10 @@ public class Localizer implements IRobotModule {
         Pose2d pose2d = localizer.getPoseEstimate();
         pose = new Pose(pose2d.getX(), pose2d.getY(), pose2d.getHeading());
         velocity = new Vector(xVelocityFilter.getValue(localizer.getPoseVelocity().getX()), yVelocityFilter.getValue(localizer.getPoseVelocity().getY()));
+        velocity = Vector.rotateBy(velocity, -pose.getHeading());
         Vector predictedGlideVector = new Vector(Math.signum(velocity.getX()) * velocity.getX() * velocity.getX() / (2.0 * xDeceleration), Math.signum(velocity.getY()) * velocity.getY() * velocity.getY() / (2.0 * yDeceleration));
-        glideDelta = Vector.rotateBy(predictedGlideVector, -pose.getHeading());
+        glideDelta = Vector.rotateBy(predictedGlideVector, pose.getHeading());
     }
+
+    //TODO: vezi ca ai schimbat cv aici e posibil sa fie funny
 }

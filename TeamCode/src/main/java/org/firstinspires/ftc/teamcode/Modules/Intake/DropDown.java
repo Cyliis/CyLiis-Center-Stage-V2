@@ -41,9 +41,9 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     private void updateStateValues() {
 
-        double[] poses = new double[]{pos0, pos1, pos2, pos3, pos4};
+        double[] poses = new double[]{pos0, pos3, pos2, pos3, pos4};
         intakePosition = poses[index];
-        double[] upPoses = new double[]{upPos0, upPos1, upPos2, upPos3, upPos4};
+        double[] upPoses = new double[]{upPos0, upPos3, upPos2, upPos3, upPos4};
         upPosition = upPoses[index];
         State.UP.position = upPosition;
         State.INTAKE.position = intakePosition;

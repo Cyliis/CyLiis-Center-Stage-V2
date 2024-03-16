@@ -26,12 +26,12 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public static double extensionLimit = 1320;
     private double extensionPower = 0;
 
-    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 30, inThreshold = 100;
+    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 30, inThreshold = 200;
 
     public static PIDFCoefficients PIDF = new PIDFCoefficients(0.011,0.12,0.00055,0);
 //    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
 
-    public static double timeOut = 0.1;
+    public static double timeOut = 0.3;
     private final ElapsedTime timer = new ElapsedTime();
 
     public enum State{
@@ -80,7 +80,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
 
         if(!ENABLED) encoder = null;
         else {
-            encoder = hardware.ech1;
+            encoder = hardware.eeh0;
             if(encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
         }
 
@@ -128,11 +128,11 @@ public class Extendo implements IStateBasedModule, IRobotModule {
         else if(state == State.OUT){
             motor.setMode(CoolMotor.RunMode.RUN);
             motor.setPower(extensionPower);
-        }else {
+        } else {
             target = state.position + zeroPos;
             motor.setMode(CoolMotor.RunMode.PID);
-            motor.setPIDF(PIDF, PIDF.f * Math.signum(motor.getPower(encoder.getCurrentPosition(), target)));
-            motor.calculatePower(encoder.getCurrentPosition(), target);
+            motor.setPIDF(PIDF, PIDF.f * Math.signum(motor.getPIDPower(encoder.getCurrentPosition(), target)));
+            motor.calculatePIDPower(encoder.getCurrentPosition(), target);
         }
         motor.update();
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
@@ -86,12 +87,17 @@ public class RobotModules implements IRobotModule {
 
     public void telemetry(Telemetry telemetry){
         telemetry.addData("Lift level", Lift.level);
-        telemetry.addData("Current position lift", lift.encoder.getCurrentPosition());
-        telemetry.addData("Target position lift", lift.target);
+        telemetry.addData("Current position left lift", lift.leftMotor.getCurrentPosition());
+        telemetry.addData("Current position right lift",lift.rightMotor.getCurrentPosition());
+        telemetry.addData("Target position lift", lift.leftMotor.motor.motor.getTargetPosition());
+        telemetry.addData("Current draw lift left", lift.leftMotor.motor.motor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Current draw lift right", lift.rightMotor.motor.motor.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Outtake state", outtake.getState());
         telemetry.addData("Intake state", intake.getState());
         telemetry.addData("Lift state", lift.getState());
         telemetry.addData("Extendo state", extendo.getState());
+        telemetry.addData("Extendo position", extendo.encoder.getCurrentPosition());
+        telemetry.addData("Extendo current draw", extendo.motor.motor.motor.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Active intake state", activeIntake.getState());
         telemetry.addData("Bottom gripper state", bottomGripper.getState());
         telemetry.addData("Top gripper state", topGripper.getState());
@@ -103,6 +109,7 @@ public class RobotModules implements IRobotModule {
         telemetry.addData("Left power lift", lift.leftMotor.power);
         telemetry.addData("Right power lift", lift.rightMotor.power);
         telemetry.addData("Power extendo", extendo.motor.power);
+        telemetry.addData("Plane state", plane.getState());
     }
 
     @Override

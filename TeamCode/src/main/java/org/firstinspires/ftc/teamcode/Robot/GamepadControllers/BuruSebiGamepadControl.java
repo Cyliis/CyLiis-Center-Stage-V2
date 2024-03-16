@@ -60,7 +60,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
             if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN &&
                     robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
                 robotModules.extendo.setState(Extendo.State.OUT);
-                if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos < Extendo.extensionLimit)
+                if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos < Extendo.extensionLimit)
                     robotModules.extendo.setPower(-gamepad1.right_stick_y);
                 else robotModules.extendo.setPower(0);
             }
@@ -74,15 +74,15 @@ public class BuruSebiGamepadControl implements IRobotModule {
             }
         }
         if(Math.abs(gamepad1.right_stick_y) > extensionDeadZone && gamepad1.right_stick_y > 0){ // extendo in
-            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos > 0)
+            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos > 0)
                 robotModules.extendo.setPower(-gamepad1.right_stick_y);
             else robotModules.extendo.setPower(0);
-            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
+            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
                     && (robotModules.extendo.getState() == Extendo.State.OUT || robotModules.extendo.getState() == Extendo.State.GOING_OUT))
                 robotModules.intake.setState(Intake.State.GOING_IN);
         }
         if(Math.abs(gamepad1.right_stick_y) <= extensionDeadZone) { //extendo idle
-            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
+            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
                     && (robotModules.extendo.getState() == Extendo.State.OUT || robotModules.extendo.getState() == Extendo.State.GOING_OUT))
                 robotModules.intake.setState(Intake.State.GOING_IN);
             robotModules.extendo.setPower(0); // extendo idle

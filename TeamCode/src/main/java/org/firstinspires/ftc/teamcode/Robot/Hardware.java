@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Robot;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.Localizer;
+import org.firstinspires.ftc.teamcode.Wrappers.Analog30cm;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
@@ -35,6 +37,8 @@ public class Hardware {
     public static double voltage;
 
     public CoolDigitalSensor beamBreak0, beamBreak1;
+
+    public Analog30cm extendoSensor;
 
     public enum Color{
         Red, Blue
@@ -80,10 +84,10 @@ public class Hardware {
             mch1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mch2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mch3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            meh0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            meh1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            meh2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            meh3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            meh0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            meh1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            meh2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            meh3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             mch0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             mch1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -95,10 +99,10 @@ public class Hardware {
             meh3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-//        eeh0 = new Encoder(meh0);
-//        eeh1 = new Encoder(meh1);
-//        eeh2 = new Encoder(meh2);
-//        eeh3 = new Encoder(meh3);
+        eeh0 = new Encoder(meh0);
+        eeh1 = new Encoder(meh1);
+        eeh2 = new Encoder(meh2);
+        eeh3 = new Encoder(meh3);
 
         sch0 = hm.get(Servo.class, "sch0");
         sch1 = hm.get(Servo.class, "sch1");
@@ -118,6 +122,8 @@ public class Hardware {
 
 //        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
 
+        extendoSensor = new Analog30cm(hardwareMap.get(AnalogInput.class, "extendo sensor"));
+
         beamBreak0 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb0"));
         beamBreak1 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb1"));
 
@@ -132,12 +138,13 @@ public class Hardware {
 
     public void update(){
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-            if(hub.isParent()) hub.clearBulkCache();
+            hub.clearBulkCache();
             localizer.updateTime = System.nanoTime();
         }
         voltage = voltageSensor.getVoltage();
         imu.update();
         localizer.update();
+        extendoSensor.update();
     }
 
 

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 public class CoolMotor {
 
     public enum RunMode {
-        RUN, PID;
+        RUN, PID, RTP
     }
 
     public final DcMotorFunny motor;
@@ -77,12 +77,20 @@ public class CoolMotor {
     public void setMode(RunMode runMode){
         this.runMode = runMode;
     }
+    public RunMode getMode(){
+        return runMode;
+    }
 
     public double power;
+    public int target;
 
     public void setPower(double power){
         if(runMode == RunMode.PID) return;
         this.power = power;
+    }
+
+    public void setTarget(int target){
+        this.target = target;
     }
 
     public void setPID(PIDCoefficients pidCoefficients){
@@ -105,27 +113,53 @@ public class CoolMotor {
         pidCoefficients.d = pidfCoefficients.d;
     }
 
-    public void calculatePower(double current, double target){
+    public void setPIDF(PIDFCoefficients pidfCoefficients){
+        if(runMode==RunMode.RTP) motor.motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfCoefficients);
+    }
+
+    public void calculatePIDPower(double current, double target){
         if(runMode == RunMode.RUN) return;
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         power = feedforward + pidController.calculate(current,target);
     }
 
-    public void calculatePower(double current, double target, double voltage){
+    public void calculatePIDPower(double current, double target, double voltage){
         if(runMode == RunMode.RUN) return;
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         power = (feedforward + pidController.calculate(current,target)) * (12.0/voltage);
     }
 
-    public double getPower(double current, double target){
+    public double getPIDPower(double current, double target){
         if(runMode == RunMode.RUN) return 0;
         controlPidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         return controlPidController.calculate(current,target);
     }
 
+    public int getCurrentPosition(){
+        return motor.motor.getCurrentPosition();
+    }
+
     public void update(){
-        motor.setPowerAsync(power);
-        if(!async)motor.updatePowerAsync();
+        if(runMode == RunMode.RTP) {
+            if(motor.motor.getMode()!= DcMotor.RunMode.RUN_TO_POSITION) {
+                motor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motor.motor.setTargetPosition(target);
+                motor.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motor.motor.setPower(power);
+            }
+            motor.setPowerAsync(power);
+            motor.setTargetPositionAsync(target);
+            if(!async){
+                motor.updatePowerAsync();
+                motor.updateTargetPositionAsync();
+            }
+        }
+        else {
+            if(motor.motor.getMode() != DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+                motor.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setPowerAsync(power);
+            if (!async) motor.updatePowerAsync();
+        }
     }
 
 }

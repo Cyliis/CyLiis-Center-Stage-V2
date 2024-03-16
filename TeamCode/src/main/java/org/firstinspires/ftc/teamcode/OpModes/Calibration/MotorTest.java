@@ -4,26 +4,27 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 @TeleOp
-public class ServoTest extends OpMode {
-    Servo servo;
+public class MotorTest extends OpMode {
+    DcMotorEx motor;
 
-    public static double position = 0.5;
+    public static double power = 0.5;
 
     public static boolean chub = false;
     public static int port = 0;
 
     @Override
     public void init() {
-        servo = hardwareMap.get(Servo.class, "seh5");
+        motor = hardwareMap.get(DcMotorEx.class, "eh0");
     }
 
     @Override
     public void loop() {
-        servo = hardwareMap.get(Servo.class, "s" + (chub?"c":"e") + "h" + String.valueOf(port));
-        servo.setPosition(position);
+        motor = hardwareMap.get(DcMotorEx.class,(chub?"c":"e") + "h" + String.valueOf(port));
+        motor.setPower(power);
     }
 }

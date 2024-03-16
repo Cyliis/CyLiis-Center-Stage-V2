@@ -6,6 +6,7 @@ public class DcMotorFunny {
 
     public DcMotorEx motor;
     private double power;
+    private int target;
 
     final Object lock = new Object();
 
@@ -19,9 +20,21 @@ public class DcMotorFunny {
         }
     }
 
+    public void setTargetPositionAsync(int target){
+        this.target = target;
+    }
+
     public void updatePowerAsync(){
         synchronized (lock) {
-            motor.setPower(power);
+            if(motor.getPower() != power)
+                motor.setPower(power);
+        }
+    }
+
+    public void updateTargetPositionAsync(){
+        synchronized (lock){
+            if(motor.getTargetPosition() != target)
+                motor.setTargetPosition(target);
         }
     }
 }

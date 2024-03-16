@@ -48,6 +48,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 break;
             case LIFT_GOING_UP:
                 lift.setState(Lift.State.GOING_UP);
+                turret.setState(Turret.State.BACKDROP);
                 break;
             case UP:
                 lift.setState(Lift.State.GOING_UP);
@@ -131,11 +132,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public void updateState() {
         switch (state){
             case GOING_UP_CLOSE:
-                if(lift.encoder.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
+                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
                     setState(State.EXTEND_CLOSE1);
                 break;
             case GOING_UP_FAR:
-                if(lift.encoder.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
+                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
                     setState(State.EXTEND_FAR);
                 break;
             case CHANGING_LIFT_POSITION:
@@ -168,7 +169,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     break;
                 }
                 if(extension.getState() != Extension.State.GOING_IN){
-                    if(lift.encoder.getCurrentPosition() - Lift.groundPos >= Lift.passthroughPosition - Lift.positionThresh/2)
+                    if(lift.leftMotor.getCurrentPosition() - Lift.groundPosLeft >= Lift.passthroughPosition - Lift.positionThresh/2)
                         extension.setState(Extension.State.GOING_IN);
                 }
                 break;

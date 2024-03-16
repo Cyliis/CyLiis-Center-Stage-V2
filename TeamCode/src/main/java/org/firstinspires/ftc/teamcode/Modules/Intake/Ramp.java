@@ -38,7 +38,7 @@ public class Ramp implements IStateBasedModule, IRobotModule {
 
     private void updateStateValues(){
 
-        double[] poses = new double[]{pos0, pos1, pos2, pos3, pos4};
+        double[] poses = new double[]{pos0, pos3, pos2, pos3, pos4};
         rampPosition = poses[DropDown.index];
 
         State.UP.position = upPosition;

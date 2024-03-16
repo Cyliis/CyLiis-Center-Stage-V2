@@ -15,8 +15,8 @@ public class PTOs implements IRobotModule, IStateBasedModule {
     private final CoolServo leftServo, rightServo;
     public static boolean leftReversed = false, rightReversed = false;
 
-    public static double leftDisengagedPosition=0.15, leftEngagedPosition=0.53;
-    public static double rightDisengagedPosition=0.5, rightEngagedPosition=0.06;
+    public static double leftDisengagedPosition=0.17, leftEngagedPosition=0.52;
+    public static double rightDisengagedPosition=0.5, rightEngagedPosition=0.12;
 
 
     public enum State{
