@@ -79,6 +79,11 @@ public class Hardware {
         ech2 = new Encoder(mch2);
         ech3 = new Encoder(mch3);
 
+        eeh0 = new Encoder(meh0);
+        eeh1 = new Encoder(meh1);
+        eeh2 = new Encoder(meh2);
+        eeh3 = new Encoder(meh3);
+
         if(reset){
             mch0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mch1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -98,11 +103,6 @@ public class Hardware {
             meh2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             meh3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-
-        eeh0 = new Encoder(meh0);
-        eeh1 = new Encoder(meh1);
-        eeh2 = new Encoder(meh2);
-        eeh3 = new Encoder(meh3);
 
         sch0 = hm.get(Servo.class, "sch0");
         sch1 = hm.get(Servo.class, "sch1");
@@ -139,7 +139,6 @@ public class Hardware {
     public void update(){
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
             hub.clearBulkCache();
-            localizer.updateTime = System.nanoTime();
         }
         voltage = voltageSensor.getVoltage();
         imu.update();

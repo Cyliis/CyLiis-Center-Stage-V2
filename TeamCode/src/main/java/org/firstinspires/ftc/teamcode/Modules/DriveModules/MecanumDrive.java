@@ -23,8 +23,10 @@ public class MecanumDrive implements IRobotModule {
     public final CoolMotor frontLeft, frontRight, backLeft, backRight;
     public static boolean frontLeftMotorReversed = false, frontRightMotorReversed = true, backLeftMotorReversed = false, backRightMotorReversed = true;
 
+    public static double headingMultiplier = 1;
+
     public static PIDCoefficients translationalPID = new PIDCoefficients(0.15,0 ,0),
-            headingPID = new PIDCoefficients(2,0,0.19);
+            headingPID = new PIDCoefficients(1.3,0,0.19);
     public final PIDController tpid= new PIDController(0,0,0), hpid = new PIDController(0,0,0);
 
     public static double lateralMultiplier = 2;
@@ -53,9 +55,9 @@ public class MecanumDrive implements IRobotModule {
         }
 
         this.localizer = hardware.localizer;
-        frontLeft = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
-        frontRight = new CoolMotor(hardware.mch2, CoolMotor.RunMode.RUN, frontRightMotorReversed);
-        backLeft = new CoolMotor(hardware.mch1, CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        frontLeft = new CoolMotor(hardware.mch1, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardware.mch2, CoolMotor.RunMode.RUN, backLeftMotorReversed);
         backRight = new CoolMotor(hardware.mch3, CoolMotor.RunMode.RUN, backRightMotorReversed);
 
         if(brake){
@@ -141,7 +143,7 @@ public class MecanumDrive implements IRobotModule {
 
                 hpid.setPID(headingPID.p, headingPID.i, headingPID.d);
 
-                double headingPower = hpid.calculate(-headingDiff, 0);
+                double headingPower = hpid.calculate(-headingDiff, 0) * headingMultiplier;
 
                 powerVector= new Vector(powerVector.getX(),powerVector.getY() * lateralMultiplier, headingPower);
                 break;

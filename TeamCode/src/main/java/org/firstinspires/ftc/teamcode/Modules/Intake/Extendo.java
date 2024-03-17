@@ -26,12 +26,12 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     public static double extensionLimit = 1320;
     private double extensionPower = 0;
 
-    public static double resetPower = -1, velocityThreshold = 0, positionThreshold = 30, inThreshold = 200;
+    public static double resetPower = -1, velocityThreshold = 1, positionThreshold = 30, inThreshold = 200;
 
     public static PIDFCoefficients PIDF = new PIDFCoefficients(0.011,0.12,0.00055,0);
 //    public static PIDFCoefficients inPIDF = new PIDFCoefficients(0.5,0,0,0.03);
 
-    public static double timeOut = 0.3;
+    public static double timeOut = 0.1;
     private final ElapsedTime timer = new ElapsedTime();
 
     public enum State{
@@ -110,8 +110,8 @@ public class Extendo implements IStateBasedModule, IRobotModule {
                 state = state.nextState;
             }
         }
-        else if(state == State.GOING_IN && timer.seconds() >= timeOut){
-            if(Math.abs(encoder.getRawVelocity()) <= velocityThreshold) setState(State.RESETTING);
+        else if(state == State.GOING_IN && timer.seconds() >= timeOut && Math.abs(encoder.getRawVelocity()) <= velocityThreshold){
+            setState(State.RESETTING);
         }
         else if(Math.abs((state.position + zeroPos) - encoder.getCurrentPosition()) <= positionThreshold)
             state = state.nextState;

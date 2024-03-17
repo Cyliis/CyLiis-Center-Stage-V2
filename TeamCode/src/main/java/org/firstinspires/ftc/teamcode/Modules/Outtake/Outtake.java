@@ -15,7 +15,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
-        UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_DELAY, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
+        UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_SAFE, GOING_DOWN_DELAY, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
         GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE
     }
 
@@ -191,6 +191,12 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 break;
             case GOING_DOWN_DELAY:
                 if(timer.seconds()>=waitTime)
+                    setState(State.GOING_DOWN);
+                break;
+            case GOING_DOWN_SAFE:
+                if(timer.seconds()>=waitTime)
+                    extension.setState(Extension.State.GOING_IN);
+                if(extension.getState() == Extension.State.IN)
                     setState(State.GOING_DOWN);
                 break;
         }

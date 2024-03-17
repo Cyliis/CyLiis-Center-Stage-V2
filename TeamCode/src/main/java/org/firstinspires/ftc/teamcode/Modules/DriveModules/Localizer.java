@@ -55,35 +55,31 @@ public class Localizer implements IRobotModule {
     }
 
     private Vector velocity = new Vector();
+    public Vector driveTrainVelocity = new Vector();
     public Vector glideDelta = new Vector();
 
     public static double filterParameter = 0.8;
     private final LowPassFilter xVelocityFilter = new LowPassFilter(filterParameter, 0),
             yVelocityFilter = new LowPassFilter(filterParameter, 0);
 
-    public static double xDeceleration = 100, yDeceleration = 130;
+    public static double xDeceleration = 100, yDeceleration = 150;
 
     public Vector getVelocity(){
         return velocity;
     }
 
-    public double updateTime;
-    private double lastUpdateTime = 0;
-
     @Override
     public void update() {
         if(!ENABLED) return;
-
-        if(lastUpdateTime == updateTime) return;
-        lastUpdateTime = updateTime;
 
         localizer.update();
         Pose2d pose2d = localizer.getPoseEstimate();
         pose = new Pose(pose2d.getX(), pose2d.getY(), pose2d.getHeading());
         velocity = new Vector(xVelocityFilter.getValue(localizer.getPoseVelocity().getX()), yVelocityFilter.getValue(localizer.getPoseVelocity().getY()));
-        velocity = Vector.rotateBy(velocity, -pose.getHeading());
-        Vector predictedGlideVector = new Vector(Math.signum(velocity.getX()) * velocity.getX() * velocity.getX() / (2.0 * xDeceleration), Math.signum(velocity.getY()) * velocity.getY() * velocity.getY() / (2.0 * yDeceleration));
-        glideDelta = Vector.rotateBy(predictedGlideVector, pose.getHeading());
+        driveTrainVelocity = Vector.rotateBy(velocity, 0);
+        Vector predictedGlideVector = new Vector(Math.signum(driveTrainVelocity.getX()) * driveTrainVelocity.getX() * driveTrainVelocity.getX() / (2.0 * xDeceleration),
+                Math.signum(driveTrainVelocity.getY()) * driveTrainVelocity.getY() * driveTrainVelocity.getY() / (2.0 * yDeceleration));
+        glideDelta = Vector.rotateBy(predictedGlideVector, -pose.getHeading());
     }
 
     //TODO: vezi ca ai schimbat cv aici e posibil sa fie funny

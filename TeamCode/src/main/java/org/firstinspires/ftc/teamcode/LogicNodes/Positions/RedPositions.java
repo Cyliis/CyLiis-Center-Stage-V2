@@ -8,28 +8,33 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 public class RedPositions {
     //Right
 
-    public static Pose purplePosition3 = new Pose(30,-2.5,-1.787);
-    public static int preloadIntakeExtendoPosition3 = 760;
+    public static Pose purplePosition3 = new Pose(30,-2,-1.787);
+    public static int preloadIntakeExtendoPosition3 = 730;
 
-    public static Pose alignToCrossFieldForYellowPosition3 = new Pose(51,6,-Math.PI/2);
+    public static Pose alignToCrossFieldForYellowPosition3 = new Pose(51,0,-Math.PI/2);
     public static Pose crossFieldYellowPosition3 = new Pose(51,-75,-Math.PI/2);
     public static Pose scoreWhitePosition3 = new Pose(30,-89.5,-Math.PI/2);
-    public static Pose scoreYellowPosition3 = new Pose(18,-89.5,-Math.PI/2);
+    public static Pose scoreYellowPosition3 = new Pose(18,-90,-Math.PI/2);
 
     public static Pose alignToCrossBackPosition3 = new Pose(51,-75,-Math.PI/2);
     public static Pose[] intakePositions3 = {
-            new Pose(49.5,-12,-Math.PI/2),
-            new Pose(52,-11.5,-Math.PI/2),
-            new Pose(54,-12,-1.3),
+            new Pose(51,-12,-Math.PI/2),
+            new Pose(53,-11.5,-Math.PI/2),
+            new Pose(54.5,-12,-1.25),
             new Pose(0,0,0)
     };
-    public static double[] extendoDistanceTolerance3 = {45,45,10};
+    public static double[] extendoDistanceTolerance3 = {50,50,20};
     public static double[] extendoHeadingTolerance3 = {0.03,0.03,0.05};
-    public static int[] extendoPositions3 = {1100,1100,1130};
+    public static int[] extendoPositions3 = {1100,1100,1160};
     public static Pose[] scorePositions3 = {
-            new Pose(47,-89,-2.34),
-            new Pose(47,-89,-2.34),
-            new Pose(47,-92,-2.34)
+            new Pose(46,-90.5,-2.34),
+            new Pose(46,-90.5,-2.34),
+            new Pose(46.5,-90.5,-2.34)
+    };
+    public static Pose[] alignPositions3 = {
+            new Pose(50, -78, -Math.PI/2),
+            new Pose(50, -78, -Math.PI/2),
+            new Pose(50, -78, -Math.PI/2)
     };
     public static Pose[] parkingPositions3 = {
             new Pose(38,-81,-Math.PI/2),
@@ -63,6 +68,12 @@ public class RedPositions {
             new Pose(47,-89,-2.34),
             new Pose(53,-91.5,-2.34)
     };
+    public static Pose[] alignPositions2 = {
+            new Pose(50, -84, -Math.PI/2),
+            new Pose(50, -84, -Math.PI/2),
+            new Pose(50, -84, -Math.PI/2),
+            new Pose(50, -84, -Math.PI/2)
+    };
     public static Pose[] parkingPositions2 = {
             new Pose(40,-81,-Math.PI/2),
             new Pose(40,-81,-Math.PI/2),
@@ -95,6 +106,11 @@ public class RedPositions {
             new Pose(44,-89.5,-2.34),
             new Pose(46,-89,-2.34),
             new Pose(53,-91.5,-2.34)
+    };
+    public static Pose[] alignPositions1 = {
+            new Pose(50, -78, -Math.PI/2),
+            new Pose(50, -78, -Math.PI/2),
+            new Pose(50, -78, -Math.PI/2)
     };
     public static Pose[] parkingPositions1 = {
             new Pose(40,-81,-Math.PI/2),

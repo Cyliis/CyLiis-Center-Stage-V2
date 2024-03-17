@@ -66,7 +66,7 @@ public class IntakeCalibration extends LinearOpMode {
             dropDown.update();
             gamepad.update();
 
-            hardware.mch0.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+            hardware.meh3.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
 //            robotModules.telemetry(telemetry);
 

@@ -33,7 +33,7 @@ public class BlueNodes {
 
     private final double yellowCycleTime = 8;
 
-    public static double fallTime = 0.5;
+    public static double fallTime = 0.2;
 
     public int cycle = -1;
 
@@ -43,14 +43,14 @@ public class BlueNodes {
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
     private Pose[] scorePositions;
-    public static double outtakeActivationLine = 60;
+    public static double outtakeActivationLine = 55;
     private Pose[] parkingPositions;
 
     public static double intakeTimeOut = 0.8, reverseTime = 0.2;
     public static int reverseExtendoRetraction = 100;
     public static double outtakeWaitTime = 0.2;
 
-    private final double[] cycleTime = {7,7,100,100};
+    private final double[] cycleTime = {7,7,7,100};
     private final double[] goBackTime = {3.5,3.5,3.5,100};
 
     public static double parkTime = 1;
@@ -86,7 +86,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions1;
                 scorePositions = BluePositions.scorePositions1;
                 parkingPositions = BluePositions.parkingPositions1;
-                startWaitTime = 4;
+                startWaitTime = 0;
                 break;
             case 2:
                 purplePosition = BluePositions.purplePosition2;
@@ -102,7 +102,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions2;
                 scorePositions = BluePositions.scorePositions2;
                 parkingPositions = BluePositions.parkingPositions2;
-                startWaitTime = 4;
+                startWaitTime = 0;
                 break;
             case 3:
                 purplePosition = BluePositions.purplePosition3;
@@ -118,7 +118,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions3;
                 scorePositions = BluePositions.scorePositions3;
                 parkingPositions = BluePositions.parkingPositions3;
-                startWaitTime = 4;
+                startWaitTime = 0;
                 break;
         }
     }
@@ -192,8 +192,6 @@ public class BlueNodes {
 
         intake.addCondition(()->detector.getPixels() == 2, ()-> {
             robot.intake.setState(Intake.State.REVERSE);
-            Extendo.extendedPos = Extendo.extendedPos - reverseExtendoRetraction;
-            robot.ramp.setState(Ramp.State.UP);
             timer.reset();
         }, reverseToLeave);
 
@@ -207,8 +205,6 @@ public class BlueNodes {
 
         intake.addCondition(()->(detector.getPixels() == 1 && timer.seconds() >= intakeTimeOut && intakeTries>=maxRetries) || ((30-parkTime) - globalTimer.seconds() <= (cycle<0?yellowCycleTime:goBackTime[cycle])), ()->{
             robot.intake.setState(Intake.State.REVERSE);
-            Extendo.extendedPos = Extendo.extendedPos - reverseExtendoRetraction;
-            robot.ramp.setState(Ramp.State.UP);
             timer.reset();
         }, reverseToLeave);
 
@@ -232,14 +228,12 @@ public class BlueNodes {
             robot.intake.setState(Intake.State.STOP_INTAKE);
             robot.intake.setState(Intake.State.GOING_IN);
             drive.setTargetPose(alignToCrossFieldForYellowPosition);
-            robot.ramp.setState(Ramp.State.DOWN);
         }, alignToCross);
 
         reverseToLeave.addCondition(()->timer.seconds() >= reverseTime && cycle >= 0, ()->{
             robot.intake.setState(Intake.State.STOP_INTAKE);
             robot.intake.setState(Intake.State.GOING_IN);
             drive.setTargetPose(scorePositions[cycle]);
-            robot.ramp.setState(Ramp.State.DOWN);
         }, goToScoringPosition);
 
         alignToCross.addPositionCondition(drive, 2, crossFieldYellowPosition, crossForYellow);
@@ -318,8 +312,7 @@ public class BlueNodes {
         scoreYellow.addCondition(()->drive.reachedTarget(1) && detector.getPixels() != 0 && robot.outtake.getState() == Outtake.State.UP && robot.outtake.timer.seconds() >= outtakeWaitTime, ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
             if(robot.bottomGripper.getState() == BottomGripper.State.CLOSED) robot.bottomGripper.setState(BottomGripper.State.OPENING);
-            robot.outtake.setState(Outtake.State.GOING_DOWN);
-            Lift.level = 3;
+            robot.outtake.setState(Outtake.State.GOING_DOWN_DELAY);
             Extendo.extendedPos = extendoRetryPosition;
             robot.extendo.setState(Extendo.State.GOING_LOCK);
         }, retryTransfer1);
@@ -346,6 +339,7 @@ public class BlueNodes {
 
         retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle == -1, ()->{
             robot.outtake.setState(Outtake.State.GOING_UP_CLOSE);
+            Lift.level = 3;
         }, scoreYellow);
 
         retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle >= 0, ()->{

@@ -16,12 +16,12 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     private final CoolMotor motor;
     public static boolean reversedMotor = false;
 
-    public static double runningPower = 1, reversePower = -0.7;
+    public static double runningPower = 1, reversePower = -0.7, holdPower = 0.4;
 
-    public static double pushTime = 0.1;
+    public static double pushTime = 0.2;
 
     public enum State{
-        RUNNING(runningPower), IDLE(0), REVERSE(reversePower), PUSH(runningPower);
+        RUNNING(runningPower), IDLE(0), REVERSE(reversePower), PUSH(runningPower), HOLD(holdPower);
 
         public double power;
 
@@ -32,6 +32,9 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     private void updateStateValues(){
         State.RUNNING.power = runningPower;
+        State.REVERSE.power = reversePower;
+        State.PUSH.power = runningPower;
+        State.HOLD.power = holdPower;
     }
 
     private State state;

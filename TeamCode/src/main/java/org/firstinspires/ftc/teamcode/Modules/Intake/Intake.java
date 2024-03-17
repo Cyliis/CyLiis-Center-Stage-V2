@@ -102,8 +102,8 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 extendo.setState(Extendo.State.GOING_IN);
                 break;
             case CLOSING_GRIPPERS:
-                bottomGripper.setState(BottomGripper.State.CLOSING);
-                topGripper.setState(TopGripper.State.CLOSING);
+//                bottomGripper.setState(BottomGripper.State.CLOSING);
+//                topGripper.setState(TopGripper.State.CLOSING);
                 break;
         }
         timer.reset();
@@ -133,6 +133,10 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 activeIntake.setState(ActiveIntake.State.IDLE);
                 break;
             case CLOSING_GRIPPERS:
+                if(activeIntake.getState()!= ActiveIntake.State.PUSH && bottomGripper.getState() == BottomGripper.State.OPEN && topGripper.getState() == TopGripper.State.OPEN){
+                    topGripper.setState(TopGripper.State.CLOSING);
+                    bottomGripper.setState(BottomGripper.State.CLOSING);
+                }
                 if(bottomGripper.getState() == BottomGripper.State.CLOSED && topGripper.getState() == TopGripper.State.CLOSED) {
                     if (activeIntake.getState() == ActiveIntake.State.IDLE) setState(State.IDLE);
                     if (activeIntake.getState() == ActiveIntake.State.REVERSE) setState(State.REVERSE);
