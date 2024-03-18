@@ -50,10 +50,10 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public void updateIntake(){
         if(!Intake.ENABLED) return;
         if(stickyGamepad2.right_bumper){
-            DropDown.index = Math.min(4, DropDown.index + 1);
+            DropDown.index = 3;
         }
         if(stickyGamepad2.left_bumper){
-            DropDown.index = Math.max(0, DropDown.index - 1);
+            DropDown.index = 0;
         }
         if(Math.abs(gamepad1.right_stick_y) > extensionDeadZone && gamepad1.right_stick_y < 0
                 && robotModules.intake.getState()!= Intake.State.GOING_IN){ // extendo out
@@ -70,6 +70,10 @@ public class BuruSebiGamepadControl implements IRobotModule {
             }
             if(robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED || robotModules.bottomGripper.getState() == BottomGripper.State.CLOSING){
                 robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
+                robotModules.extendo.setState(Extendo.State.GOING_OUT);
+            }
+            if(robotModules.intake.getState() == Intake.State.CLOSING_GRIPPERS){
+                robotModules.intake.setState(Intake.State.OPENING_GRIPPERS);
                 robotModules.extendo.setState(Extendo.State.GOING_OUT);
             }
         }
@@ -200,7 +204,8 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
     void updateGrippers(){
         if(!TopGripper.ENABLED || !BottomGripper.ENABLED) return;
-        if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION){
+        if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION ||
+        robotModules.outtake.getState() == Outtake.State.LIFT_GOING_UP){
             if(stickyGamepad1.x){
                 robotModules.topGripper.setState(TopGripper.State.OPENING);
                 robotModules.bottomGripper.setState(BottomGripper.State.OPENING);

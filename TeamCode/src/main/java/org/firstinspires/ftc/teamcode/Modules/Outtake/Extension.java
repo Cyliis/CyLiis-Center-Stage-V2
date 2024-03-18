@@ -22,7 +22,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.69, outPosition1 = 0.17, inPosition2 = 0.37, closePosition = 0.5, outPosition2 = 0.89;
+    public static double inPosition1 = 0.69, outPosition1 = 0.17, inPosition2 = 0.37, purplePosition = 0.45, closePosition = 0.6, outPosition2 = 0.89;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
@@ -83,7 +83,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
         CLOSE(outPosition1, closePosition), GOING_CLOSE(outPosition1, closePosition, CLOSE),
         MID(outPosition1, inPosition2), GOING_MID(outPosition1, inPosition2, MID),
         FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
-        BACKDROP(outPosition1, inPosition2), BOOP(outPosition1, inPosition2);
+        BACKDROP(outPosition1, inPosition2), BOOP(outPosition1, inPosition2),
+        PURPLE(outPosition1, purplePosition), GOING_PURPLE(outPosition1, purplePosition, PURPLE);
 
         public double position1, position2;
         public final State nextState;

@@ -67,8 +67,8 @@ public class Extendo implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
-        State.LOCK.position = extendedPos;
-        State.GOING_LOCK.position = extendedPos;
+        State.LOCK.position = Math.max(0,extendedPos);
+        State.GOING_LOCK.position = Math.max(0,extendedPos);
     }
 
     public Extendo(Hardware hardware, State initialState){

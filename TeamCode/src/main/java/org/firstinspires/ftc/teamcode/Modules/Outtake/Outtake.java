@@ -73,7 +73,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 lift.setState(Lift.State.GOING_PASSTHROUGH);
                 break;
             case EXTENDING_CLOSE:
-                extension.setState(Extension.State.GOING_CLOSE);
+                extension.setState(Extension.State.GOING_PURPLE);
                 break;
             case LIFT_GOING_PURPLE_POSITION:
                 lift.setState(Lift.State.GOING_PURPLE);
@@ -182,7 +182,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     setState(State.EXTENDING_CLOSE);
                 break;
             case EXTENDING_CLOSE:
-                if(extension.getState() == Extension.State.CLOSE)
+                if(extension.getState() == Extension.State.PURPLE)
                     setState(State.LIFT_GOING_PURPLE_POSITION);
                 break;
             case LIFT_GOING_PURPLE_POSITION:
@@ -194,7 +194,9 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     setState(State.GOING_DOWN);
                 break;
             case GOING_DOWN_SAFE:
-                if(timer.seconds()>=waitTime)
+                if(timer.seconds()>=waitTime && turret.getState() == Turret.State.BACKDROP)
+                    turret.setState(Turret.State.GOING_MIDDLE);
+                if(turret.getState() == Turret.State.MIDDLE && extension.getState() != Extension.State.IN && extension.getState() != Extension.State.GOING_IN)
                     extension.setState(Extension.State.GOING_IN);
                 if(extension.getState() == Extension.State.IN)
                     setState(State.GOING_DOWN);
