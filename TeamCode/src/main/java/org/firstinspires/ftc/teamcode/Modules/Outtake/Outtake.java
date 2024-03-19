@@ -16,7 +16,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
         UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_SAFE, GOING_DOWN_DELAY, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
-        GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE
+        GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE,
+        GOING_POKE, EXTEND_POKE, LIFT_GOING_CORRECT_POSITION_POKE, POKE
     }
 
     State state;
@@ -78,7 +79,16 @@ public class Outtake implements IStateBasedModule, IRobotModule {
             case LIFT_GOING_PURPLE_POSITION:
                 lift.setState(Lift.State.GOING_PURPLE);
                 break;
-
+            case GOING_POKE:
+                if(Lift.State.GOING_UP.position < Lift.passthroughPosition) lift.setState(Lift.State.GOING_PASSTHROUGH);
+                else lift.setState(Lift.State.GOING_UP);
+                break;
+            case EXTEND_POKE:
+                extension.setState(Extension.State.GOING_POKE);
+                break;
+            case LIFT_GOING_CORRECT_POSITION_POKE:
+                lift.setState(Lift.State.GOING_UP);
+                break;
         }
 
         timer.reset();
@@ -200,6 +210,14 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     extension.setState(Extension.State.GOING_IN);
                 if(extension.getState() == Extension.State.IN)
                     setState(State.GOING_DOWN);
+                break;
+            case GOING_POKE:
+                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
+                    setState(State.EXTEND_POKE);
+                break;
+            case EXTEND_POKE:
+                if(extension.getState() == Extension.State.POKE)
+                    setState(State.POKE);
                 break;
         }
     }

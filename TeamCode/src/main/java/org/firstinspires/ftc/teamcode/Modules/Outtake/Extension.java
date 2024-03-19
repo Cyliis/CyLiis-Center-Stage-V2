@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Modules.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -22,7 +23,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.69, outPosition1 = 0.17, inPosition2 = 0.37, purplePosition = 0.45, closePosition = 0.6, outPosition2 = 0.89;
+    public static double inPosition1 = 0.69, outPosition1 = 0.17,
+            inPosition2 = 0.37, purplePosition = 0.45, closePosition = 0.6, outPosition2 = 0.89, pokePosition = 0.89;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
 
@@ -84,7 +86,8 @@ public class Extension implements IStateBasedModule, IRobotModule {
         MID(outPosition1, inPosition2), GOING_MID(outPosition1, inPosition2, MID),
         FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
         BACKDROP(outPosition1, inPosition2), BOOP(outPosition1, inPosition2),
-        PURPLE(outPosition1, purplePosition), GOING_PURPLE(outPosition1, purplePosition, PURPLE);
+        PURPLE(outPosition1, purplePosition), GOING_PURPLE(outPosition1, purplePosition, PURPLE),
+        POKE(inPosition1, pokePosition), GOING_POKE(inPosition1, pokePosition, POKE);
 
         public double position1, position2;
         public final State nextState;
@@ -118,6 +121,10 @@ public class Extension implements IStateBasedModule, IRobotModule {
         State.GOING_FAR.position2 = outPosition2;
         State.BACKDROP.position1 = outPosition1;
         State.BACKDROP.position2 = getBackdropPosition();
+        State.GOING_POKE.position1 = inPosition1;
+        State.GOING_POKE.position2 = pokePosition;
+        State.POKE.position1 = inPosition1;
+        State.POKE.position2 = pokePosition;
     }
 
     private State state;

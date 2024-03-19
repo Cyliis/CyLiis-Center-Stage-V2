@@ -31,11 +31,6 @@ public class RedPositions {
             new Pose(46,-90.5,-2.34),
             new Pose(46.5,-90.5,-2.34)
     };
-    public static Pose[] alignPositions3 = {
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2)
-    };
     public static Pose[] parkingPositions3 = {
             new Pose(38,-81,-Math.PI/2),
             new Pose(38,-81,-Math.PI/2),
@@ -67,11 +62,6 @@ public class RedPositions {
             new Pose(46.5,-91,-2.34),
             new Pose(46.5,-91,-2.34),
             new Pose(47,-91,-2.34)
-    };
-    public static Pose[] alignPositions2 = {
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2)
     };
     public static Pose[] parkingPositions2 = {
             new Pose(38,-81,-Math.PI/2),
@@ -105,11 +95,6 @@ public class RedPositions {
             new Pose(45,-91.5,-2.34),
             new Pose(45,-91.5,-2.34),
             new Pose(45,-91.5,-2.34)
-    };
-    public static Pose[] alignPositions1 = {
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2),
-            new Pose(50, -78, -Math.PI/2)
     };
     public static Pose[] parkingPositions1 = {
             new Pose(38,-81,-Math.PI/2),

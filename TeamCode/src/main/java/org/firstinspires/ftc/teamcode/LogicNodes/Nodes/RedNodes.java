@@ -45,7 +45,6 @@ public class RedNodes {
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
     private Pose[] scorePositions;
-    private Pose[] alignPositions;
     public static double outtakeActivationLine = -55;
     private Pose[] parkingPositions;
 
@@ -90,7 +89,6 @@ public class RedNodes {
                 extendoHeadingTolerance = RedPositions.extendoHeadingTolerance1;
                 extendoPositions = RedPositions.extendoPositions1;
                 scorePositions = RedPositions.scorePositions1;
-                alignPositions = RedPositions.alignPositions1;
                 parkingPositions = RedPositions.parkingPositions1;
                 startWaitTime = 0;
                 break;
@@ -107,7 +105,6 @@ public class RedNodes {
                 extendoHeadingTolerance = RedPositions.extendoHeadingTolerance2;
                 extendoPositions = RedPositions.extendoPositions2;
                 scorePositions = RedPositions.scorePositions2;
-                alignPositions = RedPositions.alignPositions2;
                 parkingPositions = RedPositions.parkingPositions2;
                 startWaitTime = 0;
                 break;
@@ -124,7 +121,6 @@ public class RedNodes {
                 extendoHeadingTolerance = RedPositions.extendoHeadingTolerance3;
                 extendoPositions = RedPositions.extendoPositions3;
                 scorePositions = RedPositions.scorePositions3;
-                alignPositions = RedPositions.alignPositions3;
                 parkingPositions = RedPositions.parkingPositions3;
                 startWaitTime = 0;
                 break;
@@ -234,7 +230,6 @@ public class RedNodes {
             DropDown.index = Math.max(0, DropDown.index - 1);
             Extendo.extendedPos = Extendo.extendedPos + reverseExtendoRetraction;
             robot.ramp.setState(Ramp.State.DOWN);
-            MecanumDrive.headingMultiplier = 3;
             if(intakeTries%headingCorrectionTries == 1 && intakeTries != 1) {
                 drive.setTargetPose(drive.getTargetPose().plus(new Pose(0,0,headingOffset * (cycle>1?-1:1))));
             }
