@@ -47,6 +47,25 @@ public class CoolIMU {
     }
 
 
+    public void startIMUThread(LinearOpMode opMode, Localizer localizer, boolean resetImu) {
+        new Thread(() -> {
+            if(resetImu)imu.resetYaw();
+            while ((opMode.opModeIsActive() && !opMode.isStopRequested()) || (opMode.opModeInInit() && !opMode.isStopRequested())) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (imuLock) {
+                    imuAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+                    localizer.update();
+//                    imuVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+                }
+            }
+        }).start();
+    }
+
+
 
     public void startIMUThread(LinearOpMode opMode) {
         new Thread(() -> {
@@ -80,7 +99,7 @@ public class CoolIMU {
     }
 
     public double getHeading() {
-        return imuAngle - imuOffset;
+        return imuAngle + imuOffset;
     }
     public double getVelocity() {
         return imuVelocity;

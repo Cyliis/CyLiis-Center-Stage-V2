@@ -106,6 +106,7 @@ public class RedNodes {
                 extendoPositions = RedPositions.extendoPositions2;
                 scorePositions = RedPositions.scorePositions2;
                 parkingPositions = RedPositions.parkingPositions2;
+//                startWaitTime = 0.5;
                 startWaitTime = 0;
                 break;
             case 3:
@@ -383,7 +384,7 @@ public class RedNodes {
             drive.setTargetPose(intakePositions[cycle+1]);
             cycle++;
             DropDown.index = Math.max(DropDown.index -1, 0);
-            if(cycle == 2) DropDown.index = 1;
+            if(cycle == 2) DropDown.index = 2;
             robot.ramp.setState(Ramp.State.DOWN);
         }, goToIntakePosition);
 

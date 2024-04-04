@@ -22,8 +22,10 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public static boolean leftMotorReversed = false, rightMotorReversed = true;
 
     public static double power = 1;
-    public static int groundPosLeft = 0, groundPosRight = 0, firstLevel = 280, increment = 100, level = 0, positionThresh = 16,
+    public static int groundPosLeft = 0, groundPosRight = 0, firstLevel = 280, increment = 100, positionThresh = 16,
             passthroughPosition = 250, purplePosition = 0;
+
+    public static double level = 0;
 
     public static double resetPower = -0.5, maxHoldPower = -0.2, velocityThreshold = 0;
 
@@ -49,13 +51,13 @@ public class Lift implements IStateBasedModule, IRobotModule {
         public int position;
         public final State nextState;
 
-        State(int position){
-            this.position = position;
+        State(double position){
+            this.position = (int)position;
             this.nextState = this;
         }
 
-        State(int position, State nextState){
-            this.position = position;
+        State(double position, State nextState){
+            this.position = (int)position;
             this.nextState = nextState;
         }
     }
@@ -79,8 +81,8 @@ public class Lift implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
-        State.UP.position = firstLevel + increment * level;
-        State.GOING_UP.position = firstLevel + increment * level;
+        State.UP.position = (int)(firstLevel + increment * level);
+        State.GOING_UP.position = (int)(firstLevel + increment * level);
         State.PASSTHROUGH.position = passthroughPosition;
         State.GOING_PASSTHROUGH.position = passthroughPosition;
         State.PURPLE.position = purplePosition;

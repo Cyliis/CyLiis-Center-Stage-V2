@@ -44,7 +44,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public static double triggerThreshold = 0.1;
+    public static double triggerThreshold = 0.3;
     public static double extensionDeadZone = 0.1;
 
     public void updateIntake(){
@@ -112,8 +112,10 @@ public class BuruSebiGamepadControl implements IRobotModule {
             }
         }
         else if(gamepad2.right_trigger >= triggerThreshold){ // press to intake
-            if(robotModules.intake.getState() == Intake.State.IDLE || robotModules.intake.getState() == Intake.State.CLOSING_GRIPPERS)
+            if(robotModules.intake.getState() == Intake.State.IDLE || robotModules.intake.getState() == Intake.State.CLOSING_GRIPPERS
+                    || robotModules.intake.getState() == Intake.State.REVERSE)
                 robotModules.intake.setState(Intake.State.START_INTAKE);
+            //might mess up
         } else { // idle
             if(robotModules.intake.getState() == Intake.State.OPENING_GRIPPERS || robotModules.intake.getState() == Intake.State.INTAKE
             || robotModules.intake.getState() == Intake.State.REVERSE || robotModules.intake.getState() == Intake.State.AUTO_REVERSE)
@@ -129,14 +131,26 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public void updateOuttake(){
         if(!Outtake.ENABLED) return;
         if(stickyGamepad2.dpad_up){
-            Lift.level = Math.min(9, Lift.level + 1);
+            Lift.level = Math.min(7, Lift.level + 1);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
         if(stickyGamepad2.dpad_down){
             Lift.level = Math.max(-1, Lift.level - 1);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
+        if(stickyGamepad1.left_bumper){
+            Lift.level = Math.max(-1, Lift.level - 0.5);
+            if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
+        }
+        if(stickyGamepad1.right_bumper){
+            Lift.level = Math.min(7.5, Lift.level + 0.5);
+            if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
+        }
 //        if(robotModules.intake.getState() != Intake.State.IDLE) return;
+
+        if(robotModules.lift.getState() == Lift.State.GOING_DOWN){
+            Lift.level = Math.ceil(Lift.level);
+        }
 
         if(Extendo.ENABLED && robotModules.extendo.getState() != Extendo.State.IN) return;
 

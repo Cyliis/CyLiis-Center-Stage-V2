@@ -90,7 +90,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions1;
                 scorePositions = BluePositions.scorePositions1;
                 parkingPositions = BluePositions.parkingPositions1;
-                startWaitTime = 0;
+                startWaitTime = 5;
                 break;
             case 2:
                 purplePosition = BluePositions.purplePosition2;
@@ -106,7 +106,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions2;
                 scorePositions = BluePositions.scorePositions2;
                 parkingPositions = BluePositions.parkingPositions2;
-                startWaitTime = 0;
+                startWaitTime = 5;
                 break;
             case 3:
                 purplePosition = BluePositions.purplePosition3;
@@ -122,7 +122,7 @@ public class BlueNodes {
                 extendoPositions = BluePositions.extendoPositions3;
                 scorePositions = BluePositions.scorePositions3;
                 parkingPositions = BluePositions.parkingPositions3;
-                startWaitTime = 0;
+                startWaitTime = 5;
                 break;
         }
     }

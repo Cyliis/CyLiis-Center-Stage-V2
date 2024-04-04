@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.Localizer;
+import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Wrappers.Analog30cm;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
@@ -41,7 +42,7 @@ public class Hardware {
     public Analog30cm extendoSensor;
 
     public enum Color{
-        Red, Blue
+        Red, Blue, Universal
     }
 
     public final Color color;
@@ -130,6 +131,8 @@ public class Hardware {
         imu = new CoolIMU(hm);
 
         localizer = new Localizer(this);
+
+        MecanumDrive.headingMultiplier = 1;
     }
 
     public void startThreads(LinearOpMode opMode){

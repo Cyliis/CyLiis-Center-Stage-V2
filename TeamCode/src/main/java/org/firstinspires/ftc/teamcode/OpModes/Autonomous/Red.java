@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedFar;
+import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous(name = "Daria rosie")

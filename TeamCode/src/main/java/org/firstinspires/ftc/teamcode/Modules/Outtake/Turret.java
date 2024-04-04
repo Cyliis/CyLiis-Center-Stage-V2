@@ -21,7 +21,7 @@ public class Turret implements IStateBasedModule, IRobotModule {
 
     public static double middle = 0.515;
     public static double range = Math.toRadians(355);
-    public static double limit = Math.toRadians(60);
+    public static double limit = Math.toRadians(90);
 
     public static double profileMaxVelocity = 20, profileAcceleration = 32;
     private final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(profileMaxVelocity, profileAcceleration, profileAcceleration);
@@ -48,6 +48,11 @@ public class Turret implements IStateBasedModule, IRobotModule {
     private void updateStateValues(){
         double targetAngle = Angles.normalize(Math.PI/2.0 * (color == Hardware.Color.Blue ? 1 : -1));
         double currentAngle = Angles.normalize(localizer.getHeading());
+        if(color == Hardware.Color.Universal){
+            if(Math.abs(Angles.normalize(Math.PI/2.0 - currentAngle)) > Math.abs(Angles.normalize(-Math.PI/2.0 - currentAngle)))
+                targetAngle = -Math.PI/2.0;
+            else targetAngle = Math.PI/2.0;
+        }
         double deltaAngle = Math.min(Math.max(Angles.normalize(targetAngle - currentAngle), -limit), limit);
         State.BACKDROP.position = middle + deltaAngle * (1.0/range);
         State.MIDDLE.position = middle;

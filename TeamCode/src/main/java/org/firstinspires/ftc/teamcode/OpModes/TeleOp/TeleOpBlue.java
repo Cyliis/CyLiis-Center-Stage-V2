@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruDriveTrainCon
 import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadControl;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
+import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Blue 🐟")
 public class TeleOpBlue extends LinearOpMode {
@@ -32,7 +33,7 @@ public class TeleOpBlue extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dash.getTelemetry());
 
-        hardware = new Hardware(hardwareMap, Hardware.Color.Blue);
+        hardware = new Hardware(hardwareMap, Hardware.Color.Universal, false);
 
         drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, true);
 
@@ -67,6 +68,7 @@ public class TeleOpBlue extends LinearOpMode {
             robotModules.telemetry(telemetry);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
+            telemetry.addData("Imu angle", hardware.imu.getHeading());
             loopTimer.reset();
 
             telemetry.update();

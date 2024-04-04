@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 
 @Config
 public class DepositPixelDetector {
-    public static double doublePixelTime = 0.2;
+    public static double doublePixelTime = 0;
 
     private final CoolDigitalSensor bb0, bb1;
 
@@ -24,6 +24,8 @@ public class DepositPixelDetector {
     private int pixels = 0;
     private int prevPixels = 0;
 
+    private boolean det0, det1;
+
     public int getPixels(){
         return pixels;
     }
@@ -37,7 +39,7 @@ public class DepositPixelDetector {
 
         prevPixels = pixels;
 
-        if(detection0 && detection1){
+        if((detection0 && detection1) && (det0 && det1)){
             if(doublePixelTimer.seconds() >= doublePixelTime) pixels = 2;
         }
         else {
@@ -45,5 +47,8 @@ public class DepositPixelDetector {
             if(detection0 || detection1) pixels = 1;
             else pixels = 0;
         }
+
+        det0 = detection0;
+        det1 = detection1;
     }
 }
