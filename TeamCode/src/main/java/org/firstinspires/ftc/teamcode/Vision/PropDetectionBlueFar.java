@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Vision;
 import android.graphics.Canvas;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -13,6 +14,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+@Disabled
 @Config
 public class PropDetectionBlueFar implements VisionProcessor {
 
