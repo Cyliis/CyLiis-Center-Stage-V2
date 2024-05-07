@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pivot;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Utils.DoubleStickyGamepad;
@@ -193,6 +194,10 @@ public class BuruSebiGamepadControl implements IRobotModule {
         if(stickyGamepad2.dpad_right){
             if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_POKE);
             if(robotModules.outtake.getState() == Outtake.State.POKE) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+        }
+        if(robotModules.extension.getState() == Extension.State.IN || robotModules.extension.getState() == Extension.State.FAR){
+            if(stickyGamepad1.left_bumper) Pivot.index = (((Pivot.index - 1) % 4) + 4) % 4;
+            if(stickyGamepad1.right_bumper) Pivot.index = (Pivot.index + 1) % 4;
         }
     }
 

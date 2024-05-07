@@ -15,7 +15,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
-        UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_SAFE, GOING_DOWN_DELAY, HOME_TURRET, RETRACT_GO_PASSTHROUGH, GO_DOWN,
+        UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_SAFE, GOING_DOWN_DELAY, HOME_END_EFFECTOR, RETRACT_GO_PASSTHROUGH, GO_DOWN,
         GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE,
         GOING_POKE, EXTEND_POKE, LIFT_GOING_CORRECT_POSITION_POKE, POKE
     }
@@ -56,10 +56,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 turret.setState(Turret.State.BACKDROP);
                 break;
             case GOING_DOWN:
-                setState(State.HOME_TURRET);
+                setState(State.HOME_END_EFFECTOR);
                 break;
-            case HOME_TURRET:
+            case HOME_END_EFFECTOR:
                 turret.setState(Turret.State.GOING_MIDDLE);
+                pivot.setState(Pivot.State.GOING_HOME);
                 break;
             case RETRACT_GO_PASSTHROUGH:
                 lift.setState(Lift.State.GOING_PASSTHROUGH);
@@ -101,11 +102,13 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     private final Lift lift;
     private final Extension extension;
     private final Turret turret;
+    private final Pivot pivot;
 
-    public Outtake(Lift lift, Extension extension, Turret turret, State initialState){
+    public Outtake(Lift lift, Extension extension, Turret turret, Pivot pivot, State initialState){
         this.lift = lift;
         this.extension = extension;
         this.turret = turret;
+        this.pivot = pivot;
         this.state = initialState;
         timer.startTime();
     }
@@ -117,6 +120,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         lift.atStart();
         extension.atStart();
         turret.atStart();
+        pivot.atStart();
 
     }
 
@@ -128,6 +132,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         lift.initUpdate();
         extension.initUpdate();
         turret.initUpdate();
+        pivot.initUpdate();
     }
 
     @Override
@@ -169,8 +174,8 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                 if(lift.getState() == Lift.State.UP)
                     setState(State.UP);
                 break;
-            case HOME_TURRET:
-                if(turret.getState() == Turret.State.MIDDLE)
+            case HOME_END_EFFECTOR:
+                if(turret.getState() == Turret.State.MIDDLE && pivot.getState() == Pivot.State.HOME)
                     setState(State.RETRACT_GO_PASSTHROUGH);
                 break;
             case RETRACT_GO_PASSTHROUGH:
@@ -227,6 +232,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
         lift.update();
         extension.update();
         turret.update();
+        pivot.update();
     }
 }
 

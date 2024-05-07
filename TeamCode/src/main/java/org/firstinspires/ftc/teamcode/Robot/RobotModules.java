@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pivot;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
@@ -37,6 +38,7 @@ public class RobotModules implements IRobotModule {
     public final Extension extension;
     public final Lift lift;
     public final Turret turret;
+    public final Pivot pivot;
 
     public final Outtake outtake;
 
@@ -66,8 +68,9 @@ public class RobotModules implements IRobotModule {
         extension = new Extension(hardware, Extension.State.IN);
         lift = new Lift(hardware, Lift.State.RESETTING);
         turret = new Turret(hardware, Turret.State.MIDDLE);
+        pivot = new Pivot(hardware, Pivot.State.HOME);
 
-        outtake = new Outtake(lift, extension, turret, Outtake.State.DOWN);
+        outtake = new Outtake(lift, extension, turret, pivot, Outtake.State.DOWN);
 
         modules.add(outtake);
 
