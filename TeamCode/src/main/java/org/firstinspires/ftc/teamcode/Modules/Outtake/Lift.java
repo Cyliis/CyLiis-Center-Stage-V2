@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.ejml.data.DGrowArray;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Math.AsymmetricMotionProfile;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.IRobotModule;
@@ -18,29 +20,18 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
-    public final CoolMotor leftMotor, rightMotor;
-    public static boolean leftMotorReversed = false, rightMotorReversed = true;
+    public final CoolMotor motor;
+    public static boolean motorReversed = false;
 
     public static double power = 1;
-    public static int groundPosLeft = 0, groundPosRight = 0, firstLevel = 280, increment = 100, positionThresh = 16,
+    public static int groundPos = 0, firstLevel = 280, increment = 100, positionThresh = 25,
             passthroughPosition = 250, purplePosition = 0;
 
     public static double level = 0;
 
-    public static double resetPower = -0.5, maxHoldPower = -0.2, velocityThreshold = 0;
-
-//    public static PIDCoefficients pid = new PIDCoefficients(0.02,0.1,0.0006);
-//    public static double ff1 = 0.05, ff2 = 0.00003;
-
-    public static PIDFCoefficients pidf = new PIDFCoefficients(25,0.1,0,0);
+    public static double resetPower = -1, holdPower = -0.2, holdThresh = 3;
 
     private final ElapsedTime timer = new ElapsedTime();
-    public static double timeOut = 0.15;
-
-    public static double maxVelocity = 12000, acceleration = 10000, deceleration = 3500;
-    public final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(maxVelocity, acceleration, deceleration);
-    public static boolean profiled = false;
-    public static boolean defaultProfiledState = false;
 
     public enum State{
         DOWN(0), RESETTING(0, DOWN), GOING_DOWN(0, RESETTING),
@@ -71,11 +62,6 @@ public class Lift implements IStateBasedModule, IRobotModule {
     public void setState(State newState){
         updateStateValues();
         if(state == newState) return;
-        profile.setMotion(profile.getPosition(), newState.position, profile.getSignedVelocity());
-        if(newState != State.DOWN){
-            leftMotor.motor.motor.setMotorEnable();
-            rightMotor.motor.motor.setMotorEnable();
-        }
         timer.reset();
         this.state = newState;
     }
@@ -90,21 +76,16 @@ public class Lift implements IStateBasedModule, IRobotModule {
     }
 
     public Lift(Hardware hardware, State initialState){
-        if(!ENABLED) leftMotor = null;
+        //port 2
+
+        if(!ENABLED) motor = null;
         else {
-            leftMotor = new CoolMotor(hardware.meh1, CoolMotor.RunMode.RTP, leftMotorReversed);
-            leftMotor.setPower(power);
-            leftMotor.setTarget(initialState.position + groundPosLeft);
-//            leftMotor.motor.motor.setTargetPositionTolerance(20);
+            motor = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RUN, motorReversed);
+            motor.motor.motor.setCurrentAlert(8, CurrentUnit.AMPS);
+            setState(initialState);
         }
-        if(!ENABLED) rightMotor = null;
-        else {
-            rightMotor = new CoolMotor(hardware.meh2, CoolMotor.RunMode.RTP, rightMotorReversed);
-            rightMotor.setPower(power);
-            rightMotor.setTarget(initialState.position + groundPosRight);
-//            rightMotor.motor.motor.setTargetPositionTolerance(20);
-        }
-        profiled = defaultProfiledState;
+
+        level = 0;
 
         timer.startTime();
 
@@ -121,23 +102,21 @@ public class Lift implements IStateBasedModule, IRobotModule {
     }
 
     @Override
+    public void initUpdate() {
+        update();
+    }
+
+    @Override
     public void updateState() {
-        if(state == State.RESETTING){
-            if(Math.abs(leftMotor.motor.motor.getVelocity()) <= velocityThreshold && timer.seconds() >= timeOut){
-                groundPosLeft = leftMotor.getCurrentPosition();
-                groundPosRight = rightMotor.getCurrentPosition();
-                updateStateValues();
+        if(state == State.GOING_DOWN){
+            if(motor.motor.motor.isOverCurrent()){
+                groundPos = motor.getCurrentPosition();
                 setState(State.DOWN);
             }
         }
-        else if(Math.abs((state.position + groundPosLeft) - leftMotor.getCurrentPosition()) <= positionThresh)
-            setState(state.nextState);
-        if(state == State.GOING_DOWN && timer.seconds() >= timeOut){
-            if(Math.abs(leftMotor.motor.motor.getVelocity()) <= velocityThreshold){
-                groundPosLeft = leftMotor.getCurrentPosition();
-                groundPosRight = rightMotor.getCurrentPosition();
-                setState(State.RESETTING);
-            }
+        else{
+            if(Math.abs((motor.getCurrentPosition()- groundPos)-state.position) <= positionThresh)
+                setState(state.nextState);
         }
     }
 
@@ -145,42 +124,24 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateHardware() {
-
+        if(Hardware.voltage <= 9) motor.motor.motor.setCurrentAlert(7, CurrentUnit.AMPS);
+        else motor.motor.motor.setCurrentAlert(8, CurrentUnit.AMPS);
         if(state == State.DOWN){
-            if(leftMotor.motor.motor.isMotorEnabled()) leftMotor.motor.motor.setMotorDisable();
-            if(rightMotor.motor.motor.isMotorEnabled()) rightMotor.motor.motor.setMotorDisable();
+            if(motor.getMode() != CoolMotor.RunMode.RUN){
+                motor.setMode(CoolMotor.RunMode.RUN);
+            }
+            if (motor.getCurrentPosition() > groundPos + holdThresh) motor.setPower(holdPower);
+            else if(motor.getCurrentPosition() <= groundPos + holdThresh) motor.setPower(0);
         }
-
-        profile.update();
-        pidf.algorithm = MotorControlAlgorithm.LegacyPID;
-
-        if(state == State.RESETTING){
-            if(leftMotor.getMode() != CoolMotor.RunMode.RUN) leftMotor.setMode(CoolMotor.RunMode.RUN);
-            if(rightMotor.getMode() != CoolMotor.RunMode.RUN) rightMotor.setMode(CoolMotor.RunMode.RUN);
-            leftMotor.setPower(resetPower);
-            rightMotor.setPower(resetPower);
+        else if(state == State.GOING_DOWN){
+            if(motor.getMode() != CoolMotor.RunMode.RUN) motor.setMode(CoolMotor.RunMode.RUN);
+            motor.setPower(resetPower);
         }else {
-            if(!profiled)target = state.position;
-            else target = (int)profile.getPosition();
-//            leftMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
-//            rightMotor.setPIDF(pid, ff1 + ff2 * (double) (target - groundPos));
-            leftMotor.setPIDF(pidf);
-            rightMotor.setPIDF(pidf);
-//            leftMotor.calculatePIDPower(encoder.getCurrentPosition(), target);
-//            rightMotor.calculatePIDPower(encoder.getCurrentPosition(), target);
-            leftMotor.setTarget(target + groundPosLeft);
-            rightMotor.setTarget(target + groundPosRight);
-            if(leftMotor.power != power) leftMotor.power = power;
-            if(rightMotor.power != power) rightMotor.power = power;
-            if(leftMotor.getMode() != CoolMotor.RunMode.RTP) leftMotor.setMode(CoolMotor.RunMode.RTP);
-            if(rightMotor.getMode() != CoolMotor.RunMode.RTP) rightMotor.setMode(CoolMotor.RunMode.RTP);
-//            if(state == State.DOWN){
-//                leftMotor.power = Math.max(leftMotor.power, maxHoldPower);
-//                rightMotor.power = Math.max(rightMotor.power, maxHoldPower);
-//            }
+            target = state.position;
+            motor.setTarget(target + groundPos);
+            motor.setPower(power);
+            if(motor.getMode() != CoolMotor.RunMode.RTP) motor.setMode(CoolMotor.RunMode.RTP);
         }
-        leftMotor.update();
-        rightMotor.update();
-
+        motor.update();
     }
 }

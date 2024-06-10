@@ -18,35 +18,33 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     public static double intakePosition = 0.5, upPosition = 0.5;
     public static int index = 0;
-    public static double pos0 = 0.28, pos1 = 0.42, pos2 = 0.53, pos3 = 0.63, pos4 = 0.69;
-    public static double upPos0 = 0.68, upPos1 = 0.68, upPos2 = 0.84, upPos3 = 0.9, upPos4 = 0.98;
+    public static double init = 0.32;
+    public static double pos0 = 0.35, pos1 = 0.39, pos2 = 0.42, pos3 = 0.45, pos4 = 0.47;
+//    public static double upPos = 0.4;
+    public static double inPos = 0.325;
 
+    public static double upOffset = 0.05;
+
+    public static boolean in = true;
 
     public enum State {
-        UP(upPosition), INTAKE(intakePosition);
+        UP(upPosition), INTAKE(intakePosition), INIT(init);
 
         public double position;
-        public final State nextState;
 
         State(double position) {
             this.position = position;
-            this.nextState = this;
-        }
-
-        State(double position, State nextState) {
-            this.position = position;
-            this.nextState = nextState;
         }
     }
 
     private void updateStateValues() {
 
         double[] poses = new double[]{pos0, pos1, pos2, pos3, pos4};
-        intakePosition = poses[index];
-        double[] upPoses = new double[]{upPos0, upPos1, upPos2, upPos3, upPos4};
-        upPosition = upPoses[index];
+        intakePosition = index == 0 ? (in?inPos:poses[index]) : poses[index];
+        upPosition = intakePosition + upOffset;
         State.UP.position = upPosition;
         State.INTAKE.position = intakePosition;
+        State.INIT.position = init;
     }
 
     private State state;
@@ -65,8 +63,7 @@ public class DropDown implements IStateBasedModule, IRobotModule {
 
     public DropDown(Hardware hardware, State initialState) {
         if (!ENABLED) servo = null;
-            // maybe sch1
-        else servo = new CoolServo(hardware.seh1, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.seh4, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if (ENABLED) servo.forceUpdate();

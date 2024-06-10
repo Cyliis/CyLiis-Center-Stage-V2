@@ -13,15 +13,15 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
     private final ActiveIntake activeIntake;
     private final DropDown dropDown;
-    private final Ramp ramp;
     private final Extendo extendo;
     private final BottomGripper bottomGripper;
     private final TopGripper topGripper;
 
-    public Intake(ActiveIntake activeIntake, DropDown dropDown, Ramp ramp, Extendo extendo, BottomGripper bottomGripper, TopGripper topGripper){
+    public static double delay = 0.05;
+
+    public Intake(ActiveIntake activeIntake, DropDown dropDown, Extendo extendo, BottomGripper bottomGripper, TopGripper topGripper){
         this.activeIntake = activeIntake;
         this.dropDown = dropDown;
-        this.ramp = ramp;
         this.extendo = extendo;
         this.bottomGripper = bottomGripper;
         this.topGripper = topGripper;
@@ -34,7 +34,6 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
          activeIntake.initUpdate();
          dropDown.initUpdate();
-         ramp.initUpdate();
          extendo.initUpdate();
     }
 
@@ -44,14 +43,13 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
         activeIntake.atStart();
         dropDown.atStart();
-        ramp.atStart();
         extendo.atStart();
     }
 
     public enum State {
         IDLE,
         START_INTAKE, PREPARE_DROPDOWN, OPENING_GRIPPERS, INTAKE, AUTO_REVERSE,
-        STOP_INTAKE, REVERSE, GOING_IN, CLOSING_GRIPPERS
+        STOP_INTAKE,REVERSE_DELAY ,REVERSE, GOING_IN, CLOSING_GRIPPERS
     }
 
     private State state;
@@ -143,6 +141,10 @@ public class Intake implements IStateBasedModule, IRobotModule {
                     if (activeIntake.getState() == ActiveIntake.State.RUNNING) setState(State.INTAKE);
                 }
                 break;
+            case REVERSE_DELAY:
+                if(timer.seconds() >= delay)
+                    setState(State.REVERSE);
+                break;
         }
     }
 
@@ -150,7 +152,6 @@ public class Intake implements IStateBasedModule, IRobotModule {
     public void updateHardware() {
         activeIntake.update();
         dropDown.update();
-        ramp.update();
         extendo.update();
     }
 
@@ -160,7 +161,6 @@ public class Intake implements IStateBasedModule, IRobotModule {
 
         activeIntake.emergencyStop();
         dropDown.emergencyStop();
-        ramp.emergencyStop();
         extendo.emergencyStop();
     }
 }

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Utils.Vector;
 
 @Config
-@TeleOp(name = "Deceleration Tuner")
+@TeleOp(name = "Deceleration Tuner", group="zz")
 public class DecelerationTuner extends LinearOpMode {
 
     FtcDashboard dash;

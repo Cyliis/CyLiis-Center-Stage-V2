@@ -6,16 +6,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Modules.Outtake.Turret;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pivot;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
+import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
 @TeleOp(group="zz")
-public class TurretCalibration extends LinearOpMode {
+public class PivotCalibration extends LinearOpMode {
     FtcDashboard dash;
 
     Hardware hardware;
 
-    Turret turret;
+    Pivot pivot;
+
+    StickyGamepad gamepad;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,8 +29,10 @@ public class TurretCalibration extends LinearOpMode {
 
         hardware = new Hardware(hardwareMap, Hardware.Color.Blue);
 
+        gamepad = new StickyGamepad(gamepad1);
+
         hardware.startThreads(this);
-        turret = new Turret(hardware, Turret.State.MIDDLE);
+        pivot = new Pivot(hardware, Pivot.State.ROTATED);
 
         while(opModeInInit() && !isStopRequested()){
 
@@ -42,13 +47,20 @@ public class TurretCalibration extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             hardware.update();
 
-            turret.update();
+            if(gamepad.right_bumper){
+                Pivot.index = (Pivot.index + 1) % 4;
+            }
+            if(gamepad.left_bumper ){
+                Pivot.index = (((Pivot.index - 1) % 4)+4)%4;
+            }
+
+            pivot.update();
+            gamepad.update();
 
 //            robotModules.telemetry(telemetry);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
-            telemetry.addData("Imu angle", hardware.localizer.getHeading());
-            telemetry.addData("Turret position", Turret.State.BACKDROP.position);
+            telemetry.addData("Pivot index", Pivot.index);
             loopTimer.reset();
 
             telemetry.update();

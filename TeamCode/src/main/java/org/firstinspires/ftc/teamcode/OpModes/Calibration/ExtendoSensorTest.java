@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.teamcode.Wrappers.Analog30cm;
 
-@TeleOp
+@TeleOp(group="zz")
 public class ExtendoSensorTest extends OpMode {
     Analog30cm sensor;
 

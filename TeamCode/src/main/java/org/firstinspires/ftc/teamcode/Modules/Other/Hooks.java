@@ -12,25 +12,25 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 public class Hooks implements IRobotModule, IStateBasedModule {
     public static boolean ENABLED = true;
 
-    private final CoolServo servo;
-    public static boolean latchReversed = false;
+    private final CoolServo servo1, servo2;
 
-    public static double latchOpenPosition1 = 1, latchOpenPosition2 = 0, latchClosedPosition = 0.5;
+    public static double openPos1 = 0.75, openPos2 = 0.25, closedPos1 = 0.5, closedPos2 = 0.5;
 
     public enum State{
-        IDLE(latchClosedPosition), HOOK1(latchOpenPosition1), HOOK2(latchOpenPosition2);
+        CLOSED(closedPos1, closedPos2), OPEN(openPos1, openPos2);
 
-        public double pos;
+        public double pos1, pos2;
 
-        State(double pos){
-            this.pos = pos;
+        State(double pos1, double pos2){
+            this.pos1 = pos1; this.pos2 = pos2;
         }
     }
 
     private void updateStateValues(){
-        State.IDLE.pos = latchClosedPosition;
-        State.HOOK1.pos = latchOpenPosition1;
-        State.HOOK2.pos = latchOpenPosition2;
+        State.CLOSED.pos1 = closedPos1;
+        State.CLOSED.pos2 = closedPos2;
+        State.OPEN.pos1 = openPos1;
+        State.OPEN.pos2 = openPos2;
     }
 
     private State state;
@@ -49,11 +49,14 @@ public class Hooks implements IRobotModule, IStateBasedModule {
 
     public Hooks(Hardware hardware, State initialState){
         if(!ENABLED) {
-            servo = null;
+            servo1 = null;
+            servo2 = null;
         }
         else {
-            servo = new CoolServo(hardware.sch5, latchReversed, initialState.pos);
-            servo.forceUpdate();
+            servo1 = new CoolServo(hardware.seh3, false, initialState.pos1);
+            servo2 = new CoolServo(hardware.seh5, false, initialState.pos1);
+            servo1.forceUpdate();
+            servo2.forceUpdate();
         }
         timer.startTime();
         setState(initialState);
@@ -75,8 +78,10 @@ public class Hooks implements IRobotModule, IStateBasedModule {
 
     @Override
     public void updateHardware() {
-        servo.setPosition(state.pos);
+        servo1.setPosition(state.pos1);
+        servo2.setPosition(state.pos2);
 
-        servo.update();
+        servo1.update();
+        servo2.update();
     }
 }

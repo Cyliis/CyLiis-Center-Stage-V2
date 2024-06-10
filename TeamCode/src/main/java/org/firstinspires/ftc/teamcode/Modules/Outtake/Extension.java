@@ -23,60 +23,10 @@ public class Extension implements IStateBasedModule, IRobotModule {
     public final CoolServo servo1, servo2;
     public static boolean reversedServo1 = false, reversedServo2 = true;
 
-    public static double inPosition1 = 0.69, outPosition1 = 0.17,
-            inPosition2 = 0.37, purplePosition = 0.45, closePosition = 0.6, outPosition2 = 0.89, pokePosition = 0.89;
+    public static double inPosition1 = 0.78, outPosition1 = 0.18,
+            inPosition2 = 0.29, purplePosition = 0.35, closePosition = 0.5, outPosition2 = 0.83, pokePosition = 0.83;
 
     public static double profileMaxVelocity = 40, profileAcceleration = 32, profileDeceleration = 24;
-
-    public static double d0 = 57.811, l1 = 110.04, l2 = 110, h1 = 0.465, h2 = 18;
-    public static double limit = 161.48907;
-    public static double range = 2.288146111923855;
-    public static double direction = -1;
-
-    public static double sensorOffset = 53;
-    public static double linearAdd = 13.0/300.0;
-    public static double turretLength = 0;
-    public static double offset = 0;
-
-    private final Localizer localizer;
-    private final Hardware.Color color;
-
-    public static double filterParameter = 0.5;
-    private final LowPassFilter filter = new LowPassFilter(filterParameter, 0);
-
-    public double sensorReading;
-
-    public Vector extensionVector = new Vector(0,0);
-
-    public double servoDelta = 0;
-
-    public double calculateBackdropExtension(){
-        double distance = sensorReading;
-
-        Vector targetVector = new Vector(distance * Math.cos(localizer.getHeading()), distance * Math.sin(localizer.getHeading()));
-        Vector turretVector = new Vector(0, (color == Hardware.Color.Blue?1:-1) * turretLength);
-        Vector offsetVector = new Vector(offset * Math.cos(localizer.getHeading()), offset * Math.sin(localizer.getHeading()));
-
-        extensionVector = targetVector.plus(turretVector.scaledBy(-1)).plus(offsetVector.scaledBy(-1));
-
-        return Math.min(limit, extensionVector.getMagnitude());
-    }
-
-    public double calculateAngle(double distance){
-        double a = Math.sqrt((distance + d0) * (distance + d0) + (h2-h1) * (h2-h1));
-        return Math.acos((a * a + l1 * l1 - l2 * l2)/(2 * a * l1));
-    }
-
-    public double getBackdropPosition(){
-        double deltaFromIn = calculateAngle(calculateBackdropExtension()) - calculateAngle(0);
-        servoDelta = (deltaFromIn * direction) / range;
-
-        if(servoDelta < 0) servoDelta = 0;
-        if(servoDelta > (outPosition2 - inPosition2)) servoDelta = outPosition2-inPosition2;
-        if(Double.isNaN(servoDelta)) servoDelta = 0;
-
-        return inPosition2 + servoDelta;
-    }
 
     public static double boopTime = 0.2;
 
@@ -85,7 +35,7 @@ public class Extension implements IStateBasedModule, IRobotModule {
         CLOSE(outPosition1, closePosition), GOING_CLOSE(outPosition1, closePosition, CLOSE),
         MID(outPosition1, inPosition2), GOING_MID(outPosition1, inPosition2, MID),
         FAR(outPosition1, outPosition2), GOING_FAR(outPosition1, outPosition2, FAR),
-        BACKDROP(outPosition1, inPosition2), BOOP(outPosition1, inPosition2),
+        BOOP(outPosition1, inPosition2),
         PURPLE(outPosition1, purplePosition), GOING_PURPLE(outPosition1, purplePosition, PURPLE),
         POKE(inPosition1, pokePosition), GOING_POKE(inPosition1, pokePosition, POKE);
 
@@ -119,8 +69,6 @@ public class Extension implements IStateBasedModule, IRobotModule {
         State.FAR.position2 = outPosition2;
         State.GOING_FAR.position1 = outPosition1;
         State.GOING_FAR.position2 = outPosition2;
-        State.BACKDROP.position1 = outPosition1;
-        State.BACKDROP.position2 = getBackdropPosition();
         State.GOING_POKE.position1 = inPosition1;
         State.GOING_POKE.position2 = pokePosition;
         State.POKE.position1 = inPosition1;
@@ -143,16 +91,13 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     public Extension(Hardware hardware, State initialState){
         if(!ENABLED) servo1 = null;
-        else servo1 = new CoolServo(hardware.sch0, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
+        else servo1 = new CoolServo(hardware.sch1, reversedServo1, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position1);
         if(!ENABLED) servo2 = null;
-        else servo2 = new CoolServo(hardware.sch2, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
+        else servo2 = new CoolServo(hardware.sch0, reversedServo2, profileMaxVelocity, profileAcceleration, profileDeceleration, initialState.position2);
         if(ENABLED){
             servo1.forceUpdate();
             servo2.forceUpdate();
         }
-
-        localizer = hardware.localizer;
-        color = hardware.color;
 
         timer.startTime();
         setState(initialState);
@@ -176,11 +121,6 @@ public class Extension implements IStateBasedModule, IRobotModule {
 
     @Override
     public void updateHardware() {
-        if(state == State.BACKDROP) {
-            servo2.cachedPosition = state.position2;
-            servo2.forceUpdate();
-        }
-
         servo1.setPosition(state.position1);
         servo2.setPosition(state.position2);
 

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@TeleOp
+@TeleOp(group="zz")
 public class DriveMotorDebugger extends OpMode {
     DcMotorEx m0,m1,m2,m3;
 

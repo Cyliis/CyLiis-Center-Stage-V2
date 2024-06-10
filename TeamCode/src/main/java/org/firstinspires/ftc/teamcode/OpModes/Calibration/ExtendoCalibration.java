@@ -15,19 +15,20 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.Wrappers.Encoder;
 
 @Config
-@TeleOp
+@TeleOp(group="zz")
 public class ExtendoCalibration extends LinearOpMode {
     FtcDashboard dash;
 
     Hardware hardware;
 
-    CoolMotor motor;
+    CoolMotor motor1, motor2;
+    Encoder encoder;
 
     StickyGamepad gamepad;
 
     public static int target = 0;
 
-    public static double hertz = 50;
+    public static double hertz = 30;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,16 +37,16 @@ public class ExtendoCalibration extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dash.getTelemetry());
 
-        hardware = new Hardware(hardwareMap, Hardware.Color.Blue);
+        hardware = new Hardware(hardwareMap, Hardware.Color.Universal);
 
         gamepad = new StickyGamepad(gamepad1);
 
         hardware.startThreads(this);
 
-        motor = new CoolMotor(hardware.meh0, CoolMotor.RunMode.RTP, Extendo.motorReversed);
-
-        motor.setPower(1);
-        motor.setTarget(0);
+        motor1 = new CoolMotor(hardware.meh0, CoolMotor.RunMode.PID, Extendo.motor1Reversed);
+        motor2 = new CoolMotor(hardware.meh1, CoolMotor.RunMode.PID, Extendo.motor2Reversed);
+        encoder = hardware.eeh0;
+        if(Extendo.encoderReversed) encoder.setDirection(Encoder.Direction.REVERSE);
 
         while(opModeInInit() && !isStopRequested()){
 
@@ -60,15 +61,18 @@ public class ExtendoCalibration extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             hardware.update();
 
-            motor.setPIDF(Extendo.PIDF);
-            motor.setTarget(target);
+            motor1.setPIDF(Extendo.PIDF, Extendo.PIDF.f * Math.signum(motor1.getPIDPower(encoder.getCurrentPosition(), target)));
+            motor1.calculatePIDPower(encoder.getCurrentPosition(), target);
+            motor2.setPIDF(Extendo.PIDF, Extendo.PIDF.f * Math.signum(motor2.getPIDPower(encoder.getCurrentPosition(), target)));
+            motor2.calculatePIDPower(encoder.getCurrentPosition(), target);
 
-            motor.update();
+            motor1.update();
+            motor2.update();
 
             while (loopTimer.seconds() <= (1.0/hertz));
 
-            telemetry.addData("Target", motor.motor.motor.getTargetPosition());
-            telemetry.addData("Current", motor.getCurrentPosition());
+            telemetry.addData("Target", motor1.motor.motor.getTargetPosition());
+            telemetry.addData("Current", encoder.getCurrentPosition());
             telemetry.addData("Voltage", Hardware.voltage);
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
 

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Blue 🐟")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Blue 🐟🔵", group="main")
 public class TeleOpBlue extends LinearOpMode {
 
     FtcDashboard dash;
@@ -45,6 +45,7 @@ public class TeleOpBlue extends LinearOpMode {
         hardware.startThreads(this);
 
         while(opModeInInit() && !isStopRequested()){
+            hardware.update();
             robotModules.initUpdate();
             robotModules.telemetry(telemetry);
             telemetry.update();

@@ -2,23 +2,20 @@ package org.firstinspires.ftc.teamcode.OpModes.Calibration;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
-import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
-@TeleOp
+@TeleOp(group="zz")
 public class IntakeCalibration extends LinearOpMode {
     FtcDashboard dash;
 
     Hardware hardware;
 
-    Ramp ramp;
     DropDown dropDown;
 
     StickyGamepad gamepad;
@@ -35,7 +32,6 @@ public class IntakeCalibration extends LinearOpMode {
         gamepad = new StickyGamepad(gamepad1);
 
         hardware.startThreads(this);
-        ramp = new Ramp(hardware, Ramp.State.DOWN);
         dropDown = new DropDown(hardware, DropDown.State.UP);
 
         while(opModeInInit() && !isStopRequested()){
@@ -62,7 +58,6 @@ public class IntakeCalibration extends LinearOpMode {
                 DropDown.index = Math.min(4, DropDown.index + 1);
             }
 
-            ramp.update();
             dropDown.update();
             gamepad.update();
 
@@ -72,7 +67,6 @@ public class IntakeCalibration extends LinearOpMode {
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             telemetry.addData("Dropdown level", DropDown.index);
-            telemetry.addData("Ramp state", ramp.getState());
             telemetry.addData("Dropdown state", dropDown.getState());
             loopTimer.reset();
 

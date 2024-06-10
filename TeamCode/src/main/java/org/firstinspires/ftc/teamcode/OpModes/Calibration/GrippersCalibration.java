@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
-@TeleOp
+@TeleOp(group="zz")
 public class GrippersCalibration extends LinearOpMode {
     FtcDashboard dash;
 

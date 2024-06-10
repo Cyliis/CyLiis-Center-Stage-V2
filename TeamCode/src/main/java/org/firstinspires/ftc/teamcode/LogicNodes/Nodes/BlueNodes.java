@@ -10,14 +10,12 @@ import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Other.DepositPixelDetector;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
-import org.firstinspires.ftc.teamcode.OpModes.Autonomous.Blue;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
@@ -206,7 +204,6 @@ public class BlueNodes {
         intake.addCondition(()->detector.getPixels() == 1 && timer.seconds() >= intakeTimeOut && intakeTries<maxRetries, ()->{
             robot.intake.setState(Intake.State.REVERSE);
             Extendo.extendedPos = Extendo.extendedPos - reverseExtendoRetraction;
-            robot.ramp.setState(Ramp.State.UP);
             intakeTries++;
             timer.reset();
         }, reverseToRetry);
@@ -220,7 +217,6 @@ public class BlueNodes {
         intake.addCondition(()->detector.getPixels() == 0 && timer.seconds() >= intakeTimeOut, ()->{
             robot.intake.setState(Intake.State.REVERSE);
             Extendo.extendedPos = Extendo.extendedPos - reverseExtendoRetraction;
-            robot.ramp.setState(Ramp.State.UP);
             intakeTries++;
             timer.reset();
         }, reverseToRetry);
@@ -229,7 +225,6 @@ public class BlueNodes {
             robot.intake.setState(Intake.State.START_INTAKE);
             DropDown.index = Math.max(0, DropDown.index - 1);
             Extendo.extendedPos = Extendo.extendedPos + reverseExtendoRetraction;
-            robot.ramp.setState(Ramp.State.DOWN);
             MecanumDrive.headingMultiplier = 3;
             if(intakeTries%headingCorrectionTries == 1 && intakeTries != 1) {
                 drive.setTargetPose(drive.getTargetPose().plus(new Pose(0,0,headingOffset * (cycle>1?-1:1))));
@@ -241,7 +236,6 @@ public class BlueNodes {
             robot.intake.setState(Intake.State.STOP_INTAKE);
             robot.activeIntake.setState(ActiveIntake.State.HOLD);
             robot.intake.setState(Intake.State.GOING_IN);
-            robot.ramp.setState(Ramp.State.UP);
             drive.setTargetPose(alignToCrossFieldForYellowPosition);
         }, alignToCross);
 
@@ -249,7 +243,6 @@ public class BlueNodes {
             robot.intake.setState(Intake.State.STOP_INTAKE);
             robot.activeIntake.setState(ActiveIntake.State.HOLD);
             robot.intake.setState(Intake.State.GOING_IN);
-            robot.ramp.setState(Ramp.State.UP);
             drive.setTargetPose(scorePositions[cycle]);
         }, goToScoringPosition);
 
@@ -325,7 +318,6 @@ public class BlueNodes {
 
         alignToCrossBack.addCondition(()->drive.reachedTarget(8), ()->{
             drive.setTargetPose(intakePositions[cycle+1]);
-            robot.ramp.setState(Ramp.State.DOWN);
             cycle = 0;
         }, goToIntakePosition);
 
@@ -385,7 +377,6 @@ public class BlueNodes {
             cycle++;
             DropDown.index = Math.max(DropDown.index -1, 0);
             if(cycle == 2) DropDown.index = 1;
-            robot.ramp.setState(Ramp.State.DOWN);
         }, goToIntakePosition);
 
 //        align.addCondition(()->drive.reachedHeading(alignHeadingTolerance), ()-> {

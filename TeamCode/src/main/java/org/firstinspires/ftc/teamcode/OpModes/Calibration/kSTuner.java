@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Utils.Vector;
 
-@TeleOp
+@TeleOp(group="zz")
 public class kSTuner extends LinearOpMode {
 
     Hardware hardware;

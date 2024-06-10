@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 
 @Config
 public class DepositPixelDetector {
-    public static double doublePixelTime = 0;
+    public static double doublePixelTime = 0.05;
 
     private final CoolDigitalSensor bb0, bb1;
 

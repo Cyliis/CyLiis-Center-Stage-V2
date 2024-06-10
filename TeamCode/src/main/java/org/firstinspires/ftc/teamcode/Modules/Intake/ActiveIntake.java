@@ -14,9 +14,9 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
     public static boolean ENABLED = true;
 
     private final CoolMotor motor;
-    public static boolean reversedMotor = false;
+    public static boolean reversedMotor = true;
 
-    public static double runningPower = 1, reversePower = -0.7, holdPower = 0.4;
+    public static double runningPower = 1, reversePower = -0.7, holdPower = 0.6;
 
     public static double pushTime = 0.2;
 

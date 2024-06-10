@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp
+@TeleOp(group="zz")
 public class SimpleDT extends OpMode {
     DcMotorEx mfl, mfr, mbl, mbr;
 

@@ -52,6 +52,7 @@ public class Blue extends LinearOpMode {
         robotModules = new RobotModules(hardware, drive);
 
         hardware.startThreads(this);
+        Hardware.AUTO = true;
 
         processor = new PropDetectionBlueFar();
         portal = new VisionPortal.Builder()
@@ -68,6 +69,7 @@ public class Blue extends LinearOpMode {
         robotModules.topGripper.setState(TopGripper.State.OPEN);
 
         while(opModeInInit() && !isStopRequested()){
+            hardware.update();
             detectionCase = processor.detection;
 
             robotModules.initUpdate();

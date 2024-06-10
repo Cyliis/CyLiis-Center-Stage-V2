@@ -17,7 +17,7 @@ public class TopGripper implements IStateBasedModule, IRobotModule {
     public static boolean reversedServo = false;
 
     public static double openPosition = 0.92, closedPosition = 0.05;
-    public static double motionTime = 0.2;
+    public static double motionTime = 0.15;
 
     public enum State{
         OPEN(openPosition), OPENING(openPosition, OPEN), CLOSED(openPosition), CLOSING(openPosition, CLOSED);
@@ -59,7 +59,7 @@ public class TopGripper implements IStateBasedModule, IRobotModule {
 
     public TopGripper(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch3, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch5, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

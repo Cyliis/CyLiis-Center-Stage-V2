@@ -37,9 +37,9 @@ public class Hardware {
     public VoltageSensor voltageSensor;
     public static double voltage;
 
-    public CoolDigitalSensor beamBreak0, beamBreak1;
+    public static boolean AUTO = false;
 
-    public Analog30cm extendoSensor;
+    public CoolDigitalSensor beamBreak0, beamBreak1;
 
     public enum Color{
         Red, Blue, Universal
@@ -121,10 +121,6 @@ public class Hardware {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-//        outtakeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "outtake sensor");
-
-        extendoSensor = new Analog30cm(hardwareMap.get(AnalogInput.class, "extendo sensor"));
-
         beamBreak0 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb0"));
         beamBreak1 = new CoolDigitalSensor(hm.get(DigitalChannel.class, "bb1"));
 
@@ -146,7 +142,6 @@ public class Hardware {
         voltage = voltageSensor.getVoltage();
         imu.update();
         localizer.update();
-        extendoSensor.update();
     }
 
 

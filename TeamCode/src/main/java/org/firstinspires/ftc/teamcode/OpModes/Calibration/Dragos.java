@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
 
-@TeleOp(name="o guritza")
+@TeleOp(name="o guritza", group="zz")
 public class Dragos extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -33,7 +33,7 @@ public class MecanumDrive implements IRobotModule {
 
     public double overallMultiplier = 1;
 
-    public double velocityThreshold = 1;
+    public double velocityThreshold = 3;
 
     public static double ks = 0.03;
 
@@ -55,10 +55,10 @@ public class MecanumDrive implements IRobotModule {
         }
 
         this.localizer = hardware.localizer;
-        frontLeft = new CoolMotor(hardware.mch1, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
-        frontRight = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, frontRightMotorReversed);
-        backLeft = new CoolMotor(hardware.mch2, CoolMotor.RunMode.RUN, backLeftMotorReversed);
-        backRight = new CoolMotor(hardware.mch3, CoolMotor.RunMode.RUN, backRightMotorReversed);
+        frontLeft = new CoolMotor(hardware.mch0, CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardware.mch3, CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardware.mch1, CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        backRight = new CoolMotor(hardware.mch2, CoolMotor.RunMode.RUN, backRightMotorReversed);
 
         if(brake){
             frontLeft.setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.BRAKE);

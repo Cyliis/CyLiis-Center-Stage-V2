@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadCo
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 
-@TeleOp
+@TeleOp(name="🚨ඞ🚨ඞ🚨ඞ🚨ඞ🚨ඞ🚨", group="main")
 public class EmergencyMeeting extends LinearOpMode {
 
     FtcDashboard dash;

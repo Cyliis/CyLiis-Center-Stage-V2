@@ -47,6 +47,8 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
     public static double triggerThreshold = 0.3;
     public static double extensionDeadZone = 0.1;
+    public static double timeoutThreshold = 0.7;
+    public static double addedTimeOut = 0.1;
 
     public void updateIntake(){
         if(!Intake.ENABLED) return;
@@ -61,7 +63,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
             if(robotModules.bottomGripper.getState() == BottomGripper.State.OPEN &&
                     robotModules.topGripper.getState() == TopGripper.State.OPEN){ // can go out
                 robotModules.extendo.setState(Extendo.State.OUT);
-                if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos < Extendo.extensionLimit)
+                if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos < Extendo.extensionLimit)
                     robotModules.extendo.setPower(-gamepad1.right_stick_y);
                 else robotModules.extendo.setPower(0);
             }
@@ -79,15 +81,18 @@ public class BuruSebiGamepadControl implements IRobotModule {
             }
         }
         if(Math.abs(gamepad1.right_stick_y) > extensionDeadZone && gamepad1.right_stick_y > 0){ // extendo in
-            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos > 0)
+            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos > 0) {
                 robotModules.extendo.setPower(-gamepad1.right_stick_y);
+                if(robotModules.extendo.getState() == Extendo.State.OUT && Math.abs(gamepad1.right_stick_y) < timeoutThreshold)
+                    Extendo.timeOut = addedTimeOut;
+            }
             else robotModules.extendo.setPower(0);
-            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
+            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
                     && (robotModules.extendo.getState() == Extendo.State.OUT || robotModules.extendo.getState() == Extendo.State.GOING_OUT))
                 robotModules.intake.setState(Intake.State.GOING_IN);
         }
         if(Math.abs(gamepad1.right_stick_y) <= extensionDeadZone) { //extendo idle
-            if(robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
+            if(robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos <= Extendo.inThreshold
                     && (robotModules.extendo.getState() == Extendo.State.OUT || robotModules.extendo.getState() == Extendo.State.GOING_OUT))
                 robotModules.intake.setState(Intake.State.GOING_IN);
             robotModules.extendo.setPower(0); // extendo idle
@@ -132,18 +137,18 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public void updateOuttake(){
         if(!Outtake.ENABLED) return;
         if(stickyGamepad2.dpad_up){
-            Lift.level = Math.min(7, Lift.level + 1);
+            Lift.level = Math.min(7.5, Lift.level + 0.5);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
         if(stickyGamepad2.dpad_down){
-            Lift.level = Math.max(-1, Lift.level - 1);
+            Lift.level = Math.max(-2, Lift.level - 0.5);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
-        if(stickyGamepad1.left_bumper){
-            Lift.level = Math.max(-1, Lift.level - 0.5);
+        if(stickyGamepad1.dpad_down){
+            Lift.level = Math.max(-2, Lift.level - 0.5);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
-        if(stickyGamepad1.right_bumper){
+        if(stickyGamepad1.dpad_up){
             Lift.level = Math.min(7.5, Lift.level + 0.5);
             if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.CHANGING_LIFT_POSITION);
         }
@@ -157,6 +162,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
 
         if(stickyGamepad2.x){
             if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GOING_CLOSE || robotModules.extension.getState() == Extension.State.CLOSE)) robotModules.extension.setState(Extension.State.GOING_FAR);
+            else if(robotModules.outtake.getState() == Outtake.State.POKE) robotModules.outtake.setState(Outtake.State.EXTEND_FAR);
             else if(robotModules.outtake.getState() == Outtake.State.DOWN &&
                     (robotModules.topGripper.getState() == TopGripper.State.CLOSED  && robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED))
                 robotModules.outtake.setState(Outtake.State.GOING_UP_FAR);
@@ -170,6 +176,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
         }
         if(stickyGamepad2.a){
             if(robotModules.outtake.getState() == Outtake.State.UP && (robotModules.extension.getState() == Extension.State.GOING_FAR || robotModules.extension.getState() == Extension.State.FAR)) robotModules.extension.setState(Extension.State.GOING_CLOSE);
+            else if(robotModules.outtake.getState() == Outtake.State.POKE) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE1);
             else if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
             else if(robotModules.outtake.getState() == Outtake.State.EXTEND_FAR) robotModules.outtake.setState(Outtake.State.EXTEND_CLOSE1);
             else if(robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR) robotModules.outtake.setState(Outtake.State.GOING_UP_CLOSE);
@@ -183,7 +190,8 @@ public class BuruSebiGamepadControl implements IRobotModule {
             if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION
             || robotModules.outtake.getState() == Outtake.State.GOING_UP_CLOSE || robotModules.outtake.getState() == Outtake.State.GOING_UP_FAR
                     || robotModules.outtake.getState() == Outtake.State.EXTEND_CLOSE1 || robotModules.outtake.getState() == Outtake.State.EXTEND_FAR ||
-            robotModules.outtake.getState() == Outtake.State.EXTEND_POKE || robotModules.outtake.getState() == Outtake.State.GOING_POKE || robotModules.outtake.getState() == Outtake.State.POKE){
+            robotModules.outtake.getState() == Outtake.State.EXTEND_POKE || robotModules.outtake.getState() == Outtake.State.GOING_POKE ||
+            robotModules.outtake.getState() == Outtake.State.GO_POKE_FROM_UP || robotModules.outtake.getState() == Outtake.State.POKE){
                 robotModules.outtake.setState(Outtake.State.GOING_DOWN);
                 if(robotModules.topGripper.getState() != TopGripper.State.OPEN)
                     robotModules.topGripper.setState(TopGripper.State.OPENING);
@@ -193,12 +201,15 @@ public class BuruSebiGamepadControl implements IRobotModule {
         }
         if(stickyGamepad2.dpad_right){
             if(robotModules.outtake.getState() == Outtake.State.DOWN) robotModules.outtake.setState(Outtake.State.GOING_POKE);
-            if(robotModules.outtake.getState() == Outtake.State.POKE) robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            if(robotModules.outtake.getState() == Outtake.State.POKE) {
+                if((robotModules.bottomGripper.getState() == BottomGripper.State.OPEN || robotModules.bottomGripper.getState() == BottomGripper.State.OPENING) &&
+                        (robotModules.topGripper.getState() == TopGripper.State.OPEN || robotModules.topGripper.getState() == TopGripper.State.OPENING))
+                    robotModules.outtake.setState(Outtake.State.GOING_DOWN);
+            }
+            if(robotModules.outtake.getState() == Outtake.State.UP) robotModules.outtake.setState(Outtake.State.GO_POKE_FROM_UP);
         }
-        if(robotModules.extension.getState() == Extension.State.IN || robotModules.extension.getState() == Extension.State.FAR){
-            if(stickyGamepad1.left_bumper) Pivot.index = (((Pivot.index - 1) % 4) + 4) % 4;
-            if(stickyGamepad1.right_bumper) Pivot.index = (Pivot.index + 1) % 4;
-        }
+        if(stickyGamepad1.left_bumper) Pivot.index = (((Pivot.index - 1) % 4) + 4) % 4;
+        if(stickyGamepad1.right_bumper) Pivot.index = (Pivot.index + 1) % 4;
     }
 
     public void updatePlane(){
@@ -210,9 +221,7 @@ public class BuruSebiGamepadControl implements IRobotModule {
     public void updateClimb(){
         if(!PTOs.ENABLED || !Hooks.ENABLED) return;
         if(doubleStickyGamepad.y && (robotModules.plane.getState() == Plane.State.OPEN || !Plane.ENABLED)){
-            if(robotModules.hooks.getState() == Hooks.State.IDLE || robotModules.hooks.getState() == Hooks.State.HOOK2)
-                robotModules.hooks.setState(Hooks.State.HOOK1);
-            else robotModules.hooks.setState(Hooks.State.HOOK2);
+            robotModules.hooks.setState(Hooks.State.OPEN);
         }
         if(gamepad2.y && stickyGamepad1.ps){
             if(robotModules.ptos.getState() == PTOs.State.DISENGAGED) {
@@ -229,16 +238,38 @@ public class BuruSebiGamepadControl implements IRobotModule {
     void updateGrippers(){
         if(!TopGripper.ENABLED || !BottomGripper.ENABLED) return;
         if(robotModules.outtake.getState() == Outtake.State.UP || robotModules.outtake.getState() == Outtake.State.CHANGING_LIFT_POSITION ||
-        robotModules.outtake.getState() == Outtake.State.LIFT_GOING_UP){
-            if(stickyGamepad1.x){
-                robotModules.topGripper.setState(TopGripper.State.OPENING);
-                robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
+        robotModules.outtake.getState() == Outtake.State.LIFT_GOING_UP || robotModules.outtake.getState() == Outtake.State.POKE){
+
+            boolean both = false, bottom = false, top = false;
+
+            if(Pivot.index == 1){
+                both = stickyGamepad1.x || stickyGamepad1.b;
+                bottom = stickyGamepad1.a;
+                top = stickyGamepad1.y;
             }
-            if(stickyGamepad1.a){
+            else if(Pivot.index == 0){
+                bottom = stickyGamepad1.b;
+                top = stickyGamepad1.x;
+                both = stickyGamepad1.a || stickyGamepad1.y;
+            }
+            else if(Pivot.index == 2){
+                bottom = stickyGamepad1.x;
+                top = stickyGamepad1.b;
+                both = stickyGamepad1.a || stickyGamepad1.y;
+            } else if(Pivot.index == 3){
+                both = stickyGamepad1.x || stickyGamepad1.b;
+                bottom = stickyGamepad1.y;
+                top = stickyGamepad1.a;
+            }
+
+            if(both){
+                if(robotModules.topGripper.getState() == TopGripper.State.CLOSED) robotModules.topGripper.setState(TopGripper.State.OPENING);
                 if(robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED) robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
-                else if(robotModules.topGripper.getState() == TopGripper.State.CLOSED) robotModules.topGripper.setState(TopGripper.State.OPENING);
             }
-            if(stickyGamepad1.b){
+            if(bottom){
+                if(robotModules.bottomGripper.getState() == BottomGripper.State.CLOSED) robotModules.bottomGripper.setState(BottomGripper.State.OPENING);
+            }
+            if(top){
                 if(robotModules.topGripper.getState() == TopGripper.State.CLOSED) robotModules.topGripper.setState(TopGripper.State.OPENING);
             }
         }

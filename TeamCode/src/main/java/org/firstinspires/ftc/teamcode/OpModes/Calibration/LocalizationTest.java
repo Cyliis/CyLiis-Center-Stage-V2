@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Utils.DashboardUtil;
 
-@TeleOp
+@TeleOp(group="zz")
 public class LocalizationTest extends LinearOpMode {
 
     FtcDashboard dash;
@@ -73,7 +73,7 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("Drive train velocity X", hardware.localizer.driveTrainVelocity.getX());
             telemetry.addData("Drive train velocity Y", hardware.localizer.driveTrainVelocity.getY());
 
-            telemetry.addData("extendo pos", robotModules.extendo.motor.getCurrentPosition() - Extendo.zeroPos);
+            telemetry.addData("extendo pos", robotModules.extendo.encoder.getCurrentPosition() - Extendo.zeroPos);
 
             telemetry.addData("Hz", 1.0/loopTimer.seconds());
             loopTimer.reset();

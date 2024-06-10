@@ -53,6 +53,7 @@ public class Red extends LinearOpMode {
         robotModules = new RobotModules(hardware, drive);
 
         hardware.startThreads(this);
+        Hardware.AUTO = true;
 
         processor = new PropDetectionRedFar();
         portal = new VisionPortal.Builder()
@@ -69,6 +70,7 @@ public class Red extends LinearOpMode {
         robotModules.topGripper.setState(TopGripper.State.OPEN);
 
         while(opModeInInit() && !isStopRequested()){
+            hardware.update();
             detectionCase = processor.detection;
 
             robotModules.initUpdate();
@@ -78,7 +80,7 @@ public class Red extends LinearOpMode {
         }
         portal.close();
 
-//        detectionCase = 1;
+        detectionCase = 1;
         nodes = new RedNodes(drive, robotModules, detectionCase);
 
         waitForStart();

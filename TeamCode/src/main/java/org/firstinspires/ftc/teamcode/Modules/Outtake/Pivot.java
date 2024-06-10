@@ -21,8 +21,8 @@ public class Pivot implements IStateBasedModule, IRobotModule {
 
     public static double profileMaxVelocity = 20, profileAcceleration = 32;
     private final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(profileMaxVelocity, profileAcceleration, profileAcceleration);
-    public static double homePosition = 0.5;
-    public static double rotatedLeft = 0.5, rotatedRight = 0.5, flipped = 0.5;
+    public static double homePosition = 0.316;
+    public static double rotatedLeft = 0.038, rotatedRight = 0.595, flipped = 0.875;
     public static int index = 1;
 
     private double[] poses = {rotatedLeft, homePosition, rotatedRight, flipped};
@@ -45,6 +45,7 @@ public class Pivot implements IStateBasedModule, IRobotModule {
     }
 
     private void updateStateValues(){
+        poses = new double[]{rotatedLeft, homePosition, rotatedRight, flipped};
         State.HOME.position = homePosition;
         State.GOING_HOME.position = homePosition;
         State.ROTATED.position = poses[index];
@@ -67,7 +68,7 @@ public class Pivot implements IStateBasedModule, IRobotModule {
 
     public Pivot(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.sch4, reversedServo, initialState.position);
+        else servo = new CoolServo(hardware.sch2, reversedServo, initialState.position);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

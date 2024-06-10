@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.Wrappers.CoolDigitalSensor;
 
-@TeleOp
+@TeleOp(group="zz")
 public class BeamBreakTest extends OpMode {
     CoolDigitalSensor breakBeam0, breakBeam1;
     

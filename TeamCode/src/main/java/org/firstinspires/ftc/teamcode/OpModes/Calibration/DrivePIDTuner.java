@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
 
-@TeleOp
+@TeleOp(group="zz")
 public class DrivePIDTuner extends LinearOpMode {
 
     FtcDashboard dash;

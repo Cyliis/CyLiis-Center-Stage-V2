@@ -6,13 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
-import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Utils.StickyGamepad;
 
-@TeleOp
+@TeleOp(group="zz")
 public class ExtensionCalibration extends LinearOpMode {
     FtcDashboard dash;
 

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@TeleOp
+@TeleOp(group="zz")
 public class MotorTest extends OpMode {
     DcMotorEx motor;
 

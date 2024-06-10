@@ -11,13 +11,13 @@ public class Outtake implements IStateBasedModule, IRobotModule {
 
     public static boolean ENABLED = true;
 
-    public static double waitTime = 0.7;
+    public static double waitTime = 0.3;
 
     public enum State{
         DOWN, GOING_UP_CLOSE, EXTEND_CLOSE1, EXTEND_CLOSE2, GOING_UP_FAR, EXTEND_FAR, LIFT_GOING_UP,
         UP, CHANGING_LIFT_POSITION, GOING_DOWN, GOING_DOWN_SAFE, GOING_DOWN_DELAY, HOME_END_EFFECTOR, RETRACT_GO_PASSTHROUGH, GO_DOWN,
         GO_PURPLE, GOING_PASSTHROUGH, EXTENDING_CLOSE, LIFT_GOING_PURPLE_POSITION, PURPLE,
-        GOING_POKE, EXTEND_POKE, LIFT_GOING_CORRECT_POSITION_POKE, POKE
+        GOING_POKE, GO_POKE_FROM_UP, EXTEND_POKE, LIFT_GOING_CORRECT_POSITION_POKE, POKE
     }
 
     State state;
@@ -50,6 +50,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
             case LIFT_GOING_UP:
                 lift.setState(Lift.State.GOING_UP);
                 turret.setState(Turret.State.BACKDROP);
+                pivot.setState(Pivot.State.ROTATED);
                 break;
             case UP:
                 lift.setState(Lift.State.GOING_UP);
@@ -90,10 +91,16 @@ public class Outtake implements IStateBasedModule, IRobotModule {
             case LIFT_GOING_CORRECT_POSITION_POKE:
                 lift.setState(Lift.State.GOING_UP);
                 break;
+            case GO_POKE_FROM_UP:
+                turret.setState(Turret.State.GOING_MIDDLE);
+                pivot.setState(Pivot.State.GOING_HOME);
+                break;
+
         }
 
         timer.reset();
     }
+
 
     public State getState(){
         return state;
@@ -147,11 +154,11 @@ public class Outtake implements IStateBasedModule, IRobotModule {
     public void updateState() {
         switch (state){
             case GOING_UP_CLOSE:
-                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
+                if(lift.motor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
                     setState(State.EXTEND_CLOSE1);
                 break;
             case GOING_UP_FAR:
-                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
+                if(lift.motor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
                     setState(State.EXTEND_FAR);
                 break;
             case CHANGING_LIFT_POSITION:
@@ -184,7 +191,7 @@ public class Outtake implements IStateBasedModule, IRobotModule {
                     break;
                 }
                 if(extension.getState() != Extension.State.GOING_IN){
-                    if(lift.leftMotor.getCurrentPosition() - Lift.groundPosLeft >= Lift.passthroughPosition - Lift.positionThresh/2)
+                    if(lift.motor.getCurrentPosition() - Lift.groundPos >= Lift.passthroughPosition - Lift.positionThresh/2)
                         extension.setState(Extension.State.GOING_IN);
                 }
                 break;
@@ -211,13 +218,20 @@ public class Outtake implements IStateBasedModule, IRobotModule {
             case GOING_DOWN_SAFE:
                 if(timer.seconds()>=waitTime && turret.getState() == Turret.State.BACKDROP)
                     turret.setState(Turret.State.GOING_MIDDLE);
-                if(turret.getState() == Turret.State.MIDDLE && extension.getState() != Extension.State.IN && extension.getState() != Extension.State.GOING_IN)
+                if(timer.seconds()>=waitTime && pivot.getState() == Pivot.State.ROTATED)
+                    pivot.setState(Pivot.State.GOING_HOME);
+                if(turret.getState() == Turret.State.MIDDLE && pivot.getState() == Pivot.State.HOME &&
+                extension.getState() != Extension.State.IN && extension.getState() != Extension.State.GOING_IN)
                     extension.setState(Extension.State.GOING_IN);
                 if(extension.getState() == Extension.State.IN)
                     setState(State.GOING_DOWN);
                 break;
             case GOING_POKE:
-                if(lift.leftMotor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPosLeft >= -Lift.positionThresh)
+                if(lift.motor.getCurrentPosition() - Lift.passthroughPosition - Lift.groundPos >= -Lift.positionThresh)
+                    setState(State.EXTEND_POKE);
+                break;
+            case GO_POKE_FROM_UP:
+                if(turret.getState() == Turret.State.MIDDLE && pivot.getState() == Pivot.State.HOME)
                     setState(State.EXTEND_POKE);
                 break;
             case EXTEND_POKE:

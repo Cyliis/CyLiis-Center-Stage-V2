@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Plane implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = true;
+    public static boolean ENABLED = false;
 
     private final CoolServo servo;
     public static boolean reversedServo = false;
@@ -56,7 +56,7 @@ public class Plane implements IStateBasedModule, IRobotModule {
 
     public Plane(Hardware hardware, State initialState){
         if(!ENABLED) servo = null;
-        else servo = new CoolServo(hardware.seh3, reversedServo, initialState.position-0.01);
+        else servo = new CoolServo(hardware.seh1, reversedServo, initialState.position-0.01);
         timer.startTime();
         setState(initialState);
         if(ENABLED) servo.forceUpdate();

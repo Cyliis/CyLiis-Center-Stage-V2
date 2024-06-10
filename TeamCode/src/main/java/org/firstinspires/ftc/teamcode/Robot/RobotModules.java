@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Extendo;
 import org.firstinspires.ftc.teamcode.Modules.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Modules.Intake.Ramp;
 import org.firstinspires.ftc.teamcode.Modules.Other.Hooks;
 import org.firstinspires.ftc.teamcode.Modules.Other.PTOs;
 import org.firstinspires.ftc.teamcode.Modules.Other.Plane;
@@ -28,7 +27,6 @@ public class RobotModules implements IRobotModule {
 
     public final ActiveIntake activeIntake;
     public final DropDown dropDown;
-    public final Ramp ramp;
     public final Extendo extendo;
     public final BottomGripper bottomGripper;
     public final TopGripper topGripper;
@@ -52,21 +50,20 @@ public class RobotModules implements IRobotModule {
 
     public RobotModules(Hardware hardware, MecanumDrive drive){
         activeIntake = new ActiveIntake(hardware, ActiveIntake.State.IDLE);
-        dropDown = new DropDown(hardware, DropDown.State.UP);
-        ramp = new Ramp(hardware, Ramp.State.DOWN);
-        extendo = new Extendo(hardware, Extendo.State.RESETTING);
+        dropDown = new DropDown(hardware, DropDown.State.INIT);
+        extendo = new Extendo(hardware, Extendo.State.GOING_IN);
         bottomGripper = new BottomGripper(hardware, BottomGripper.State.OPENING);
         topGripper = new TopGripper(hardware, TopGripper.State.OPENING);
 
         modules.add(bottomGripper);
         modules.add(topGripper);
 
-        intake = new Intake(activeIntake, dropDown, ramp, extendo, bottomGripper, topGripper);
+        intake = new Intake(activeIntake, dropDown, extendo, bottomGripper, topGripper);
 
         modules.add(intake);
 
         extension = new Extension(hardware, Extension.State.IN);
-        lift = new Lift(hardware, Lift.State.RESETTING);
+        lift = new Lift(hardware, Lift.State.GOING_DOWN);
         turret = new Turret(hardware, Turret.State.MIDDLE);
         pivot = new Pivot(hardware, Pivot.State.HOME);
 
@@ -76,7 +73,7 @@ public class RobotModules implements IRobotModule {
 
         plane = new Plane(hardware, Plane.State.CLOSED);
         ptos = new PTOs(hardware, PTOs.State.DISENGAGED);
-        hooks = new Hooks(hardware, Hooks.State.IDLE);
+        hooks = new Hooks(hardware, Hooks.State.CLOSED);
 
         modules.add(plane);
         modules.add(ptos);
@@ -89,30 +86,12 @@ public class RobotModules implements IRobotModule {
     }
 
     public void telemetry(Telemetry telemetry){
-        telemetry.addData("Lift level", Lift.level);
-        telemetry.addData("Current position left lift", lift.leftMotor.getCurrentPosition());
-        telemetry.addData("Current position right lift",lift.rightMotor.getCurrentPosition());
-        telemetry.addData("Target position lift", lift.leftMotor.motor.motor.getTargetPosition());
-        telemetry.addData("Current draw lift left", lift.leftMotor.motor.motor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Current draw lift right", lift.rightMotor.motor.motor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Outtake state", outtake.getState());
-        telemetry.addData("Intake state", intake.getState());
+        telemetry.addData("Current position left lift", lift.motor.getCurrentPosition());
         telemetry.addData("Lift state", lift.getState());
         telemetry.addData("Extendo state", extendo.getState());
-        telemetry.addData("Extendo position", extendo.encoder.getCurrentPosition());
-        telemetry.addData("Extendo current draw", extendo.motor.motor.motor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Active intake state", activeIntake.getState());
-        telemetry.addData("Bottom gripper state", bottomGripper.getState());
-        telemetry.addData("Top gripper state", topGripper.getState());
-        telemetry.addData("PTOs state", ptos.getState());
-        telemetry.addData("Hooks state", hooks.getState());
-        telemetry.addData("Drive mode", drive.getRunMode());
-        telemetry.addData("Lift power", lift.leftMotor.power);
-        telemetry.addData("Voltage", Hardware.voltage);
-        telemetry.addData("Left power lift", lift.leftMotor.power);
-        telemetry.addData("Right power lift", lift.rightMotor.power);
-        telemetry.addData("Power extendo", extendo.motor.power);
-        telemetry.addData("Plane state", plane.getState());
+        telemetry.addData("Lift power", lift.motor.power);
+//        telemetry.addData("PTOs state", ptos.getState());
+        telemetry.addData("Intake level", DropDown.index);
     }
 
     @Override
