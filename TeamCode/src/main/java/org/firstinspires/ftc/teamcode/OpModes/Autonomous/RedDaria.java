@@ -10,22 +10,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueNodes;
-import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.RedNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.RedDariaNodes;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
-import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruDriveTrainControl;
-import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadControl;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
-import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedFar;
-import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous(name = "Daria rosie")
-public class Red extends LinearOpMode {
+public class RedDaria extends LinearOpMode {
 
     FtcDashboard dash;
 
@@ -34,7 +29,7 @@ public class Red extends LinearOpMode {
     MecanumDrive drive;
     RobotModules robotModules;
 
-    RedNodes nodes;
+    RedDariaNodes nodes;
 
     VisionPortal portal;
     PropDetectionRedFar processor;
@@ -80,8 +75,8 @@ public class Red extends LinearOpMode {
         }
         portal.close();
 
-        detectionCase = 1;
-        nodes = new RedNodes(drive, robotModules, detectionCase);
+//        detectionCase = 3;
+        nodes = new RedDariaNodes(drive, robotModules, detectionCase);
 
         waitForStart();
 

@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.LogicNodes.LogicNode;
-import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BluePositions;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.RedDariaPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
@@ -16,12 +16,13 @@ import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Extension;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Lift;
 import org.firstinspires.ftc.teamcode.Modules.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pivot;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
 @Config
-public class BlueNodes {
+public class RedDariaNodes {
 
     private Pose purplePosition;
     private int preloadIntakeExtendoPosition;
@@ -29,7 +30,6 @@ public class BlueNodes {
     private Pose alignToCrossFieldForYellowPosition;
     private Pose crossFieldYellowPosition;
     private Pose scoreYellowPosition;
-    private Pose scoreWhitePosition;
 
     private final double yellowCycleTime = 8;
 
@@ -43,17 +43,18 @@ public class BlueNodes {
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
     private Pose[] scorePositions;
-    public static double outtakeActivationLine = 45;
+    public static double outtakeActivationLine = -55;
     private Pose[] parkingPositions;
 
-    public static double intakeTimeOut = 1, reverseTime = 0.2;
+    public static double intakeTimeOut = 1.2, reverseTime = 0.3;
     public static int reverseExtendoRetraction = 100;
     public static double outtakeWaitTime = 0.1;
+    public static double afterYellowDropTime = 0.2;
 
     private final double[] cycleTime = {6,6,6,100};
     private final double[] goBackTime = {3,3,3,100};
 
-    public static double headingOffset = -0.1;
+    public static double headingOffset = 0.1;
 
     public static double parkTime = 1;
 
@@ -62,7 +63,7 @@ public class BlueNodes {
     private final ElapsedTime timer = new ElapsedTime();
     private final ElapsedTime globalTimer = new ElapsedTime();
 
-    public BlueNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
+    public RedDariaNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
         drive.setRunMode(MecanumDrive.RunMode.PID);
         CoolIMU.imuOffset = 0;
         detector = new DepositPixelDetector(robot);
@@ -72,55 +73,55 @@ public class BlueNodes {
         initNodes(drive, robot);
     }
 
+    public int detectionCase;
+
     private void initPositions(int detectionCase){
+        this.detectionCase = detectionCase;
         switch (detectionCase){
             case 1:
-                purplePosition = BluePositions.purplePosition1;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition1;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition1;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition1;
-                scoreYellowPosition = BluePositions.scoreYellowPosition1;
-                scoreWhitePosition = BluePositions.scoreWhitePosition1;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition1;
-                intakePositions = BluePositions.intakePositions1;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance1;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance1;
-                extendoPositions = BluePositions.extendoPositions1;
-                scorePositions = BluePositions.scorePositions1;
-                parkingPositions = BluePositions.parkingPositions1;
-                startWaitTime = 5;
+                purplePosition = RedDariaPositions.purplePosition1;
+                preloadIntakeExtendoPosition = RedDariaPositions.preloadIntakeExtendoPosition1;
+                alignToCrossFieldForYellowPosition = RedDariaPositions.alignToCrossFieldForYellowPosition1;
+                crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition1;
+                scoreYellowPosition = RedDariaPositions.scoreYellowPosition1;
+                alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition1;
+                intakePositions = RedDariaPositions.intakePositions1;
+                extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance1;
+                extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance1;
+                extendoPositions = RedDariaPositions.extendoPositions1;
+                scorePositions = RedDariaPositions.scorePositions1;
+                parkingPositions = RedDariaPositions.parkingPositions1;
+                startWaitTime = 0;
                 break;
             case 2:
-                purplePosition = BluePositions.purplePosition2;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition2;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition2;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition2;
-                scoreYellowPosition = BluePositions.scoreYellowPosition2;
-                scoreWhitePosition = BluePositions.scoreWhitePosition2;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition2;
-                intakePositions = BluePositions.intakePositions2;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance2;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance2;
-                extendoPositions = BluePositions.extendoPositions2;
-                scorePositions = BluePositions.scorePositions2;
-                parkingPositions = BluePositions.parkingPositions2;
-                startWaitTime = 5;
+                purplePosition = RedDariaPositions.purplePosition2;
+                preloadIntakeExtendoPosition = RedDariaPositions.preloadIntakeExtendoPosition2;
+                alignToCrossFieldForYellowPosition = RedDariaPositions.alignToCrossFieldForYellowPosition2;
+                crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition2;
+                scoreYellowPosition = RedDariaPositions.scoreYellowPosition2;
+                alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition2;
+                intakePositions = RedDariaPositions.intakePositions2;
+                extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance2;
+                extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance2;
+                extendoPositions = RedDariaPositions.extendoPositions2;
+                scorePositions = RedDariaPositions.scorePositions2;
+                parkingPositions = RedDariaPositions.parkingPositions2;
+                startWaitTime = 0;
                 break;
             case 3:
-                purplePosition = BluePositions.purplePosition3;
-                preloadIntakeExtendoPosition = BluePositions.preloadIntakeExtendoPosition3;
-                alignToCrossFieldForYellowPosition = BluePositions.alignToCrossFieldForYellowPosition3;
-                crossFieldYellowPosition = BluePositions.crossFieldYellowPosition3;
-                scoreYellowPosition = BluePositions.scoreYellowPosition3;
-                scoreWhitePosition = BluePositions.scoreWhitePosition3;
-                alignToCrossBackPosition = BluePositions.alignToCrossBackPosition3;
-                intakePositions = BluePositions.intakePositions3;
-                extendoDistanceTolerance = BluePositions.extendoDistanceTolerance3;
-                extendoHeadingTolerance = BluePositions.extendoHeadingTolerance3;
-                extendoPositions = BluePositions.extendoPositions3;
-                scorePositions = BluePositions.scorePositions3;
-                parkingPositions = BluePositions.parkingPositions3;
-                startWaitTime = 5;
+                purplePosition = RedDariaPositions.purplePosition3;
+                preloadIntakeExtendoPosition = RedDariaPositions.preloadIntakeExtendoPosition3;
+                alignToCrossFieldForYellowPosition = RedDariaPositions.alignToCrossFieldForYellowPosition3;
+                crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition3;
+                scoreYellowPosition = RedDariaPositions.scoreYellowPosition3;
+                alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition3;
+                intakePositions = RedDariaPositions.intakePositions3;
+                extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance3;
+                extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance3;
+                extendoPositions = RedDariaPositions.extendoPositions3;
+                scorePositions = RedDariaPositions.scorePositions3;
+                parkingPositions = RedDariaPositions.parkingPositions3;
+                startWaitTime = 0;
                 break;
         }
     }
@@ -139,8 +140,6 @@ public class BlueNodes {
     private LogicNode reverseToLeave = new LogicNode("Reversing to leave");
     private LogicNode alignToCross = new LogicNode("Aligning to cross");
     private LogicNode crossForYellow = new LogicNode("Crossing for yellow");
-    private LogicNode scoreWhite = new LogicNode("Scoring white");
-    private LogicNode waitWhite = new LogicNode("Waiting for white to fall");
     private LogicNode retryTransfer1 = new LogicNode("Extending intake to retry transfer");
     private LogicNode retryTransfer2 = new LogicNode("Retracting intake to retry transfer");
     private LogicNode scoreYellow = new LogicNode("Scoring yellow");
@@ -151,7 +150,6 @@ public class BlueNodes {
     private LogicNode goToScoringPosition = new LogicNode("Going to scoring position");
     private LogicNode waitForOuttake = new LogicNode("Waiting for outtake");
     private LogicNode waitToOpen = new LogicNode("Waiting to open");
-    private LogicNode align = new LogicNode("Ideea lui Codrin");
     private LogicNode park = new LogicNode("Parking");
     private LogicNode startWait = new LogicNode("Waiting");
 
@@ -189,15 +187,15 @@ public class BlueNodes {
             timer.reset();
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             intakeTries = 0;
-            MecanumDrive.headingMultiplier = 1;
+//            MecanumDrive.headingMultiplier = 1;
         }, intake);
 
         intake.addCondition(()->detector.getPrevPixels() == 0 && detector.getPixels() == 1,
                 ()->DropDown.index = Math.max(DropDown.index -1, 0), intake);
 
         intake.addCondition(()->detector.getPixels() == 2, ()-> {
-            robot.intake.setState(Intake.State.REVERSE);
-            MecanumDrive.headingMultiplier = 1;
+            robot.intake.setState(Intake.State.REVERSE_DELAY);
+//            MecanumDrive.headingMultiplier = 1;
             timer.reset();
         }, reverseToLeave);
 
@@ -210,7 +208,7 @@ public class BlueNodes {
 
         intake.addCondition(()->(detector.getPixels() == 1 && timer.seconds() >= intakeTimeOut && intakeTries>=maxRetries) || ((30-parkTime) - globalTimer.seconds() <= (cycle<0?yellowCycleTime:goBackTime[cycle])), ()->{
             robot.intake.setState(Intake.State.REVERSE);
-            MecanumDrive.headingMultiplier = 1;
+//            MecanumDrive.headingMultiplier = 1;
             timer.reset();
         }, reverseToLeave);
 
@@ -225,14 +223,13 @@ public class BlueNodes {
             robot.intake.setState(Intake.State.START_INTAKE);
             DropDown.index = Math.max(0, DropDown.index - 1);
             Extendo.extendedPos = Extendo.extendedPos + reverseExtendoRetraction;
-            MecanumDrive.headingMultiplier = 3;
             if(intakeTries%headingCorrectionTries == 1 && intakeTries != 1) {
                 drive.setTargetPose(drive.getTargetPose().plus(new Pose(0,0,headingOffset * (cycle>1?-1:1))));
             }
             timer.reset();
         }, intake);
 
-        reverseToLeave.addCondition(()->timer.seconds() >= reverseTime && cycle == -1, ()->{
+        reverseToLeave.addCondition(()->timer.seconds() >= reverseTime && cycle == -1 && robot.outtake.getState() == Outtake.State.DOWN, ()->{
             robot.intake.setState(Intake.State.STOP_INTAKE);
             robot.activeIntake.setState(ActiveIntake.State.HOLD);
             robot.intake.setState(Intake.State.GOING_IN);
@@ -248,38 +245,20 @@ public class BlueNodes {
 
         alignToCross.addPositionCondition(drive, 2, crossFieldYellowPosition, crossForYellow);
 
-        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
+        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
                 robot.extendo.getState() == Extendo.State.IN && robot.topGripper.getState() == TopGripper.State.CLOSED &&
                 robot.bottomGripper.getState() == BottomGripper.State.CLOSED, ()->{
-            robot.outtake.setState(Outtake.State.GOING_UP_CLOSE);
+            robot.outtake.setState(Outtake.State.GOING_UP_FAR);
         }, crossForYellow);
 
         crossForYellow.addCondition(()->robot.extendo.getState() == Extendo.State.IN && drive.reachedTarget(8), ()->{
-            drive.setTargetPose(scoreWhitePosition);
+            drive.setTargetPose(scoreYellowPosition);
             robot.activeIntake.setState(ActiveIntake.State.IDLE);
-        }, scoreWhite);
-
-        scoreWhite.addCondition(()->globalTimer.seconds() >= (30 - parkTime), ()->{
-            robot.bottomGripper.setState(BottomGripper.State.OPENING);
-            robot.topGripper.setState(TopGripper.State.OPENING);
-            robot.outtake.setState(Outtake.State.GOING_DOWN);
-            robot.intake.setState(Intake.State.GOING_IN);
-            drive.setTargetPose(parkingPositions[cycle+1]);
-        }, park);
-
-        scoreWhite.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
-                robot.extendo.getState() == Extendo.State.IN && robot.topGripper.getState() == TopGripper.State.CLOSED &&
-                robot.bottomGripper.getState() == BottomGripper.State.CLOSED, ()->{
-            robot.outtake.setState(Outtake.State.GOING_UP_CLOSE);
-        }, scoreWhite);
-
-        scoreWhite.addCondition(()->drive.reachedTarget(2)/* && drive.stopped()*/ && robot.outtake.getState() == Outtake.State.UP, ()->{
-            robot.bottomGripper.setState(BottomGripper.State.OPENING);
-            robot.extension.setState(Extension.State.BOOP);
-            timer.reset();
-        }, waitWhite);
-
-        waitWhite.addCondition(()->timer.seconds() >= 0, ()->drive.setTargetPose(scoreYellowPosition), scoreYellow);
+            if(detectionCase  == 1) Pivot.index = 0;
+            if(detectionCase == 2) Pivot.index = 3;
+            if(detectionCase == 3) Pivot.index = 2;
+            Lift.level = 0;
+        }, scoreYellow);
 
         scoreYellow.addCondition(()->globalTimer.seconds() >= (30 - parkTime), ()->{
             robot.bottomGripper.setState(BottomGripper.State.OPENING);
@@ -291,27 +270,27 @@ public class BlueNodes {
 
         scoreYellow.addCondition(()->drive.reachedTarget(1) && drive.stopped() && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && ((30-parkTime) - globalTimer.seconds() >= (cycleTime[cycle+1])), ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
-            if(robot.bottomGripper.getState() == BottomGripper.State.CLOSED) robot.bottomGripper.setState(BottomGripper.State.OPENING);
+            robot.bottomGripper.setState(BottomGripper.State.OPENING);
 //            if(Lift.level == 0) Lift.level = -1;
             DropDown.index = 4;
         }, waitYellow);
 
         waitYellow.addCondition(()->robot.topGripper.getState() == TopGripper.State.OPEN && robot.bottomGripper.getState() == BottomGripper.State.OPEN, ()->{
-            robot.extension.setState(Extension.State.GOING_IN);
+            robot.extension.setState(Extension.State.GOING_MID);
             timer.reset();
         }, waitYellow2);
 
-        waitYellow2.addCondition(()->timer.seconds() >= 0.3, ()->{
+        waitYellow2.addCondition(()->timer.seconds() >= afterYellowDropTime, ()->{
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             Lift.level = 3;
-//            Lift.profiled = false;
+            Pivot.index = 1;
             DropDown.index = Math.max(DropDown.index -1, 0);
             drive.setTargetPose(alignToCrossBackPosition);
         }, alignToCrossBack);
 
         scoreYellow.addCondition(()->drive.reachedTarget(2) && detector.getPixels() == 0 && robot.outtake.getState() == Outtake.State.UP && ((30-parkTime) - globalTimer.seconds() < (cycleTime[cycle+1]))  && robot.outtake.timer.seconds() >= outtakeWaitTime, ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
-            if(robot.bottomGripper.getState() == BottomGripper.State.CLOSED) robot.bottomGripper.setState(BottomGripper.State.OPENING);
+            robot.bottomGripper.setState(BottomGripper.State.OPENING);
             robot.outtake.setState(Outtake.State.GOING_DOWN);
             drive.setTargetPose(parkingPositions[cycle+1]);
         }, park);
@@ -323,7 +302,7 @@ public class BlueNodes {
 
         scoreYellow.addCondition(()->drive.reachedTarget(1) && detector.getPixels() != 0 && robot.outtake.getState() == Outtake.State.UP && robot.outtake.timer.seconds() >= outtakeWaitTime, ()->{
             robot.topGripper.setState(TopGripper.State.OPENING);
-            if(robot.bottomGripper.getState() == BottomGripper.State.CLOSED) robot.bottomGripper.setState(BottomGripper.State.OPENING);
+            robot.bottomGripper.setState(BottomGripper.State.OPENING);
             robot.outtake.setState(Outtake.State.GOING_DOWN_SAFE);
             Extendo.extendedPos = extendoRetryPosition;
             robot.extendo.setState(Extendo.State.GOING_LOCK);
@@ -350,7 +329,7 @@ public class BlueNodes {
         }, park);
 
         retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle == -1, ()->{
-            robot.outtake.setState(Outtake.State.GOING_UP_CLOSE);
+            robot.outtake.setState(Outtake.State.GOING_UP_FAR);
             Lift.level = 3;
         }, scoreYellow);
 
@@ -376,7 +355,7 @@ public class BlueNodes {
             drive.setTargetPose(intakePositions[cycle+1]);
             cycle++;
             DropDown.index = Math.max(DropDown.index -1, 0);
-            if(cycle == 2) DropDown.index = 1;
+            if(cycle == 2) DropDown.index = 2;
         }, goToIntakePosition);
 
 //        align.addCondition(()->drive.reachedHeading(alignHeadingTolerance), ()-> {
@@ -407,13 +386,13 @@ public class BlueNodes {
 
         goToIntakePosition.addCondition(()->robot.extendo.getState() == Extendo.State.LOCK, ()->{
             timer.reset();
-            MecanumDrive.headingMultiplier = 3;
+//            MecanumDrive.headingMultiplier = 3;
         }, intake);
 
-        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED,
+        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED,
                 ()->{
-                    robot.activeIntake.setState(ActiveIntake.State.IDLE);
-                    robot.outtake.setState(Outtake.State.GOING_UP_FAR);
+            robot.activeIntake.setState(ActiveIntake.State.IDLE);
+            robot.outtake.setState(Outtake.State.GOING_UP_FAR);
                 }, waitForOuttake);
 
     }

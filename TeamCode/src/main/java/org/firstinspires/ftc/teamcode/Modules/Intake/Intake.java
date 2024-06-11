@@ -17,7 +17,7 @@ public class Intake implements IStateBasedModule, IRobotModule {
     private final BottomGripper bottomGripper;
     private final TopGripper topGripper;
 
-    public static double delay = 0.05;
+    public static double delay = 0.1;
 
     public Intake(ActiveIntake activeIntake, DropDown dropDown, Extendo extendo, BottomGripper bottomGripper, TopGripper topGripper){
         this.activeIntake = activeIntake;
@@ -90,6 +90,9 @@ public class Intake implements IStateBasedModule, IRobotModule {
                 dropDown.setState(DropDown.State.UP);
                 activeIntake.setState(ActiveIntake.State.IDLE);
                 setState(State.IDLE);
+                break;
+            case REVERSE_DELAY:
+                dropDown.setState(DropDown.State.UP);
                 break;
             case AUTO_REVERSE:
             case REVERSE:

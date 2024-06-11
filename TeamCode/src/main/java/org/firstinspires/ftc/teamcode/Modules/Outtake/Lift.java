@@ -25,11 +25,11 @@ public class Lift implements IStateBasedModule, IRobotModule {
 
     public static double power = 1;
     public static int groundPos = 0, firstLevel = 280, increment = 100, positionThresh = 25,
-            passthroughPosition = 250, purplePosition = 0;
+            passthroughPosition = 250, purplePosition = -10;
 
     public static double level = 0;
 
-    public static double resetPower = -1, holdPower = -0.2, holdThresh = 3;
+    public static double resetPower = -1, holdPower = -0.2, holdThresh = 3, resetThresh = 20, resetTimeOut = 0.1;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -109,7 +109,8 @@ public class Lift implements IStateBasedModule, IRobotModule {
     @Override
     public void updateState() {
         if(state == State.GOING_DOWN){
-            if(motor.motor.motor.isOverCurrent()){
+            if(motor.motor.motor.isOverCurrent() && (timer.seconds() >= resetTimeOut ||
+                    Math.abs(groundPos - motor.getCurrentPosition()) <= resetThresh)){
                 groundPos = motor.getCurrentPosition();
                 setState(State.DOWN);
             }

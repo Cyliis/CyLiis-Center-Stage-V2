@@ -130,7 +130,7 @@ public class Extendo implements IStateBasedModule, IRobotModule {
                 setState(state.nextState);
         }
 
-        DropDown.in = state == State.IN;
+        DropDown.in = Math.abs(encoder.getCurrentPosition() - zeroPos) <= inThreshold;
     }
 
     public int target = 0;

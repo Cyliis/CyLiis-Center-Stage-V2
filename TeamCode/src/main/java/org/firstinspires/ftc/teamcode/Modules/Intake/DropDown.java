@@ -21,7 +21,7 @@ public class DropDown implements IStateBasedModule, IRobotModule {
     public static double init = 0.32;
     public static double pos0 = 0.35, pos1 = 0.39, pos2 = 0.42, pos3 = 0.45, pos4 = 0.47;
 //    public static double upPos = 0.4;
-    public static double inPos = 0.325;
+    public static double inDiff = 0.01;
 
     public static double upOffset = 0.05;
 
@@ -40,8 +40,8 @@ public class DropDown implements IStateBasedModule, IRobotModule {
     private void updateStateValues() {
 
         double[] poses = new double[]{pos0, pos1, pos2, pos3, pos4};
-        intakePosition = index == 0 ? (in?inPos:poses[index]) : poses[index];
-        upPosition = intakePosition + upOffset;
+        intakePosition = poses[index] - (in?1:0) * inDiff;
+        upPosition = poses[index] + upOffset;
         State.UP.position = upPosition;
         State.INTAKE.position = intakePosition;
         State.INIT.position = init;

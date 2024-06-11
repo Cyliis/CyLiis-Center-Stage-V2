@@ -10,21 +10,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueNodes;
-import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.RedNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.RedDariaNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.RedFarTrussNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.RedFarTrussPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
-import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruDriveTrainControl;
-import org.firstinspires.ftc.teamcode.Robot.GamepadControllers.BuruSebiGamepadControl;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
-import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedFar;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name = "Daria albastra")
-public class Blue extends LinearOpMode {
+@Autonomous(name = "Red Far Truss")
+public class RedFarTruss extends LinearOpMode {
 
     FtcDashboard dash;
 
@@ -33,10 +32,10 @@ public class Blue extends LinearOpMode {
     MecanumDrive drive;
     RobotModules robotModules;
 
-    BlueNodes nodes;
+    RedFarTrussNodes nodes;
 
     VisionPortal portal;
-    PropDetectionBlueFar processor;
+    PropDetectionRedFar processor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,7 +44,7 @@ public class Blue extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dash.getTelemetry());
 
-        hardware = new Hardware(hardwareMap, Hardware.Color.Blue, true);
+        hardware = new Hardware(hardwareMap, Hardware.Color.Red, true);
 
         drive = new MecanumDrive(hardware, MecanumDrive.RunMode.Vector, false);
 
@@ -54,7 +53,7 @@ public class Blue extends LinearOpMode {
         hardware.startThreads(this);
         Hardware.AUTO = true;
 
-        processor = new PropDetectionBlueFar();
+        processor = new PropDetectionRedFar();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -78,9 +77,10 @@ public class Blue extends LinearOpMode {
             telemetry.update();
         }
         portal.close();
+        robotModules.dropDown.setState(DropDown.State.UP);
 
 //        detectionCase = 3;
-        nodes = new BlueNodes(drive, robotModules, detectionCase);
+        nodes = new RedFarTrussNodes(drive, robotModules, detectionCase);
 
         waitForStart();
 

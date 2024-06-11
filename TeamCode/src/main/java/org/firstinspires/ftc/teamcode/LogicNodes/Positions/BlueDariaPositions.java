@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.Utils.Pose;
 
 @Config
-public class BluePositions {
+public class BlueDariaPositions {
     //Left
 
     public static Pose purplePosition1 = new Pose(32,2,1.787);
