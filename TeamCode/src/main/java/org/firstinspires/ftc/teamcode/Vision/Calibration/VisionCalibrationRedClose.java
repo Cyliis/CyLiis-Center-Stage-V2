@@ -9,19 +9,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedClose;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionRedFar;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Disabled
 @Config
-@Autonomous(name="Vision Calibration Red Far")
-public class VisionCalibrationRedFar extends LinearOpMode {
+@Autonomous(name="Vision Calibration Red Close")
+public class VisionCalibrationRedClose extends LinearOpMode {
     private VisionPortal portal;
-    private PropDetectionRedFar processor;
+    private PropDetectionRedClose processor;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        processor = new PropDetectionRedFar();
+        processor = new PropDetectionRedClose();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))

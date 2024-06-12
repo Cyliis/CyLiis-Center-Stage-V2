@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-//@Disabled
+@Disabled
 @Config
 @Autonomous(name="Vision Calibration Blue Far")
 public class VisionCalibrationBlueFar extends LinearOpMode {
