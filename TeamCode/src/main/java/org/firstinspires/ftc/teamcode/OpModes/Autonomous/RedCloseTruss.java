@@ -80,7 +80,7 @@ public class RedCloseTruss extends LinearOpMode {
         portal.close();
         robotModules.dropDown.setState(DropDown.State.UP);
 
-        detectionCase = 3;
+//        detectionCase = 3;
         nodes = new RedCloseTrussNodes(drive, robotModules, detectionCase);
 
         waitForStart();

@@ -21,7 +21,7 @@ public class Pivot implements IStateBasedModule, IRobotModule {
 
     public static double profileMaxVelocity = 20, profileAcceleration = 32;
     private final AsymmetricMotionProfile profile = new AsymmetricMotionProfile(profileMaxVelocity, profileAcceleration, profileAcceleration);
-    public static double homePosition = 0.316;
+    public static double homePosition = 0.31;
     public static double rotatedLeft = 0.038, rotatedRight = 0.595, flipped = 0.875;
     public static int index = 1;
 

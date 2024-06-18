@@ -32,7 +32,7 @@ public class VisionCalibrationRedClose extends LinearOpMode {
 
         while (opModeInInit() && !isStopRequested()) {
             telemetry.addData("Detection", processor.detection);
-            telemetry.addData("Left value", processor.leftSum);
+            telemetry.addData("Right value", processor.rightSum);
             telemetry.addData("Middle value", processor.middleSum);
             telemetry.update();
         }

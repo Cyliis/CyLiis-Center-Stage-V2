@@ -16,7 +16,7 @@ public class TopGripper implements IStateBasedModule, IRobotModule {
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double openPosition = 0.92, closedPosition = 0.05;
+    public static double openPosition = 0.93, closedPosition = 0.07;
     public static double motionTime = 0.15;
 
     public enum State{

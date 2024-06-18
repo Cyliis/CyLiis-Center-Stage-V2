@@ -11,7 +11,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueDariaNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueFarTrussNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BlueFarTrussPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
@@ -19,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Robot.RobotModules;
 import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name = "Daria albastra")
-public class BlueDaria extends LinearOpMode {
+@Autonomous(name = "Blue Far Truss")
+public class BlueFarTruss extends LinearOpMode {
 
     FtcDashboard dash;
 
@@ -29,7 +32,7 @@ public class BlueDaria extends LinearOpMode {
     MecanumDrive drive;
     RobotModules robotModules;
 
-    BlueDariaNodes nodes;
+    BlueFarTrussNodes nodes;
 
     VisionPortal portal;
     PropDetectionBlueFar processor;
@@ -74,9 +77,10 @@ public class BlueDaria extends LinearOpMode {
             telemetry.update();
         }
         portal.close();
+        robotModules.dropDown.setState(DropDown.State.UP);
 
 //        detectionCase = 1;
-        nodes = new BlueDariaNodes(drive, robotModules, detectionCase);
+        nodes = new BlueFarTrussNodes(drive, robotModules, detectionCase);
 
         waitForStart();
 

@@ -38,15 +38,17 @@ public class RedDariaNodes {
     public int cycle = -1;
 
     private Pose alignToCrossBackPosition;
+    private Pose[] beforeIntakePositions;
     private Pose[] intakePositions;
     public static double[] extendoDistanceTolerance;
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
+    private Pose[] beforeScoringPositions;
     private Pose[] scorePositions;
     public static double outtakeActivationLine = -55;
     private Pose[] parkingPositions;
 
-    public static double intakeTimeOut = 1.2, reverseTime = 0.3;
+    public static double intakeTimeOut = 1.2, reverseTime = 0.4;
     public static int reverseExtendoRetraction = 100;
     public static double outtakeWaitTime = 0.1;
     public static double afterYellowDropTime = 0.2;
@@ -57,6 +59,8 @@ public class RedDariaNodes {
     public static double headingOffset = 0.1;
 
     public static double parkTime = 1;
+
+    public static double grabberClosingDelay = 0.2;
 
     public final DepositPixelDetector detector;
 
@@ -85,10 +89,12 @@ public class RedDariaNodes {
                 crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition1;
                 scoreYellowPosition = RedDariaPositions.scoreYellowPosition1;
                 alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition1;
+                beforeIntakePositions = RedDariaPositions.beforeIntakePositions1;
                 intakePositions = RedDariaPositions.intakePositions1;
                 extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance1;
                 extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance1;
                 extendoPositions = RedDariaPositions.extendoPositions1;
+                beforeScoringPositions = RedDariaPositions.beforeScoringPositions1;
                 scorePositions = RedDariaPositions.scorePositions1;
                 parkingPositions = RedDariaPositions.parkingPositions1;
                 startWaitTime = 0;
@@ -100,10 +106,12 @@ public class RedDariaNodes {
                 crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition2;
                 scoreYellowPosition = RedDariaPositions.scoreYellowPosition2;
                 alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition2;
+                beforeIntakePositions = RedDariaPositions.beforeIntakePositions2;
                 intakePositions = RedDariaPositions.intakePositions2;
                 extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance2;
                 extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance2;
                 extendoPositions = RedDariaPositions.extendoPositions2;
+                beforeScoringPositions = RedDariaPositions.beforeScoringPositions2;
                 scorePositions = RedDariaPositions.scorePositions2;
                 parkingPositions = RedDariaPositions.parkingPositions2;
                 startWaitTime = 0;
@@ -115,10 +123,12 @@ public class RedDariaNodes {
                 crossFieldYellowPosition = RedDariaPositions.crossFieldYellowPosition3;
                 scoreYellowPosition = RedDariaPositions.scoreYellowPosition3;
                 alignToCrossBackPosition = RedDariaPositions.alignToCrossBackPosition3;
+                beforeIntakePositions = RedDariaPositions.beforeIntakePositions3;
                 intakePositions = RedDariaPositions.intakePositions3;
                 extendoDistanceTolerance = RedDariaPositions.extendoDistanceTolerance3;
                 extendoHeadingTolerance = RedDariaPositions.extendoHeadingTolerance3;
                 extendoPositions = RedDariaPositions.extendoPositions3;
+                beforeScoringPositions = RedDariaPositions.beforeScoringPositions3;
                 scorePositions = RedDariaPositions.scorePositions3;
                 parkingPositions = RedDariaPositions.parkingPositions3;
                 startWaitTime = 0;
@@ -162,6 +172,7 @@ public class RedDariaNodes {
             timer.reset();
             globalTimer.reset();
             DropDown.index = 4;
+            robot.dropDown.setState(DropDown.State.UP);
 //            Lift.profiled = true;
             Lift.level = 0;
         }, startWait);
@@ -231,16 +242,16 @@ public class RedDariaNodes {
 
         reverseToLeave.addCondition(()->timer.seconds() >= reverseTime && cycle == -1 && robot.outtake.getState() == Outtake.State.DOWN, ()->{
             robot.intake.setState(Intake.State.STOP_INTAKE);
-            robot.activeIntake.setState(ActiveIntake.State.HOLD);
+            robot.activeIntake.setState(ActiveIntake.State.REVERSE_SAFETY);
             robot.intake.setState(Intake.State.GOING_IN);
             drive.setTargetPose(alignToCrossFieldForYellowPosition);
         }, alignToCross);
 
         reverseToLeave.addCondition(()->timer.seconds() >= reverseTime && cycle >= 0, ()->{
             robot.intake.setState(Intake.State.STOP_INTAKE);
-            robot.activeIntake.setState(ActiveIntake.State.HOLD);
+            robot.activeIntake.setState(ActiveIntake.State.REVERSE_SAFETY);
             robot.intake.setState(Intake.State.GOING_IN);
-            drive.setTargetPose(scorePositions[cycle]);
+            drive.setTargetPose(beforeScoringPositions[cycle]);
         }, goToScoringPosition);
 
         alignToCross.addPositionCondition(drive, 2, crossFieldYellowPosition, crossForYellow);
@@ -328,12 +339,14 @@ public class RedDariaNodes {
             drive.setTargetPose(parkingPositions[cycle+1]);
         }, park);
 
-        retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle == -1, ()->{
+        retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED &&
+                robot.topGripper.getState() == TopGripper.State.CLOSED && cycle == -1  && robot.bottomGripper.timer.seconds() >= grabberClosingDelay, ()->{
             robot.outtake.setState(Outtake.State.GOING_UP_FAR);
             Lift.level = 3;
         }, scoreYellow);
 
-        retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle >= 0, ()->{
+        retryTransfer2.addCondition(()->robot.extendo.getState() == Extendo.State.IN && robot.bottomGripper.getState() == BottomGripper.State.CLOSED
+                && robot.topGripper.getState() == TopGripper.State.CLOSED && cycle >= 0  && robot.bottomGripper.timer.seconds() >= grabberClosingDelay, ()->{
             robot.outtake.setState(Outtake.State.GOING_UP_FAR);
         }, waitForOuttake);
 
@@ -352,7 +365,7 @@ public class RedDariaNodes {
         }, waitToOpen);
 
         waitToOpen.addCondition(()->robot.topGripper.getState() == TopGripper.State.OPEN && robot.bottomGripper.getState() == BottomGripper.State.OPEN, ()->{
-            drive.setTargetPose(intakePositions[cycle+1]);
+            drive.setTargetPose(beforeIntakePositions[cycle+1]);
             cycle++;
             DropDown.index = Math.max(DropDown.index -1, 0);
             if(cycle == 2) DropDown.index = 2;
@@ -378,7 +391,11 @@ public class RedDariaNodes {
             robot.extendo.setState(Extendo.State.GOING_LOCK);
         }, retryTransfer1);
 
-        goToIntakePosition.addCondition(()->drive.reachedTarget(extendoDistanceTolerance[cycle]) && drive.reachedHeading(extendoHeadingTolerance[cycle]) && robot.extendo.getState() == Extendo.State.IN, ()->{
+        goToIntakePosition.addCondition(()->cycle!=0 && drive.reachedTarget(10) && drive.reachedHeading(0.1) &&
+                drive.getTargetPose() == beforeIntakePositions[cycle], ()->drive.setTargetPose(intakePositions[cycle]), goToIntakePosition);
+
+        goToIntakePosition.addCondition(()->drive.reachedTarget(extendoDistanceTolerance[cycle]) && drive.reachedHeading(extendoHeadingTolerance[cycle])
+                && robot.extendo.getState() == Extendo.State.IN && drive.getTargetPose() == intakePositions[cycle], ()->{
             Extendo.extendedPos = extendoPositions[cycle];
             robot.extendo.setState(Extendo.State.GOING_LOCK);
             robot.intake.setState(Intake.State.START_INTAKE);
@@ -389,10 +406,15 @@ public class RedDariaNodes {
 //            MecanumDrive.headingMultiplier = 3;
         }, intake);
 
-        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED,
+        goToScoringPosition.addCondition(()->drive.getTargetPose() == beforeScoringPositions[cycle] && drive.reachedTarget(10),
+                ()->drive.setTargetPose(scorePositions[cycle]), goToScoringPosition);
+
+        goToScoringPosition.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.bottomGripper.getState() == BottomGripper.State.CLOSED
+                        && robot.topGripper.getState() == TopGripper.State.CLOSED && robot.bottomGripper.timer.seconds() >= grabberClosingDelay &&
+                        drive.getTargetPose() == scorePositions[cycle],
                 ()->{
-            robot.activeIntake.setState(ActiveIntake.State.IDLE);
-            robot.outtake.setState(Outtake.State.GOING_UP_FAR);
+                    robot.activeIntake.setState(ActiveIntake.State.IDLE);
+                    robot.outtake.setState(Outtake.State.GOING_UP_FAR);
                 }, waitForOuttake);
 
     }

@@ -17,22 +17,23 @@ import org.opencv.imgproc.Imgproc;
 @Disabled
 @Config
 public class PropDetectionRedClose implements VisionProcessor {
+
     public int detection = 2;
 
-    public static int leftRectX1 = 470, leftRectY1 = 220;
-    public static int leftRectX2 = 570, leftRectY2 = 330;
+    public static int rightRectX1 = 30, rightRectY1 = 225;
+    public static int rightRectX2 = 110, rightRectY2 = 350;
 
-    public static double leftThresh = 800000;
-    public double leftSum = 0;
+    public static double rightThresh = 1500000;
+    public double rightSum = 0;
 
-    public static int middleRectX1 = 130, middleRectY1 = 240;
-    public static int middleRectX2 = 220, middleRectY2 = 330;
+    public static int middleRectX1 = 340, middleRectY1 = 230;
+    public static int middleRectX2 = 430, middleRectY2 = 330;
 
-    public static double middleThresh = 600000;
+    public static double middleThresh = 900000;
     public double middleSum = 0;
 
-    public static int redLowH = 110, redLowS = 160, redLowV = 0;
-    public static int redHighH = 125, redHighS = 255, redHighV = 255;
+    public static int redLowH = 100, redLowS = 40, redLowV = 0;
+    public static int redHighH = 120, redHighS = 180, redHighV = 255;
 
     Mat workingMat = new Mat();
 
@@ -42,9 +43,9 @@ public class PropDetectionRedClose implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Imgproc.cvtColor(frame, workingMat, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(frame, workingMat, Imgproc.COLOR_RGB2HSV);
 
-        Rect leftRect = new Rect(new Point(leftRectX1, leftRectY1), new Point(leftRectX2, leftRectY2));
+        Rect rightRect = new Rect(new Point(rightRectX1, rightRectY1), new Point(rightRectX2, rightRectY2));
         Rect middleRect = new Rect(new Point(middleRectX1, middleRectY1), new Point(middleRectX2, middleRectY2));
 
         Scalar lowThresh = new Scalar(redLowH, redLowS, redLowV);
@@ -52,17 +53,17 @@ public class PropDetectionRedClose implements VisionProcessor {
 
         Core.inRange(workingMat, lowThresh, highThresh, workingMat);
 
-        leftSum = Core.sumElems(workingMat.submat(leftRect)).val[0];
+        rightSum = Core.sumElems(workingMat.submat(rightRect)).val[0];
         middleSum = Core.sumElems(workingMat.submat(middleRect)).val[0];
 
-        Imgproc.rectangle(frame, leftRect, new Scalar(0,255,0), 5);
+        Imgproc.rectangle(frame, rightRect, new Scalar(0,255,0), 5);
         Imgproc.rectangle(frame, middleRect, new Scalar(0,255,0), 5);
 
-        if(leftSum > leftThresh)
-            detection = 1;
+        if(rightSum > rightThresh)
+            detection = 3;
         else if (middleSum > middleThresh)
             detection = 2;
-        else detection = 3;
+        else detection = 1;
 
 //        workingMat.copyTo(frame);
 

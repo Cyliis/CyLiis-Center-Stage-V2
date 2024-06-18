@@ -10,17 +10,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueCloseTrussNodes;
 import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueDariaNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Nodes.BlueFarTrussNodes;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BlueFarTrussPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
 import org.firstinspires.ftc.teamcode.Modules.Other.BottomGripper;
 import org.firstinspires.ftc.teamcode.Modules.Other.TopGripper;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Robot.RobotModules;
-import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueFar;
+import org.firstinspires.ftc.teamcode.Vision.PropDetectionBlueClose;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name = "Daria albastra")
-public class BlueDaria extends LinearOpMode {
+@Autonomous(name = "Blue Close Truss")
+public class BlueCloseTruss extends LinearOpMode {
 
     FtcDashboard dash;
 
@@ -29,10 +33,10 @@ public class BlueDaria extends LinearOpMode {
     MecanumDrive drive;
     RobotModules robotModules;
 
-    BlueDariaNodes nodes;
+    BlueCloseTrussNodes nodes;
 
     VisionPortal portal;
-    PropDetectionBlueFar processor;
+    PropDetectionBlueClose processor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,7 +54,7 @@ public class BlueDaria extends LinearOpMode {
         hardware.startThreads(this);
         Hardware.AUTO = true;
 
-        processor = new PropDetectionBlueFar();
+        processor = new PropDetectionBlueClose();
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
@@ -62,7 +66,7 @@ public class BlueDaria extends LinearOpMode {
         int detectionCase = 2;
 
         robotModules.bottomGripper.setState(BottomGripper.State.CLOSED);
-        robotModules.topGripper.setState(TopGripper.State.OPEN);
+        robotModules.topGripper.setState(TopGripper.State.CLOSED);
 
         while(opModeInInit() && !isStopRequested()){
             hardware.update();
@@ -74,9 +78,10 @@ public class BlueDaria extends LinearOpMode {
             telemetry.update();
         }
         portal.close();
+        robotModules.dropDown.setState(DropDown.State.UP);
 
 //        detectionCase = 1;
-        nodes = new BlueDariaNodes(drive, robotModules, detectionCase);
+        nodes = new BlueCloseTrussNodes(drive, robotModules, detectionCase);
 
         waitForStart();
 

@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.LogicNodes.LogicNode;
-import org.firstinspires.ftc.teamcode.LogicNodes.Positions.RedCloseTrussPositions;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BlueCloseTrussPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
 @Config
-public class RedCloseTrussNodes {
+public class BlueCloseTrussNodes {
 
     private Pose purplePosition;
 
@@ -42,7 +42,7 @@ public class RedCloseTrussNodes {
     public static double[] extendoDistanceTolerance;
     public static double[] extendoHeadingTolerance;
     private int[] extendoPositions;
-    public static double outtakeActivationLine = -60;
+    public static double outtakeActivationLine = 60;
     private Pose[] parkingPositions;
 
     public static double intakeTimeOut = 1.2, reverseTime = 0.3;
@@ -56,7 +56,7 @@ public class RedCloseTrussNodes {
     private final double[] cycleTime = {6,6,6,100};
     private final double[] goBackTime = {3,3,3,100};
 
-    public static double headingOffset = -0.1;
+    public static double headingOffset = 0.1;
 
     public static double parkTime = 1;
 
@@ -65,7 +65,7 @@ public class RedCloseTrussNodes {
     private final ElapsedTime timer = new ElapsedTime();
     private final ElapsedTime globalTimer = new ElapsedTime();
 
-    public RedCloseTrussNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
+    public BlueCloseTrussNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
         drive.setRunMode(MecanumDrive.RunMode.PID);
         CoolIMU.imuOffset = 0;
         DropDown.index = 4;
@@ -82,49 +82,49 @@ public class RedCloseTrussNodes {
         this.detectionCase = detectionCase;
         switch (detectionCase){
             case 1:
-                purplePosition = RedCloseTrussPositions.purplePosition1;
-                alignToScoreYellowPosition = RedCloseTrussPositions.alignToScoreYellowPosition1;
-                scoreYellowPosition = RedCloseTrussPositions.scoreYellowPosition1;
-                alignToCrossBackPositions = RedCloseTrussPositions.alignToCrossBackPositions1;
-                crossBackPositions = RedCloseTrussPositions.crossBackPositions1;
-                intakePositions = RedCloseTrussPositions.intakePositions1;
-                alignToCrossPositions = RedCloseTrussPositions.alignToCrossPositions1;
-                crossPositions = RedCloseTrussPositions.crossPositions1;
-                scorePositions = RedCloseTrussPositions.scorePositions1;
-                extendoDistanceTolerance = RedCloseTrussPositions.extendoDistanceTolerance1;
-                extendoHeadingTolerance = RedCloseTrussPositions.extendoHeadingTolerance1;
-                extendoPositions = RedCloseTrussPositions.extendoPositions1;
-                parkingPositions = RedCloseTrussPositions.parkingPositions1;
+                purplePosition = BlueCloseTrussPositions.purplePosition1;
+                alignToScoreYellowPosition = BlueCloseTrussPositions.alignToScoreYellowPosition1;
+                scoreYellowPosition = BlueCloseTrussPositions.scoreYellowPosition1;
+                alignToCrossBackPositions = BlueCloseTrussPositions.alignToCrossBackPositions1;
+                crossBackPositions = BlueCloseTrussPositions.crossBackPositions1;
+                intakePositions = BlueCloseTrussPositions.intakePositions1;
+                alignToCrossPositions = BlueCloseTrussPositions.alignToCrossPositions1;
+                crossPositions = BlueCloseTrussPositions.crossPositions1;
+                scorePositions = BlueCloseTrussPositions.scorePositions1;
+                extendoDistanceTolerance = BlueCloseTrussPositions.extendoDistanceTolerance1;
+                extendoHeadingTolerance = BlueCloseTrussPositions.extendoHeadingTolerance1;
+                extendoPositions = BlueCloseTrussPositions.extendoPositions1;
+                parkingPositions = BlueCloseTrussPositions.parkingPositions1;
                 break;
             case 2:
-                purplePosition = RedCloseTrussPositions.purplePosition2;
-                alignToScoreYellowPosition = RedCloseTrussPositions.alignToScoreYellowPosition2;
-                scoreYellowPosition = RedCloseTrussPositions.scoreYellowPosition2;
-                alignToCrossBackPositions = RedCloseTrussPositions.alignToCrossBackPositions2;
-                crossBackPositions = RedCloseTrussPositions.crossBackPositions2;
-                intakePositions = RedCloseTrussPositions.intakePositions2;
-                alignToCrossPositions = RedCloseTrussPositions.alignToCrossPositions2;
-                crossPositions = RedCloseTrussPositions.crossPositions2;
-                scorePositions = RedCloseTrussPositions.scorePositions2;
-                extendoDistanceTolerance = RedCloseTrussPositions.extendoDistanceTolerance2;
-                extendoHeadingTolerance = RedCloseTrussPositions.extendoHeadingTolerance2;
-                extendoPositions = RedCloseTrussPositions.extendoPositions2;
-                parkingPositions = RedCloseTrussPositions.parkingPositions2;
+                purplePosition = BlueCloseTrussPositions.purplePosition2;
+                alignToScoreYellowPosition = BlueCloseTrussPositions.alignToScoreYellowPosition2;
+                scoreYellowPosition = BlueCloseTrussPositions.scoreYellowPosition2;
+                alignToCrossBackPositions = BlueCloseTrussPositions.alignToCrossBackPositions2;
+                crossBackPositions = BlueCloseTrussPositions.crossBackPositions2;
+                intakePositions = BlueCloseTrussPositions.intakePositions2;
+                alignToCrossPositions = BlueCloseTrussPositions.alignToCrossPositions2;
+                crossPositions = BlueCloseTrussPositions.crossPositions2;
+                scorePositions = BlueCloseTrussPositions.scorePositions2;
+                extendoDistanceTolerance = BlueCloseTrussPositions.extendoDistanceTolerance2;
+                extendoHeadingTolerance = BlueCloseTrussPositions.extendoHeadingTolerance2;
+                extendoPositions = BlueCloseTrussPositions.extendoPositions2;
+                parkingPositions = BlueCloseTrussPositions.parkingPositions2;
                 break;
             case 3:
-                purplePosition = RedCloseTrussPositions.purplePosition3;
-                alignToScoreYellowPosition = RedCloseTrussPositions.alignToScoreYellowPosition3;
-                scoreYellowPosition = RedCloseTrussPositions.scoreYellowPosition3;
-                alignToCrossBackPositions = RedCloseTrussPositions.alignToCrossBackPositions3;
-                crossBackPositions = RedCloseTrussPositions.crossBackPositions3;
-                intakePositions = RedCloseTrussPositions.intakePositions3;
-                alignToCrossPositions = RedCloseTrussPositions.alignToCrossPositions3;
-                crossPositions = RedCloseTrussPositions.crossPositions3;
-                scorePositions = RedCloseTrussPositions.scorePositions3;
-                extendoDistanceTolerance = RedCloseTrussPositions.extendoDistanceTolerance3;
-                extendoHeadingTolerance = RedCloseTrussPositions.extendoHeadingTolerance3;
-                extendoPositions = RedCloseTrussPositions.extendoPositions3;
-                parkingPositions = RedCloseTrussPositions.parkingPositions3;
+                purplePosition = BlueCloseTrussPositions.purplePosition3;
+                alignToScoreYellowPosition = BlueCloseTrussPositions.alignToScoreYellowPosition3;
+                scoreYellowPosition = BlueCloseTrussPositions.scoreYellowPosition3;
+                alignToCrossBackPositions = BlueCloseTrussPositions.alignToCrossBackPositions3;
+                crossBackPositions = BlueCloseTrussPositions.crossBackPositions3;
+                intakePositions = BlueCloseTrussPositions.intakePositions3;
+                alignToCrossPositions = BlueCloseTrussPositions.alignToCrossPositions3;
+                crossPositions = BlueCloseTrussPositions.crossPositions3;
+                scorePositions = BlueCloseTrussPositions.scorePositions3;
+                extendoDistanceTolerance = BlueCloseTrussPositions.extendoDistanceTolerance3;
+                extendoHeadingTolerance = BlueCloseTrussPositions.extendoHeadingTolerance3;
+                extendoPositions = BlueCloseTrussPositions.extendoPositions3;
+                parkingPositions = BlueCloseTrussPositions.parkingPositions3;
                 break;
         }
     }
@@ -286,7 +286,7 @@ public class RedCloseTrussNodes {
             drive.setTargetPose(crossPositions[cycle]);
         }, crossField);
 
-        crossField.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine &&
+        crossField.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine &&
                         robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED
                         && robot.outtake.getState() == Outtake.State.DOWN,
                 ()->{

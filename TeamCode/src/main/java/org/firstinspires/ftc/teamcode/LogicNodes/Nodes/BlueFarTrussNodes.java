@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.LogicNodes.LogicNode;
-import org.firstinspires.ftc.teamcode.LogicNodes.Positions.RedFarTrussPositions;
+import org.firstinspires.ftc.teamcode.LogicNodes.Positions.BlueFarTrussPositions;
 import org.firstinspires.ftc.teamcode.Modules.DriveModules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Modules.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Modules.Intake.DropDown;
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Utils.Pose;
 import org.firstinspires.ftc.teamcode.Wrappers.CoolIMU;
 
 @Config
-public class RedFarTrussNodes {
+public class BlueFarTrussNodes {
 
     private Pose purplePosition;
     private Pose preloadIntakePosition;
@@ -46,7 +46,7 @@ public class RedFarTrussNodes {
     private int[] extendoPositions;
     private Pose[] crossPositions;
     private Pose[] scorePositions;
-    public static double outtakeActivationLine = -60;
+    public static double outtakeActivationLine = 60;
     private Pose[] parkingPositions;
 
     public static double intakeTimeOut = 1.2, reverseTime = 0.3;
@@ -60,7 +60,7 @@ public class RedFarTrussNodes {
     private final double[] cycleTime = {6,6,100,100};
     private final double[] goBackTime = {3,3,100,100};
 
-    public static double headingOffset = -0.1;
+    public static double headingOffset = 0.1;
 
     public static double parkTime = 1;
 
@@ -69,7 +69,7 @@ public class RedFarTrussNodes {
     private final ElapsedTime timer = new ElapsedTime();
     private final ElapsedTime globalTimer = new ElapsedTime();
 
-    public RedFarTrussNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
+    public BlueFarTrussNodes(MecanumDrive drive, RobotModules robot, int detectionCase){
         drive.setRunMode(MecanumDrive.RunMode.PID);
         CoolIMU.imuOffset = 0;
         DropDown.index = 4;
@@ -87,57 +87,57 @@ public class RedFarTrussNodes {
         this.detectionCase = detectionCase;
         switch (detectionCase){
             case 1:
-                purplePosition = RedFarTrussPositions.purplePosition1;
-                preloadIntakePosition = RedFarTrussPositions.preloadIntakePosition1;
-                alignToCrossFieldForYellowPosition = RedFarTrussPositions.alignToCrossFieldForYellowPosition1;
-                crossFieldYellowPosition = RedFarTrussPositions.crossFieldYellowPosition1;
-                scoreYellowPosition = RedFarTrussPositions.scoreYellowPosition1;
-                alignToCrossBackPositions = RedFarTrussPositions.alignToCrossBackPositions1;
-                alignToCrossPositions = RedFarTrussPositions.alignToCrossPositions1;
-                crossBackPositions = RedFarTrussPositions.crossBackPositions1;
-                intakePositions = RedFarTrussPositions.intakePositions1;
-                extendoDistanceTolerance = RedFarTrussPositions.extendoDistanceTolerance1;
-                extendoHeadingTolerance = RedFarTrussPositions.extendoHeadingTolerance1;
-                extendoPositions = RedFarTrussPositions.extendoPositions1;
-                crossPositions = RedFarTrussPositions.crossPositions1;
-                scorePositions = RedFarTrussPositions.scorePositions1;
-                parkingPositions = RedFarTrussPositions.parkingPositions1;
+                purplePosition = BlueFarTrussPositions.purplePosition1;
+                preloadIntakePosition = BlueFarTrussPositions.preloadIntakePosition1;
+                alignToCrossFieldForYellowPosition = BlueFarTrussPositions.alignToCrossFieldForYellowPosition1;
+                crossFieldYellowPosition = BlueFarTrussPositions.crossFieldYellowPosition1;
+                scoreYellowPosition = BlueFarTrussPositions.scoreYellowPosition1;
+                alignToCrossBackPositions = BlueFarTrussPositions.alignToCrossBackPositions1;
+                alignToCrossPositions = BlueFarTrussPositions.alignToCrossPositions1;
+                crossBackPositions = BlueFarTrussPositions.crossBackPositions1;
+                intakePositions = BlueFarTrussPositions.intakePositions1;
+                extendoDistanceTolerance = BlueFarTrussPositions.extendoDistanceTolerance1;
+                extendoHeadingTolerance = BlueFarTrussPositions.extendoHeadingTolerance1;
+                extendoPositions = BlueFarTrussPositions.extendoPositions1;
+                crossPositions = BlueFarTrussPositions.crossPositions1;
+                scorePositions = BlueFarTrussPositions.scorePositions1;
+                parkingPositions = BlueFarTrussPositions.parkingPositions1;
                 startWaitTime = 0;
                 break;
             case 2:
-                purplePosition = RedFarTrussPositions.purplePosition2;
-                preloadIntakePosition = RedFarTrussPositions.preloadIntakePosition2;
-                alignToCrossFieldForYellowPosition = RedFarTrussPositions.alignToCrossFieldForYellowPosition2;
-                crossFieldYellowPosition = RedFarTrussPositions.crossFieldYellowPosition2;
-                scoreYellowPosition = RedFarTrussPositions.scoreYellowPosition2;
-                alignToCrossBackPositions = RedFarTrussPositions.alignToCrossBackPositions2;
-                alignToCrossPositions = RedFarTrussPositions.alignToCrossPositions2;
-                crossBackPositions = RedFarTrussPositions.crossBackPositions2;
-                intakePositions = RedFarTrussPositions.intakePositions2;
-                extendoDistanceTolerance = RedFarTrussPositions.extendoDistanceTolerance2;
-                extendoHeadingTolerance = RedFarTrussPositions.extendoHeadingTolerance2;
-                extendoPositions = RedFarTrussPositions.extendoPositions2;
-                crossPositions = RedFarTrussPositions.crossPositions2;
-                scorePositions = RedFarTrussPositions.scorePositions2;
-                parkingPositions = RedFarTrussPositions.parkingPositions2;
+                purplePosition = BlueFarTrussPositions.purplePosition2;
+                preloadIntakePosition = BlueFarTrussPositions.preloadIntakePosition2;
+                alignToCrossFieldForYellowPosition = BlueFarTrussPositions.alignToCrossFieldForYellowPosition2;
+                crossFieldYellowPosition = BlueFarTrussPositions.crossFieldYellowPosition2;
+                scoreYellowPosition = BlueFarTrussPositions.scoreYellowPosition2;
+                alignToCrossBackPositions = BlueFarTrussPositions.alignToCrossBackPositions2;
+                alignToCrossPositions = BlueFarTrussPositions.alignToCrossPositions2;
+                crossBackPositions = BlueFarTrussPositions.crossBackPositions2;
+                intakePositions = BlueFarTrussPositions.intakePositions2;
+                extendoDistanceTolerance = BlueFarTrussPositions.extendoDistanceTolerance2;
+                extendoHeadingTolerance = BlueFarTrussPositions.extendoHeadingTolerance2;
+                extendoPositions = BlueFarTrussPositions.extendoPositions2;
+                crossPositions = BlueFarTrussPositions.crossPositions2;
+                scorePositions = BlueFarTrussPositions.scorePositions2;
+                parkingPositions = BlueFarTrussPositions.parkingPositions2;
                 startWaitTime = 0;
                 break;
             case 3:
-                purplePosition = RedFarTrussPositions.purplePosition3;
-                preloadIntakePosition = RedFarTrussPositions.preloadIntakePosition3;
-                alignToCrossFieldForYellowPosition = RedFarTrussPositions.alignToCrossFieldForYellowPosition3;
-                crossFieldYellowPosition = RedFarTrussPositions.crossFieldYellowPosition3;
-                scoreYellowPosition = RedFarTrussPositions.scoreYellowPosition3;
-                alignToCrossBackPositions = RedFarTrussPositions.alignToCrossBackPositions3;
-                alignToCrossPositions = RedFarTrussPositions.alignToCrossPositions3;
-                crossBackPositions = RedFarTrussPositions.crossBackPositions3;
-                intakePositions = RedFarTrussPositions.intakePositions3;
-                extendoDistanceTolerance = RedFarTrussPositions.extendoDistanceTolerance3;
-                extendoHeadingTolerance = RedFarTrussPositions.extendoHeadingTolerance3;
-                extendoPositions = RedFarTrussPositions.extendoPositions3;
-                crossPositions = RedFarTrussPositions.crossPositions3;
-                scorePositions = RedFarTrussPositions.scorePositions3;
-                parkingPositions = RedFarTrussPositions.parkingPositions3;
+                purplePosition = BlueFarTrussPositions.purplePosition3;
+                preloadIntakePosition = BlueFarTrussPositions.preloadIntakePosition3;
+                alignToCrossFieldForYellowPosition = BlueFarTrussPositions.alignToCrossFieldForYellowPosition3;
+                crossFieldYellowPosition = BlueFarTrussPositions.crossFieldYellowPosition3;
+                scoreYellowPosition = BlueFarTrussPositions.scoreYellowPosition3;
+                alignToCrossBackPositions = BlueFarTrussPositions.alignToCrossBackPositions3;
+                alignToCrossPositions = BlueFarTrussPositions.alignToCrossPositions3;
+                crossBackPositions = BlueFarTrussPositions.crossBackPositions3;
+                intakePositions = BlueFarTrussPositions.intakePositions3;
+                extendoDistanceTolerance = BlueFarTrussPositions.extendoDistanceTolerance3;
+                extendoHeadingTolerance = BlueFarTrussPositions.extendoHeadingTolerance3;
+                extendoPositions = BlueFarTrussPositions.extendoPositions3;
+                crossPositions = BlueFarTrussPositions.crossPositions3;
+                scorePositions = BlueFarTrussPositions.scorePositions3;
+                parkingPositions = BlueFarTrussPositions.parkingPositions3;
                 startWaitTime = 0;
                 break;
         }
@@ -186,14 +186,14 @@ public class RedFarTrussNodes {
         }, startWait);
 
         startWait.addCondition(()->timer.seconds()>=startWaitTime, ()->{
-            if(detectionCase != 1) drive.setTargetPose(purplePosition);
-            if(detectionCase == 1) drive.setTargetPose(RedFarTrussPositions.beforePurplePosition);
+            if(detectionCase != 3) drive.setTargetPose(purplePosition);
+            if(detectionCase == 3) drive.setTargetPose(BlueFarTrussPositions.beforePurplePosition);
             robot.outtake.setState(Outtake.State.GO_PURPLE);
             timer.reset();
         }, scorePurple);
 
         scorePurple.addCondition(()->drive.reachedTarget(1) && drive.stopped() &&
-                        drive.getTargetPose() == RedFarTrussPositions.beforePurplePosition && detectionCase == 1,
+                        drive.getTargetPose() == BlueFarTrussPositions.beforePurplePosition && detectionCase == 3,
                 ()->drive.setTargetPose(purplePosition), scorePurple);
 
         scorePurple.addCondition(()->
@@ -277,7 +277,7 @@ public class RedFarTrussNodes {
             drive.setTargetPose(crossPositions[cycle]);
         }, crossField);
 
-        crossField.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine &&
+        crossField.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine &&
                         robot.bottomGripper.getState() == BottomGripper.State.CLOSED && robot.topGripper.getState() == TopGripper.State.CLOSED
                         && robot.outtake.getState() == Outtake.State.DOWN,
                 ()->{
@@ -292,7 +292,7 @@ public class RedFarTrussNodes {
             }
         }, waitForOuttake);
 
-        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() <= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
+        crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
                 robot.extendo.getState() == Extendo.State.IN && robot.topGripper.getState() == TopGripper.State.CLOSED &&
                 robot.bottomGripper.getState() == BottomGripper.State.CLOSED, ()->{
             robot.outtake.setState(Outtake.State.GOING_UP_FAR);
