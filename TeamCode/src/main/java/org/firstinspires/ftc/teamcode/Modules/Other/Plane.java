@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.Wrappers.CoolServo;
 @Config
 public class Plane implements IStateBasedModule, IRobotModule {
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED = true;
 
     private final CoolServo servo;
     public static boolean reversedServo = false;
 
-    public static double openPosition = 0.84, closedPosition = 0.91;
+    public static double openPosition = 0.43   , closedPosition = 0.505;
 
     public enum State{
         OPEN(openPosition), CLOSED(closedPosition);
