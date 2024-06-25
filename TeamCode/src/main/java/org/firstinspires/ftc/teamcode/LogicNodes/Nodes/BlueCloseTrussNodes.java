@@ -221,6 +221,8 @@ public class BlueCloseTrussNodes {
             drive.setTargetPose(crossBackPositions[cycle]);
         }, crossBack);
 
+        crossBack.addCondition(()->Lift.resetDelta > Lift.acceptableLiftDelta, ()->drive.setTargetPose(parkingPositions[cycle+1]), park);
+
         crossBack.addCondition(()->drive.reachedTarget( 5),()->{
             drive.setTargetPose(intakePositions[cycle]);
         } , goToIntakePosition);
