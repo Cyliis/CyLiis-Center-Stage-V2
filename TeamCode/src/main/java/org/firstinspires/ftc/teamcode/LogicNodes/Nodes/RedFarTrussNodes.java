@@ -170,7 +170,7 @@ public class RedFarTrussNodes {
     private LogicNode waitForOuttake = new LogicNode("Waiting for outtake");
     private LogicNode waitToOpen = new LogicNode("Waiting to open");
     private LogicNode park = new LogicNode("Parking");
-    private LogicNode startWait = new LogicNode("Waiting");
+    private LogicNode start = new LogicNode("Waiting");
 
     public static double startWaitTime;
 
@@ -183,9 +183,9 @@ public class RedFarTrussNodes {
             DropDown.index = 4;
 //            Lift.profiled = true;
             Lift.level = 0;
-        }, startWait);
+        }, start);
 
-        startWait.addCondition(()->timer.seconds()>=startWaitTime, ()->{
+        start.addCondition(()->timer.seconds()>=startWaitTime, ()->{
             if(detectionCase != 1) drive.setTargetPose(purplePosition);
             if(detectionCase == 1) drive.setTargetPose(RedFarTrussPositions.beforePurplePosition);
             robot.outtake.setState(Outtake.State.GO_PURPLE);
@@ -268,7 +268,7 @@ public class RedFarTrussNodes {
         }, alignToCross);
 
         alignToCross.addCondition(()->drive.reachedTarget(trussCrossPositionThresh) && drive.reachedHeading(trussCrossHeadingThresh)
-                && cycle == -1 && robot.extendo.getState() == Extendo.State.IN, ()->{
+                && cycle == -1 && robot.extendo.getState() == Extendo.State.IN && globalTimer.seconds() >= startWaitTime, ()->{
             drive.setTargetPose(crossFieldYellowPosition);
         }, crossForYellow);
 

@@ -161,7 +161,7 @@ public class BlueDariaNodes {
     private LogicNode waitForOuttake = new LogicNode("Waiting for outtake");
     private LogicNode waitToOpen = new LogicNode("Waiting to open");
     private LogicNode park = new LogicNode("Parking");
-    private LogicNode startWait = new LogicNode("Waiting");
+    private LogicNode start = new LogicNode("Waiting");
 
     public static double startWaitTime;
 
@@ -175,9 +175,9 @@ public class BlueDariaNodes {
             robot.dropDown.setState(DropDown.State.UP);
 //            Lift.profiled = true;
             Lift.level = 0;
-        }, startWait);
+        }, start);
 
-        startWait.addCondition(()->timer.seconds()>=startWaitTime, ()->{
+        start.addCondition(()->true, ()->{
             drive.setTargetPose(purplePosition);
             robot.outtake.setState(Outtake.State.GO_PURPLE);
             timer.reset();
@@ -254,7 +254,8 @@ public class BlueDariaNodes {
             drive.setTargetPose(beforeScoringPositions[cycle]);
         }, goToScoringPosition);
 
-        alignToCross.addPositionCondition(drive, 2, crossFieldYellowPosition, crossForYellow);
+        alignToCross.addCondition(()->drive.reachedTarget(2) && globalTimer.seconds() >= startWaitTime,
+                ()->drive.setTargetPose(crossFieldYellowPosition), crossForYellow);
 
         crossForYellow.addCondition(()->drive.getLocalizer().getPoseEstimate().getY() >= outtakeActivationLine && robot.outtake.getState() == Outtake.State.DOWN &&
                 robot.extendo.getState() == Extendo.State.IN && robot.topGripper.getState() == TopGripper.State.CLOSED &&

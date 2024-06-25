@@ -18,7 +18,7 @@ public class ActiveIntake implements IStateBasedModule, IRobotModule {
 
     public static double runningPower = 1, reversePower = -0.7, reverseSafetyPower = -0.6;
 
-    public static double pushTime = 0.2;
+    public static double pushTime = 0;
 
     public enum State{
         RUNNING(runningPower), IDLE(0), REVERSE(reversePower), PUSH(runningPower), REVERSE_SAFETY(reverseSafetyPower);
